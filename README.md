@@ -1,20 +1,13 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+## 🛠️ Arquitectura Multicapa Indexada
 
-# Run and deploy your AI Studio app
+El ecosistema **ROMEO-HYDRA v3.0** está estructurado bajo los lineamientos del estándar internacional **ISO/IEC 42001:2023** y formalmente trazado mediante las siguientes capas criptográficas y de desarrollo:
 
-This contains everything you need to run your app locally.
+*   **Capa de Software (`romeo-hydra`):** Core de ejecución y lógica de control.  
+    [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21406719.svg)](https://doi.org/10.5281/zenodo.21406719)
+*   **Capa de Hardware (`TARJETA-L-GICA-CUANTICA`):** Infraestructura física y lógica cuántica embebida.  
+    [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21697259.svg)](https://doi.org/10.5281/zenodo.21697259)
+*   **Capa de Ontología (`MANIFIESTO-ONTOLOGICO`):** Estructura semántica, modelo conceptual y ledger base.  
+    [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21709670.svg)](https://doi.org/10.5281/zenodo.21709670)
 
-View your app in AI Studio: https://ai.studio/apps/a5ddbc77-100f-4904-a6f3-8dc043e74e0c
-
-## Run Locally
-
-**Prerequisites:**  Node.js
-
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+---
+Fundador y Desarrollador Principal: Luis Ángel Vázquez Martínez
