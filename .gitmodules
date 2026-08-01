@@ -1,0 +1,21 @@
+[submodule "romeo-hydra"]
+	path = romeo-hydra
+	url = https://github.com/robinmacv2-ui/romeo-hydra
+[submodule "TARJETA-L-GICA-CUANTICA"]
+	path = TARJETA-L-GICA-CUANTICA
+	url = https://github.com/robinmacv2-ui/TARJETA-L-GICA-CUANTICA
+[submodule "MANIFIESTO-ONTOLOGICO"]
+	path = MANIFIESTO-ONTOLOGICO
+	url = https://github.com/robinmacv2-ui/MANIFIESTO-ONTOLOGICO
+[submodule "Romeo_Framework"]
+	path = Romeo_Framework
+	url = https://github.com/robinmacv2-ui/Romeo_Framework
+[submodule "Geomitria-en-agujeros-negros"]
+	path = Geomitria-en-agujeros-negros
+	url = https://github.com/robinmacv2-ui/Geomitria-en-agujeros-negros
+[submodule "Postulado-invarianza-homeostatica"]
+	path = Postulado-invarianza-homeostatica
+	url = https://github.com/robinmacv2-ui/Postulado-invarianza-homeostatica
+[submodule "Part-cula-de-Luis-ngel-"]
+	path = Part-cula-de-Luis-ngel-
+	url = https://github.com/robinmacv2-ui/Part-cula-de-Luis-ngel-
