@@ -21,4 +21,4 @@ Todo el ecosistema de **ROMEO-HYDRA v3.0** está formalmente registrado y audita
     [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21404126.svg)](https://doi.org/10.5281/zenodo.21404126)
 
 ---
-Fundador y Desarrollador Principal: Luis Ángel Vázquez Martínez
+Fundador y Desarrollador Principal: Luis Angel Vazquez Martinez
