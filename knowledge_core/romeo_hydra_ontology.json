@@ -1,0 +1,36 @@
+{
+    "timestamp": "2026-08-05T11:50:26.431261",
+    "total_records": 5,
+    "axioms": [
+        {
+            "title": "Postulado de Invarianza Homeostática",
+            "category": "Postulado",
+            "content": "La información no necesita tener fe en su existencia; se pliega y despliega en el ADN para hacer los sistemas únicos, coherentes y diferentes sin improvisar.",
+            "convexity_index": 1.0
+        },
+        {
+            "title": "Resonancia Lógica Coherente y Convexa",
+            "category": "Axioma",
+            "content": "Todo análisis operativo debe fluir bajo una geometría convexa, eliminando fricciones lógicas y unificando software, hardware y ontología en un nodo síncrono.",
+            "convexity_index": 1.0
+        },
+        {
+            "title": "Manifiesto Ontológico Central",
+            "category": "Manifiesto",
+            "content": "El marco conceptual Romeo-Hydra rechaza la ambigüedad computacional y establece un estándar de gobernanza basada en la verdad matemática y la resiliencia estructural.",
+            "convexity_index": 1.0
+        },
+        {
+            "title": "Apéndice Operativo: Reducción de Fricción Binaria",
+            "category": "Apéndice",
+            "content": "Migración obligatoria a arquitecturas de 64 bits nativas para maximizar el rendimiento matricial y asegurar cero bloqueos en entornos locales.",
+            "convexity_index": 1.0
+        },
+        {
+            "title": "Dosier Estructural de Tres Capas",
+            "category": "Dosier",
+            "content": "Sincronización simultánea de la Capa de Software (Framework), Capa de Hardware (Tarjeta Lógica) y Capa Ontológica (Modelado Conceptual).",
+            "convexity_index": 1.0
+        }
+    ]
+}
