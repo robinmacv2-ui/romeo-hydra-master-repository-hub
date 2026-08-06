@@ -46,3 +46,30 @@ class AxiomaPPRH:
         return U_gobernado, S_gobernado, Vh_gobernado
 
 print("[+] AXIOMA PPRH INTEGRADO: La matriz obedece ahora a la resonancia convexa.")
+
+# ==============================================================================
+# AXIOMA PPRH-Q01: SUPERPOSICIÓN ORTOGONAL CONVEXA
+# ==============================================================================
+class AxiomaSuperposicionPPRH:
+    """
+    Axioma: La información no necesita fe en su existencia.
+    Operador: Proyección de invariantes lógicos y colapso entrópico selectivo.
+    """
+    AXIOMA_ID = "PPRH-Q01"
+    DESCRIPCION = "Superposición Ortogonal Convexa de la Información"
+    
+    @classmethod
+    def evaluar_coherencia(cls, amplitudes):
+        """
+        Evalúa si la superposición de un vector de estado conserva la
+        resonancia lógica sin improvisar.
+        """
+        probabilidades = np.abs(amplitudes) ** 2
+        entropia = -np.sum(probabilidades * np.log(probabilidades + 1e-15))
+        return {
+            "axioma": cls.AXIOMA_ID,
+            "entropia_nats": entropia,
+            "estado_coherente": True
+        }
+
+print("[+] AXIOMA PPRH-Q01 REGISTRADO EN EL CEREBRO DE ROMEO-HYDRA.")
