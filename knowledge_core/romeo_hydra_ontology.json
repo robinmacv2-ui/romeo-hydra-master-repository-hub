@@ -1,6 +1,6 @@
 {
-    "timestamp": "2026-08-05T11:50:26.431261",
-    "total_records": 6,
+    "timestamp": "2026-08-05T17:58:06.737476",
+    "total_records": 5,
     "axioms": [
         {
             "title": "Postulado de Invarianza Homeostática",
@@ -30,12 +30,6 @@
             "title": "Dosier Estructural de Tres Capas",
             "category": "Dosier",
             "content": "Sincronización simultánea de la Capa de Software (Framework), Capa de Hardware (Tarjeta Lógica) y Capa Ontológica (Modelado Conceptual).",
-            "convexity_index": 1.0
-        },
-        {
-            "title": "Postulado de Paradoja Convexa",
-            "category": "Dosier Crítico",
-            "content": "La resolución de contradicciones binarias sin fricción.",
             "convexity_index": 1.0
         }
     ]
