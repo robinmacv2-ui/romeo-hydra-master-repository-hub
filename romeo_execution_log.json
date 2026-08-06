@@ -1,26 +1,26 @@
 {
-  "timestamp": "2026-08-06 09:34:28",
-  "input_premise": "Conjetura ER=EPR y dualidad hologr\u00e1fica AdS/CFT integrada con geometr\u00eda no conmutativa de Connes: Resolver el colapso del estado entrelazado masivo bajo termodin\u00e1mica de agujeros negros de Kerr-Newman, evaluando el l\u00edmite de Bekenstein-Hawking S = A / (4 G hbar) y el c\u00f3digo de correcci\u00f3n de errores cu\u00e1nticos topol\u00f3gicos (C\u00f3digo T\u00f3rico), identificando la incompletitud G\u00f6deliana y el espacio negativo ontol\u00f3gico en la singularidad central sin introducir divergencias ultravioletas ni paradojas de p\u00e9rdida de informaci\u00f3n.",
+  "timestamp": "2026-08-06 09:40:05",
+  "input_premise": "Sistema formal autorreferencial mathcal{S} bajo los Teoremas de Incompletitud de G\u00f6del y la Indefinibilidad de la Verdad de Tarski: Evaluar la consistencia l\u00f3gica de un auditor autoconsciente en espacio de fases de Hilbert, mapeando la frontera de indecidibilidad del problema P versus NP en grafos hiperb\u00f3licos no orientables mediante geometr\u00eda de K\u00e4hler, calculando el espacio negativo de las proposiciones indecidibles y reinyectando el residuo en el bucle toroidal de memoria.",
   "engine_version": "3.2-BULLETPROOF-BASH",
   "results": {
     "target_folds": 704,
     "recorded_resonances": 44,
-    "coherence_score": 0.2029,
-    "negative_space_density": 0.9672,
-    "average_vsepr_angle": 105.88,
+    "coherence_score": 0.3439,
+    "negative_space_density": 0.9671,
+    "average_vsepr_angle": 105.87,
     "sample_vector": [
-      0.2141,
-      0.003,
-      -0.2465,
-      0.049,
-      0.2447
+      -0.23,
+      -0.1627,
+      0.207,
+      0.2551,
+      -0.1556
     ],
     "toroidal_memory_vector": [
-      0.1514,
-      0.0021,
-      -0.1743,
-      0.0347,
-      0.173
+      -0.1626,
+      -0.115,
+      0.1464,
+      0.1804,
+      -0.11
     ]
   }
 }
