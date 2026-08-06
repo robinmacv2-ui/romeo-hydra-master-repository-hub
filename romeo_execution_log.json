@@ -1,0 +1,16 @@
+{
+  "timestamp": "2026-08-06 09:24:46",
+  "input_premise": "Ecuación de Schrödinger de N-Cuerpos H|Psirangle = E_0|Psirangle con Hamiltoniano k-Local H = sum_i h_i. Espacio de Hilbert mathcal{H} = bigotimes_{i=1}^N mathbb{C}^d de dimensión d^N. Calcular el autovalor mínimo E_0 = min_{langlePsi|Psirangle=1} langlePsi|H|Psirangle y la brecha espectral Delta E = E_1 - E_0 bajo interacción coulombiana completa sum_{i<j} frac{e^2}{|r_i - r_j|}, resolviendo el problema del signo fermiónico y la indecidibilidad del gap espectral sin aproximación Hartree-Fock ni perturbación Møller-Plesset.",
+  "engine_version": "3.0-SACRED-GEOMETRY-BASH",
+  "harmonic_constants": {
+    "phi": 1.6180339887,
+    "angle_ratios": ["180/360", "360/540", "540/720"]
+  },
+  "results": {
+    "target_folds": 704,
+    "recorded_resonances": 44,
+    "coherence_score": 0.4425,
+    "average_vsepr_angle": 105.88,
+    "sample_vector": [0.2632, 0.0546, -0.2412, -0.0431, 0.2205]
+  }
+}
