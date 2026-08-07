@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ROMEO-HYDRA V2.1 — Sistema Inmunologico Avanzado
+ROMEO-HYDRA V2.1 — Sistema Inmunologico
 """
 
 from __future__ import annotations
@@ -9,11 +9,9 @@ import os
 import sys
 import subprocess
 import hashlib
-import json
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List, Tuple
-
 
 @dataclass
 class Tejido:
@@ -21,13 +19,13 @@ class Tejido:
     minimo_bytes: int = 80
     critico: bool = True
 
-
 @dataclass
 class ConfigInmune:
     tejidos: List[Tejido] = field(default_factory=lambda: [
         Tejido("columna_vertebral_v21.py", minimo_bytes=1200, critico=True),
         Tejido("automedicina_v21.py", minimo_bytes=500, critico=True),
         Tejido("activar_romeo_hydra_v21.sh", minimo_bytes=300, critico=True),
+        Tejido("vigilante_v21.py", minimo_bytes=200, critico=True),
         Tejido("memoria_inmunologica_v21.json", minimo_bytes=5, critico=False),
         Tejido("metricas_organismo_v21.json", minimo_bytes=5, critico=False),
     ])

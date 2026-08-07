@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 """
 ROMEO-HYDRA V2.1 — Vigilante Continuo
-Ejecuta el organismo en bucle con intervalo configurable.
-Ctrl+C para detener con gracia.
 """
 
 from __future__ import annotations
@@ -10,11 +8,9 @@ from __future__ import annotations
 import sys
 import time
 import subprocess
-from pathlib import Path
 
-INTERVALO_SEGUNDOS = 45          # Ajusta segun necesidad
-MAX_CICLOS = 0                   # 0 = infinito
-
+INTERVALO_SEGUNDOS = 45
+MAX_CICLOS = 0          # 0 = infinito
 
 def main() -> int:
     print("[VIGILANTE V2.1] Iniciando supervision continua...")
@@ -35,9 +31,7 @@ def main() -> int:
     except KeyboardInterrupt:
         print("\n[VIGILANTE] Detenido por usuario. Organismo en reposo.")
         return 0
-
     return 0
-
 
 if __name__ == "__main__":
     sys.exit(main())

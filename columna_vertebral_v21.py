@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-ROMEO-HYDRA V2.1 — Nucleo HIPERSENSIBLE
-Umbrales calibrados para maxima reactividad y mutacion anticipatoria frecuente.
+ROMEO-HYDRA V2.1 — Nucleo Unificado HIPERSENSIBLE
+Umbral de conduccion calibrado a 0.63 (recomendado)
 """
 
 from __future__ import annotations
@@ -12,44 +12,34 @@ import sys
 import time
 import json
 import random
-import hashlib
-from dataclasses import dataclass, field, asdict
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, Optional
-from collections import deque
-
-# ---------------------------------------------------------------------------
-# Configuracion HIPERSENSIBLE
-# ---------------------------------------------------------------------------
+from typing import List
 
 @dataclass
 class ConfigV21:
-    # Pesos sinapticos (ligeramente mas reactivos)
+    # Pesos sinapticos
     w_hardware: float = 0.68
     w_entropia: float = 0.50
     w_friccion: float = -0.38
     bias_inicial: float = 0.12
 
-    # === UMBRALES HIPERSENSIBLES ===
-    umbral_conduccion: float = 0.68          # Antes 0.55 → ahora exige senal muy alta
-    umbral_friccion_alta: float = 0.32       # Antes 0.62 → dispara con poca carga
-    umbral_entropia_critica: float = 0.38    # Antes 0.72
-    umbral_prediccion_riesgo: float = 0.28   # Antes 0.68 → prediccion muy temprana
+    # Umbrales HIPERSENSIBLES (con ajuste recomendado)
+    umbral_conduccion: float = 0.63          # Ajuste recomendado (antes 0.68)
+    umbral_friccion_alta: float = 0.32
+    umbral_entropia_critica: float = 0.38
+    umbral_prediccion_riesgo: float = 0.28
 
-    # Antifragilidad mas agresiva
-    tasa_mutacion: float = 0.045             # Antes 0.028
-    tasa_mutacion_preventiva: float = 0.028  # Antes 0.015
-    ventana_historica: int = 6               # Ventana mas corta = reacciona mas rapido
+    # Antifragilidad agresiva
+    tasa_mutacion: float = 0.045
+    tasa_mutacion_preventiva: float = 0.028
+    ventana_historica: int = 6
 
     # Rutas de estado
     memoria_path: Path = Path("memoria_inmunologica_v21.json")
     metricas_path: Path = Path("metricas_organismo_v21.json")
     historial_path: Path = Path("historial_senales_v21.json")
 
-
-# ---------------------------------------------------------------------------
-# Utilidades de borde y termodinamica
-# ---------------------------------------------------------------------------
 
 def medir_friccion() -> float:
     try:
@@ -75,10 +65,6 @@ def sigmoide_termo(x: float, temperatura: float = 1.0) -> float:
     e = math.exp(z)
     return e / (1.0 + e)
 
-
-# ---------------------------------------------------------------------------
-# Memoria e historial
-# ---------------------------------------------------------------------------
 
 def cargar_json(path: Path, default: dict) -> dict:
     if path.exists():
@@ -129,10 +115,6 @@ def predecir_riesgo(senales: List[dict], cfg: ConfigV21) -> float:
     return round(min(1.0, max(0.0, riesgo)), 4)
 
 
-# ---------------------------------------------------------------------------
-# Nucleo de integracion HIPERSENSIBLE
-# ---------------------------------------------------------------------------
-
 def integrar(cfg: ConfigV21) -> dict:
     memoria = cargar_json(cfg.memoria_path, {
         "bias_actual": cfg.bias_inicial,
@@ -163,7 +145,6 @@ def integrar(cfg: ConfigV21) -> dict:
     senales = actualizar_historial(cfg, friccion, entropia, respuesta)
     riesgo = predecir_riesgo(senales, cfg)
 
-    # --- Antifragilidad HIPERSENSIBLE ---
     fallo = respuesta < cfg.umbral_conduccion or friccion > cfg.umbral_friccion_alta
     riesgo_alto = riesgo >= cfg.umbral_prediccion_riesgo
 
@@ -184,7 +165,7 @@ def integrar(cfg: ConfigV21) -> dict:
         bias = nuevo_bias
 
     elif riesgo_alto:
-        direccion = -1.0 if respuesta < 0.62 else 1.0
+        direccion = -1.0 if respuesta < 0.60 else 1.0
         delta = cfg.tasa_mutacion_preventiva * direccion * (1.0 + riesgo)
         nuevo_bias = max(-0.50, min(0.80, bias + delta))
         memoria["bias_actual"] = round(nuevo_bias, 5)
@@ -208,7 +189,7 @@ def integrar(cfg: ConfigV21) -> dict:
         "conduccion_optima": respuesta >= cfg.umbral_conduccion,
         "mutaciones_reactivas": memoria.get("mutaciones", 0),
         "mutaciones_preventivas": memoria.get("mutaciones_preventivas", 0),
-        "modo": "HIPERSENSIBLE"
+        "modo": "HIPERSENSIBLE_0.63"
     }
 
     guardar_json(cfg.metricas_path, resultado)
@@ -217,7 +198,7 @@ def integrar(cfg: ConfigV21) -> dict:
 
 def main() -> int:
     cfg = ConfigV21()
-    print("[COLUMNA VERTEBRAL V2.1] Modo HIPERSENSIBLE activado...")
+    print("[COLUMNA VERTEBRAL V2.1] Modo HIPERSENSIBLE (umbral 0.63) activado...")
 
     try:
         estado = integrar(cfg)
@@ -235,7 +216,7 @@ def main() -> int:
     print(f"[IMPULSO GLOBAL]     Salida del bus     : {estado['respuesta']:.5f}")
 
     if estado["conduccion_optima"]:
-        print("[ESTADO VERTEBRAL] Conduccion optima - resonancia convexa.")
+        print("[ESTADO VERTEBRAL] Conduccion optima - resonancia convexa alcanzada.")
         return 0
     else:
         print("[ESTADO VERTEBRAL] ALERTA HIPERSENSIBLE - mutacion activada.")
