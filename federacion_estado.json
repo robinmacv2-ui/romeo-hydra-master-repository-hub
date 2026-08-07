@@ -1,0 +1,11 @@
+{
+  "global_bias": 0.095,
+  "entropy_budget": 0.8872,
+  "isolated_nodes": [
+    "agent-gamma-99"
+  ],
+  "trusted_nodes": [
+    "agent-alpha-01"
+  ],
+  "total_events": 3
+}
