@@ -1,20 +1,20 @@
-[COLUMNA VERTEBRAL V2.1] Bus central termodinamico-neuronal + prediccion activado...
-[ANTIFRAGILIDAD REACTIVA] Fallo detectado -> bias 0.1200 -> 0.1604
-[SENAL DE BORDE]     Friccion E/S       : 0.4432
-[CONO TERMODINAMICO] Entropia efectiva  : 0.3699 | T=1.168
-[GRAVEDAD LOGICA]    Estado colapsado   : 0.5793
+[COLUMNA VERTEBRAL V2.1] Modo HIPERSENSIBLE activado...
+[ANTIFRAGILIDAD REACTIVA] Fallo detectado -> bias 0.1604 -> 0.2226
+[SENAL DE BORDE]     Friccion E/S       : 0.3815
+[CONO TERMODINAMICO] Entropia efectiva  : 0.3561 | T=1.160
+[GRAVEDAD LOGICA]    Estado colapsado   : 0.4956
 [PREDICCION]         Riesgo de fallo    : 0.0000
-[SINAPSIS]           Bias actual        : 0.16041
-                     Mutaciones react.  : 1
+[SINAPSIS]           Bias actual        : 0.22258
+                     Mutaciones react.  : 2
                      Mutaciones prev.   : 0
-[IMPULSO GLOBAL]     Salida del bus     : 0.54642
-[ESTADO VERTEBRAL] Alerta - homeostasis + mutacion activadas.
+[IMPULSO GLOBAL]     Salida del bus     : 0.55893
+[ESTADO VERTEBRAL] ALERTA HIPERSENSIBLE - mutacion activada.
 [HOMEOSTASIS V2.1] Escaneo multicapa del tejido digital...
-  [OK] columna_vertebral_v21.py: INTEGRO (h:604320c88113)
+  [OK] columna_vertebral_v21.py: INTEGRO (h:c0656a522dbe)
   [OK] automedicina_v21.py: INTEGRO (h:52607432345a)
   [OK] activar_romeo_hydra_v21.sh: INTEGRO (h:863c2f0e1cfe)
-  [OK] memoria_inmunologica_v21.json: INTEGRO (h:f0340983c63d)
-  [OK] metricas_organismo_v21.json: INTEGRO (h:960885b501f5)
+  [OK] memoria_inmunologica_v21.json: INTEGRO (h:219313215472)
+  [OK] metricas_organismo_v21.json: INTEGRO (h:0a350551787a)
 
 [INTEGRIDAD] 5/5 (100%)
 [ESTADO] Estabilidad convexa alcanzada.

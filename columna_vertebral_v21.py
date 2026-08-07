@@ -1,11 +1,7 @@
 #!/usr/bin/env python3
 """
-ROMEO-HYDRA V2.1 — Nucleo Unificado Avanzado
-- Fusion Termodinamica-Neuronal
-- Gravedad Logica Adaptativa
-- Antifragilidad Predictiva (mutacion anticipatoria)
-- Exportacion de metricas estructuradas
-- Compatible 100% con Windows (sin caracteres Unicode problematicos)
+ROMEO-HYDRA V2.1 — Nucleo HIPERSENSIBLE
+Umbrales calibrados para maxima reactividad y mutacion anticipatoria frecuente.
 """
 
 from __future__ import annotations
@@ -23,27 +19,27 @@ from typing import Dict, List, Optional
 from collections import deque
 
 # ---------------------------------------------------------------------------
-# Configuracion
+# Configuracion HIPERSENSIBLE
 # ---------------------------------------------------------------------------
 
 @dataclass
 class ConfigV21:
-    # Pesos sinapticos
-    w_hardware: float = 0.70
-    w_entropia: float = 0.45
-    w_friccion: float = -0.33
+    # Pesos sinapticos (ligeramente mas reactivos)
+    w_hardware: float = 0.68
+    w_entropia: float = 0.50
+    w_friccion: float = -0.38
     bias_inicial: float = 0.12
 
-    # Umbrales
-    umbral_conduccion: float = 0.55
-    umbral_friccion_alta: float = 0.62
-    umbral_entropia_critica: float = 0.72
-    umbral_prediccion_riesgo: float = 0.68
+    # === UMBRALES HIPERSENSIBLES ===
+    umbral_conduccion: float = 0.68          # Antes 0.55 → ahora exige senal muy alta
+    umbral_friccion_alta: float = 0.32       # Antes 0.62 → dispara con poca carga
+    umbral_entropia_critica: float = 0.38    # Antes 0.72
+    umbral_prediccion_riesgo: float = 0.28   # Antes 0.68 → prediccion muy temprana
 
-    # Antifragilidad predictiva
-    tasa_mutacion: float = 0.028
-    tasa_mutacion_preventiva: float = 0.015
-    ventana_historica: int = 8
+    # Antifragilidad mas agresiva
+    tasa_mutacion: float = 0.045             # Antes 0.028
+    tasa_mutacion_preventiva: float = 0.028  # Antes 0.015
+    ventana_historica: int = 6               # Ventana mas corta = reacciona mas rapido
 
     # Rutas de estado
     memoria_path: Path = Path("memoria_inmunologica_v21.json")
@@ -106,7 +102,6 @@ def actualizar_historial(cfg: ConfigV21, friccion: float, entropia: float, respu
         "entropia": entropia,
         "respuesta": respuesta
     })
-    # Mantener solo la ventana reciente
     senales = senales[-cfg.ventana_historica:]
     hist["senales"] = senales
     guardar_json(cfg.historial_path, hist)
@@ -114,10 +109,6 @@ def actualizar_historial(cfg: ConfigV21, friccion: float, entropia: float, respu
 
 
 def predecir_riesgo(senales: List[dict], cfg: ConfigV21) -> float:
-    """
-    Prediccion simple de riesgo de fallo basada en tendencia de friccion y entropia.
-    Retorna valor entre 0.0 (seguro) y 1.0 (riesgo inminente).
-    """
     if len(senales) < 3:
         return 0.0
 
@@ -125,22 +116,21 @@ def predecir_riesgo(senales: List[dict], cfg: ConfigV21) -> float:
     entropias = [s["entropia"] for s in senales]
     respuestas = [s["respuesta"] for s in senales]
 
-    # Tendencia (pendiente aproximada)
     df = fricciones[-1] - fricciones[0]
     de = entropias[-1] - entropias[0]
     dr = respuestas[-1] - respuestas[0]
 
     riesgo = 0.0
-    riesgo += max(0.0, df) * 1.8
-    riesgo += max(0.0, de) * 1.4
-    riesgo += max(0.0, -dr) * 1.6          # caida de respuesta = peligro
-    riesgo += (1.0 - respuestas[-1]) * 0.5
+    riesgo += max(0.0, df) * 2.1
+    riesgo += max(0.0, de) * 1.7
+    riesgo += max(0.0, -dr) * 1.9
+    riesgo += (1.0 - respuestas[-1]) * 0.7
 
     return round(min(1.0, max(0.0, riesgo)), 4)
 
 
 # ---------------------------------------------------------------------------
-# Nucleo de integracion V2.1
+# Nucleo de integracion HIPERSENSIBLE
 # ---------------------------------------------------------------------------
 
 def integrar(cfg: ConfigV21) -> dict:
@@ -153,15 +143,14 @@ def integrar(cfg: ConfigV21) -> dict:
 
     bias = memoria.get("bias_actual", cfg.bias_inicial)
     friccion = medir_friccion()
-    temperatura = 1.0 + 0.38 * friccion
+    temperatura = 1.0 + 0.42 * friccion
     entropia = calcular_entropia(friccion, temperatura)
 
-    # Gravedad logica adaptativa
-    ruido = random.gauss(0, 0.16 * (1.0 - friccion))
-    estado_colapsado = max(0.04, min(0.96, 0.5 + ruido - (friccion * 0.27)))
+    ruido = random.gauss(0, 0.15 * (1.0 - friccion))
+    estado_colapsado = max(0.04, min(0.96, 0.5 + ruido - (friccion * 0.30)))
 
     nucleos = os.cpu_count() or 2
-    vector_borde = (nucleos / 8.0) * (0.32 + 0.68 * (1.0 - friccion))
+    vector_borde = (nucleos / 8.0) * (0.30 + 0.70 * (1.0 - friccion))
 
     entrada = (
         vector_borde * cfg.w_hardware
@@ -171,18 +160,17 @@ def integrar(cfg: ConfigV21) -> dict:
     )
     respuesta = sigmoide_termo(entrada, temperatura)
 
-    # Historial + prediccion
     senales = actualizar_historial(cfg, friccion, entropia, respuesta)
     riesgo = predecir_riesgo(senales, cfg)
 
-    # --- Antifragilidad reactiva + PREDICTIVA ---
+    # --- Antifragilidad HIPERSENSIBLE ---
     fallo = respuesta < cfg.umbral_conduccion or friccion > cfg.umbral_friccion_alta
     riesgo_alto = riesgo >= cfg.umbral_prediccion_riesgo
 
     if fallo:
         direccion = -1.0 if respuesta < 0.5 else 1.0
         delta = cfg.tasa_mutacion * direccion * (1.0 + friccion)
-        nuevo_bias = max(-0.45, min(0.75, bias + delta))
+        nuevo_bias = max(-0.50, min(0.80, bias + delta))
         memoria["bias_actual"] = round(nuevo_bias, 5)
         memoria["mutaciones"] = memoria.get("mutaciones", 0) + 1
         memoria["fallos"].append({
@@ -196,17 +184,15 @@ def integrar(cfg: ConfigV21) -> dict:
         bias = nuevo_bias
 
     elif riesgo_alto:
-        # Mutacion preventiva (anticipatoria)
-        direccion = -1.0 if respuesta < 0.6 else 1.0
+        direccion = -1.0 if respuesta < 0.62 else 1.0
         delta = cfg.tasa_mutacion_preventiva * direccion * (1.0 + riesgo)
-        nuevo_bias = max(-0.45, min(0.75, bias + delta))
+        nuevo_bias = max(-0.50, min(0.80, bias + delta))
         memoria["bias_actual"] = round(nuevo_bias, 5)
         memoria["mutaciones_preventivas"] = memoria.get("mutaciones_preventivas", 0) + 1
         print(f"[ANTIFRAGILIDAD PREDICTIVA] Riesgo {riesgo:.3f} -> mutacion preventiva bias {bias:.4f} -> {nuevo_bias:.4f}")
         bias = nuevo_bias
 
-    # Limpiar historial de fallos
-    memoria["fallos"] = memoria.get("fallos", [])[-12:]
+    memoria["fallos"] = memoria.get("fallos", [])[-15:]
     guardar_json(cfg.memoria_path, memoria)
 
     resultado = {
@@ -222,16 +208,16 @@ def integrar(cfg: ConfigV21) -> dict:
         "conduccion_optima": respuesta >= cfg.umbral_conduccion,
         "mutaciones_reactivas": memoria.get("mutaciones", 0),
         "mutaciones_preventivas": memoria.get("mutaciones_preventivas", 0),
+        "modo": "HIPERSENSIBLE"
     }
 
-    # Exportar metricas
     guardar_json(cfg.metricas_path, resultado)
     return resultado
 
 
 def main() -> int:
     cfg = ConfigV21()
-    print("[COLUMNA VERTEBRAL V2.1] Bus central termodinamico-neuronal + prediccion activado...")
+    print("[COLUMNA VERTEBRAL V2.1] Modo HIPERSENSIBLE activado...")
 
     try:
         estado = integrar(cfg)
@@ -249,10 +235,10 @@ def main() -> int:
     print(f"[IMPULSO GLOBAL]     Salida del bus     : {estado['respuesta']:.5f}")
 
     if estado["conduccion_optima"]:
-        print("[ESTADO VERTEBRAL] Conduccion optima - organismo en resonancia convexa.")
+        print("[ESTADO VERTEBRAL] Conduccion optima - resonancia convexa.")
         return 0
     else:
-        print("[ESTADO VERTEBRAL] Alerta - homeostasis + mutacion activadas.")
+        print("[ESTADO VERTEBRAL] ALERTA HIPERSENSIBLE - mutacion activada.")
         return 1
 
 

@@ -1,14 +1,15 @@
 {
-  "timestamp": 1786067686.6372578,
-  "friccion": 0.4432,
-  "entropia": 0.3699,
-  "temperatura": 1.1684,
-  "estado_colapsado": 0.5793,
-  "vector_borde": 0.1747,
-  "bias": 0.16040959999999999,
-  "respuesta": 0.54642,
+  "timestamp": 1786068764.0185432,
+  "friccion": 0.3815,
+  "entropia": 0.3561,
+  "temperatura": 1.1602,
+  "estado_colapsado": 0.4956,
+  "vector_borde": 0.1832,
+  "bias": 0.22257749999999998,
+  "respuesta": 0.55893,
   "riesgo_predicho": 0.0,
   "conduccion_optima": false,
-  "mutaciones_reactivas": 1,
-  "mutaciones_preventivas": 0
+  "mutaciones_reactivas": 2,
+  "mutaciones_preventivas": 0,
+  "modo": "HIPERSENSIBLE"
 }
