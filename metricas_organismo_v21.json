@@ -1,0 +1,14 @@
+{
+  "timestamp": 1786067686.6372578,
+  "friccion": 0.4432,
+  "entropia": 0.3699,
+  "temperatura": 1.1684,
+  "estado_colapsado": 0.5793,
+  "vector_borde": 0.1747,
+  "bias": 0.16040959999999999,
+  "respuesta": 0.54642,
+  "riesgo_predicho": 0.0,
+  "conduccion_optima": false,
+  "mutaciones_reactivas": 1,
+  "mutaciones_preventivas": 0
+}

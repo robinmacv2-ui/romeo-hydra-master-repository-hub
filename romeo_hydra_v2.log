@@ -1,14 +1,20 @@
-[COLUMNA VERTEBRAL V2.0] Estableciendo bus central termodinámico-neuronal...
-[SEÑAL DE BORDE]     Fricción E/S      : 0.1679
-[CONO TERMODINÁMICO] Entropía efectiva : 0.2359 | T=1.067
-[GRAVEDAD LÓGICA]    Estado colapsado  : 0.1894
-[SINAPSIS]           Bias actual       : 0.12000 (mutaciones: 0)
-[IMPULSO GLOBAL]     Salida del bus    : 0.57781
-[ESTADO VERTEBRAL] Conducción óptima — organismo en resonancia convexa.
-[HOMEOSTASIS V2.0] Escaneo multicapa del tejido digital...
-  [OK] columna_vertebral_v2.py: INTEGRO (h:c68cc5bb619f)
-  [OK] automedicina_v2.py: INTEGRO (h:c16ec48a56c3)
-  [OK] memoria_inmunologica.json: INTEGRO (h:967a211c4fdf)
+[COLUMNA VERTEBRAL V2.1] Bus central termodinamico-neuronal + prediccion activado...
+[ANTIFRAGILIDAD REACTIVA] Fallo detectado -> bias 0.1200 -> 0.1604
+[SENAL DE BORDE]     Friccion E/S       : 0.4432
+[CONO TERMODINAMICO] Entropia efectiva  : 0.3699 | T=1.168
+[GRAVEDAD LOGICA]    Estado colapsado   : 0.5793
+[PREDICCION]         Riesgo de fallo    : 0.0000
+[SINAPSIS]           Bias actual        : 0.16041
+                     Mutaciones react.  : 1
+                     Mutaciones prev.   : 0
+[IMPULSO GLOBAL]     Salida del bus     : 0.54642
+[ESTADO VERTEBRAL] Alerta - homeostasis + mutacion activadas.
+[HOMEOSTASIS V2.1] Escaneo multicapa del tejido digital...
+  [OK] columna_vertebral_v21.py: INTEGRO (h:604320c88113)
+  [OK] automedicina_v21.py: INTEGRO (h:52607432345a)
+  [OK] activar_romeo_hydra_v21.sh: INTEGRO (h:863c2f0e1cfe)
+  [OK] memoria_inmunologica_v21.json: INTEGRO (h:f0340983c63d)
+  [OK] metricas_organismo_v21.json: INTEGRO (h:960885b501f5)
 
-[INTEGRIDAD] 3/3 (100%)
+[INTEGRIDAD] 5/5 (100%)
 [ESTADO] Estabilidad convexa alcanzada.
