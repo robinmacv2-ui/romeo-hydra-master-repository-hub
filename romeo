@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+# ROMEO-HYDRA — Comando unificado v3.1.1
+
+cmd="${1:-status}"
+
+case "$cmd" in
+  status)
+    echo "=============================================================="
+    echo "  ROMEO-HYDRA — ESTADO GENERAL"
+    echo "=============================================================="
+    echo
+    python monitor_federacion.py
+    echo
+    echo "[SISTEMA INMUNOLOGICO]"
+    python automedicina_v31.py 2>/dev/null || echo "  (automedicina_v31.py no encontrado)"
+    ;;
+  monitor)
+    python monitor_federacion.py "${2:-once}"
+    ;;
+  monitor-watch|watch)
+    python monitor_federacion.py watch
+    ;;
+  health)
+    python -c "
+from monitor_federacion import calcular_health_score
+from romeo_utils import cargar_json_seguro, registrar_health, obtener_tendencia
+from pathlib import Path
+estado = cargar_json_seguro(Path('federacion_estado.json'), {})
+metricas = cargar_json_seguro(Path('metricas_organismo_v30.json'), {})
+score = calcular_health_score(estado, metricas)
+scores = registrar_health(score)
+tend = obtener_tendencia(scores)
+print(f'Health Score : {score}/100')
+print(f'Tendencia    : {tend}')
+print(f'Historial    : {\" -> \".join(str(s) for s in scores[-8:])}')
+"
+    ;;
+  immune)
+    python automedicina_v31.py
+    ;;
+  config)
+    echo "Configuracion actual:"
+    cat config_romeo.json
+    ;;
+  help|--help|-h)
+    echo "Uso: ./romeo [comando]"
+    echo
+    echo "Comandos:"
+    echo "  status           Radiografia completa"
+    echo "  monitor          Dashboard (una vez)"
+    echo "  monitor-watch    Dashboard continuo"
+    echo "  health           Solo Health Score + tendencia"
+    echo "  immune           Sistema inmunologico"
+    echo "  config           Ver configuracion"
+    echo "  help             Esta ayuda"
+    ;;
+  *)
+    echo "Comando desconocido: $cmd"
+    echo "Usa: ./romeo help"
+    exit 1
+    ;;
+esac

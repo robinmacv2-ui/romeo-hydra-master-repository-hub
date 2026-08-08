@@ -1,0 +1,15 @@
+{
+  "umbral_conduccion": 0.63,
+  "umbral_friccion_alta": 0.32,
+  "umbral_prediccion_riesgo": 0.28,
+  "umbral_aislamiento_friccion": 0.75,
+  "umbral_aislamiento_entropia": 0.70,
+  "tasa_mutacion": 0.045,
+  "tasa_mutacion_preventiva": 0.028,
+  "ventana_historial": 8,
+  "intervalo_monitor_segundos": 10,
+  "max_eventos_auditoria_mostrar": 10,
+  "health_alert_threshold": 55,
+  "health_history_size": 20,
+  "version": "3.1.1-consolidada"
+}

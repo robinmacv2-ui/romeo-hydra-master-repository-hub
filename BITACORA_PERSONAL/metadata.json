@@ -1,0 +1,6 @@
+{
+  "name": "ROMEO-HYDRA Master Repository Hub",
+  "description": "Control Center, Git/WSL Terminal, Quantum-Convex Governance Auditor & Códice PPRH Repository Exporter",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

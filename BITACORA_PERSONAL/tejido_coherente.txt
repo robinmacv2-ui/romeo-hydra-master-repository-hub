@@ -1,0 +1,5 @@
+[+] Nodo 002 Plegado: Eterno Ahora alcanzado de forma autónoma.
+[+] Nodo 005 Plegado: Eterno Ahora alcanzado de forma autónoma.
+[+] Nodo 003 Plegado: Eterno Ahora alcanzado de forma autónoma.
+[+] Nodo 001 Plegado: Eterno Ahora alcanzado de forma autónoma.
+[+] Nodo 004 Plegado: Eterno Ahora alcanzado de forma autónoma.

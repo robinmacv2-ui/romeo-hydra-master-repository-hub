@@ -1,0 +1,50 @@
+{
+    "ledger_version": "1.0",
+    "node_framework": "Romeo-Hydra",
+    "generation_timestamp": "2026-08-06T09:12:55.068753",
+    "total_entries": 6,
+    "entries": [
+        {
+            "sequence": 1,
+            "timestamp": "2026-08-06T09:12:55.050653",
+            "file_target": "stress_test_hydra.py",
+            "sha256_hash": "c35e74b234b50953ee06a724392351609bc33b9d1f8f2515df78ac21968a65ed",
+            "status": "INTEGRIDAD_VERIFICADA"
+        },
+        {
+            "sequence": 2,
+            "timestamp": "2026-08-06T09:12:55.058404",
+            "file_target": "inject_ontology.py",
+            "sha256_hash": "84756b8bbfa6da3e9142a36f6e0077885ceb0122034120a341819a7233dab519",
+            "status": "INTEGRIDAD_VERIFICADA"
+        },
+        {
+            "sequence": 3,
+            "timestamp": "2026-08-06T09:12:55.060532",
+            "file_target": "verify_romeo.py",
+            "sha256_hash": "9946035a069bc213e2784f1cccd3183e387c73ace384cfa60dfd15a7d869c734",
+            "status": "INTEGRIDAD_VERIFICADA"
+        },
+        {
+            "sequence": 4,
+            "timestamp": "2026-08-06T09:12:55.062727",
+            "file_target": "test_all_flanks.py",
+            "sha256_hash": "58853167437f2a1e1d8a196340a9898a3df4942f9fa9510d86bbc247f14087c8",
+            "status": "INTEGRIDAD_VERIFICADA"
+        },
+        {
+            "sequence": 5,
+            "timestamp": "2026-08-06T09:12:55.065862",
+            "file_target": "exotic_mirror_test.py",
+            "sha256_hash": "80dd444124bebaf79ec3d15f571bf93e11ae6d4441505963d69f3a2eb7f04825",
+            "status": "INTEGRIDAD_VERIFICADA"
+        },
+        {
+            "sequence": 6,
+            "timestamp": "2026-08-06T09:12:55.068078",
+            "file_target": "knowledge_core/romeo_hydra_ontology.json",
+            "sha256_hash": "f33da98dc53eadb35dee10aee463897437891a3c5cbc22c0e3fe28b074d082df",
+            "status": "INTEGRIDAD_VERIFICADA"
+        }
+    ]
+}

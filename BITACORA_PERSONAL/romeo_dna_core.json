@@ -1,0 +1,20 @@
+{
+  "project": "ROMEO-HYDRA",
+  "version": "3.2-isomórfica",
+  "axiomatic_core": {
+    "principle_1": "La realidad es real por colapso de estados, no por decreto. La información no requiere fe.",
+    "principle_2": "La entropía es el ruido del sistema; la Desnucleasa es la lógica de purga.",
+    "principle_3": "Gravedad Lógica: La información no se mueve linealmente, se curva hacia el atractor de máxima eficiencia."
+  },
+  "technical_stack": {
+    "engine": "HPR (Hessian-based Potential Reconstruction)",
+    "traceability": "Delta Ledger / SHA-256 immutable chain",
+    "hardware_integration": "Esfera Fotónica Retiniana / PPRH Chip",
+    "compliance": "ISO/IEC 42001 + Art. 164 LIC"
+  },
+  "history_registry": {
+    "creation_date": "2026-07-08",
+    "doi_master": "10.5281/zenodo.21406719",
+    "status": "MASTER_CORE_CRYSTALLIZED"
+  }
+}
