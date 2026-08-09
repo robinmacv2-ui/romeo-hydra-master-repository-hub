@@ -1,0 +1,10 @@
+LICENSE
+README.md
+setup.py
+romeo_hydra/__init__.py
+romeo_hydra.egg-info/PKG-INFO
+romeo_hydra.egg-info/SOURCES.txt
+romeo_hydra.egg-info/dependency_links.txt
+romeo_hydra.egg-info/top_level.txt
+romeo_hydra/kernel/__init__.py
+romeo_hydra/kernel/sigma_chameleon.py
