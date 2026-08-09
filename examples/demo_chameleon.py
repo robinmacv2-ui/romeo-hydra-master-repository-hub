@@ -1,3 +1,9 @@
+import os
+import sys
+
+# Garantizar resolución del paquete raíz independientemente del punto de ejecución
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 import numpy as np
 from romeo_hydra.kernel.sigma_chameleon import (
     KernelConfig,
