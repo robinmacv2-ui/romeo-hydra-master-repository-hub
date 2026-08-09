@@ -10,6 +10,7 @@ from romeo_hydra.kernel.sigma_chameleon import (
     KernelSigmaController,
     EnvironmentSpectrum,
 )
+from romeo_hydra.kernel.cerebro_7219 import CerebroResonador7219
 
 PORT = 8888
 OLLAMA_API_URL = "http://127.0.0.1:11434/api/generate"
@@ -35,16 +36,22 @@ class RomeoOllamaGateway(http.server.SimpleHTTPRequestHandler):
         prompt = payload.get("prompt", "Estado del sistema.")
         model = payload.get("model", "qwen2.5:0.5b")
 
-        # Fase 1: Colapso Lógico en Kernel Sigma V∞
+        # Fase 1: Colapso Lógico e Integración 72/19 en Cerebro
         t_kernel_start = time.perf_counter()
         config = KernelConfig(state_dimension=128)
         controller = KernelSigmaController(config)
-        state = np.zeros(128)
+        cerebro = CerebroResonador7219(dimension=128)
+
+        state_base = np.zeros(128)
         candidate = np.random.randn(128) * 0.05
-        core, adapter = controller.collapse_to_core(state, candidate)
+        
+        # Aplicar resonancia 72/19
+        resonancia = cerebro.aplicar_modulacion(candidate)
+        
+        core, adapter = controller.collapse_to_core(state_base, resonancia.vector_modulado)
         t_kernel_ms = (time.perf_counter() - t_kernel_start) * 1000
 
-        # Fase 2: Ingesta e Inferencia Subordinada en Ollama
+        # Fase 2: Ingesta en Ollama
         t_ollama_start = time.perf_counter()
         ollama_req_data = json.dumps({
             "model": model,
@@ -74,7 +81,7 @@ class RomeoOllamaGateway(http.server.SimpleHTTPRequestHandler):
         t_ollama_ms = (time.perf_counter() - t_ollama_start) * 1000
         t_total_ms = (time.perf_counter() - t_start) * 1000
 
-        # Fase 3: Proyección de Superficie Gobernada con Telemetría
+        # Fase 3: Proyección con Telemetría Integrada 72/19
         projection = adapter.project(
             EnvironmentSpectrum.JSON_WORM,
             extra={
@@ -82,18 +89,11 @@ class RomeoOllamaGateway(http.server.SimpleHTTPRequestHandler):
                 "ollama_status": status_ollama,
                 "ollama_model": model,
                 "ollama_response": llm_output,
+                "resonance_72_19": resonancia.to_dict(),
                 "execution_telemetry": {
                     "total_time_ms": round(t_total_ms, 3),
                     "kernel_collapse_time_ms": round(t_kernel_ms, 3),
                     "ollama_inference_time_ms": round(t_ollama_ms, 3),
-                    "process_pipeline": [
-                        "1. Vector Initialization & Noise Injection (dim=128)",
-                        "2. 6k±1 Prime Sieve Noise Reduction",
-                        "3. Euler Complex Phase Modulation",
-                        "4. Hessian Stability Boundary Check (Eigenvalue Tau)",
-                        "5. Subordinate LLM Ingestion via Local IPv4 Socket",
-                        "6. Core State Immutable SHA-256 Signature Assembly"
-                    ]
                 }
             }
         )
@@ -106,7 +106,7 @@ class RomeoOllamaGateway(http.server.SimpleHTTPRequestHandler):
 if __name__ == "__main__":
     DualStackServer.allow_reuse_address = True
     with DualStackServer(("::", PORT), RomeoOllamaGateway) as httpd:
-        print(f"Pasarela Romeo-Hydra con Telemetría Interna en http://127.0.0.1:{PORT}")
+        print(f"Cerebro Romeo-Hydra con Resonancia 72/19 listo en http://127.0.0.1:{PORT}")
         try:
             httpd.serve_forever()
         except KeyboardInterrupt:
