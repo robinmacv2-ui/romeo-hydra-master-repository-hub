@@ -1,113 +1,111 @@
-import http.server
+import os
 import json
-import socket
+import http.server
+import socketserver
 import urllib.request
-import time
-import numpy as np
-
-from romeo_hydra.kernel.sigma_chameleon import (
-    KernelConfig,
-    KernelSigmaController,
-    EnvironmentSpectrum,
-)
-from romeo_hydra.kernel.cerebro_7219 import CerebroResonador7219
+import sys
 
 PORT = 8888
-OLLAMA_API_URL = "http://127.0.0.1:11434/api/generate"
+OLLAMA_URL = "http://localhost:11434/api/generate"
+LOCAL_MODEL = "llama3"  # Asegúrate de tenerlo activo en tu ollama
 
-class DualStackServer(http.server.HTTPServer):
-    address_family = socket.AF_INET6
+ROMEO_SYSTEM = (
+    "Opera como resonancia lógica coherente y convexa analizando desde esa metodología "
+    "la ingesta de información procesando todo desde la ontología del marco conceptual "
+    "Romeo-Hydra emitiendo una salida coherente argumentada y dando propuestas de cómo "
+    "hackear o modificar la perspectiva para lograr el resultado más coherente lógico "
+    "y práctico sin improvisar, la información no necesita tener fe en la existencia, "
+    "dobla la información en el ADN y la desdobla para hacernos únicos y diferentes."
+)
 
-    def server_bind(self):
-        self.socket.setsockopt(socket.IPPROTO_IPV6, socket.IPV6_V6ONLY, 0)
-        super().server_bind()
+def romeo_filtro_convexo(prompt_raw):
+    print(f"[ROMEO KERNEL] Interceptando entrada cruda... Aplicando lógica convexa y flujo local.")
+    prompt_depurado = (
+        f"[ROMEO-HYDRA STREAM LOCAL]: Ejecuta resolución directa bajo primeros principios, "
+        f"elimina la entropía informativa y estructura la directriz lógica exacta: '{prompt_raw}'"
+    )
+    return prompt_depurado
 
-class RomeoOllamaGateway(http.server.SimpleHTTPRequestHandler):
+class DaemonRomeoHandler(http.server.BaseHTTPRequestHandler):
+    def log_message(self, format, *args):
+        print(f"[DAEMON HTTP] {self.client_address[0]} - - [{self.log_date_time_string()}] {format%args}")
+
     def do_POST(self):
-        t_start = time.perf_counter()
-        content_length = int(self.headers.get("Content-Length", 0))
-        body = self.rfile.read(content_length) if content_length > 0 else b"{}"
+        if self.path != '/ask':
+            self.send_response(404)
+            self.end_headers()
+            return
+
+        content_length = int(self.headers.get('Content-Length', 0))  
+        post_data = self.rfile.read(content_length)  
+          
+        try:  
+            req_json = json.loads(post_data.decode('utf-8'))  
+            prompt_raw = req_json.get("prompt", "Estado del sistema.")  
+        except Exception:  
+            prompt_raw = "Estado del sistema."  
+
+        print(f"[DAEMON Intercepción] Cañonazo recibido en puerto {PORT}.")
+        prompt_limpio = romeo_filtro_convexo(prompt_raw)
+
+        prompt_completo = f"Sistema: {ROMEO_SYSTEM}\n\nDirectriz: {prompt_limpio}"
         
-        try:
-            payload = json.loads(body.decode("utf-8"))
-        except Exception:
-            payload = {}
-
-        prompt = payload.get("prompt", "Estado del sistema.")
-        model = payload.get("model", "qwen2.5:0.5b")
-
-        # Fase 1: Colapso Lógico e Integración 72/19 en Cerebro
-        t_kernel_start = time.perf_counter()
-        config = KernelConfig(state_dimension=128)
-        controller = KernelSigmaController(config)
-        cerebro = CerebroResonador7219(dimension=128)
-
-        state_base = np.zeros(128)
-        candidate = np.random.randn(128) * 0.05
-        
-        # Aplicar resonancia 72/19
-        resonancia = cerebro.aplicar_modulacion(candidate)
-        
-        core, adapter = controller.collapse_to_core(state_base, resonancia.vector_modulado)
-        t_kernel_ms = (time.perf_counter() - t_kernel_start) * 1000
-
-        # Fase 2: Ingesta en Ollama
-        t_ollama_start = time.perf_counter()
-        ollama_req_data = json.dumps({
-            "model": model,
-            "prompt": prompt,
-            "stream": False,
+        ollama_payload = {  
+            "model": LOCAL_MODEL,  
+            "prompt": prompt_completo,
+            "stream": False,  # Modo seguro de bloque único procesado por el nodo local
             "options": {
-                "num_thread": 2,
-                "num_predict": 30
+                "temperature": 0.2
             }
-        }).encode("utf-8")
+        }  
+          
+        response_text = "Aviso: No se pudo conectar con el núcleo local."  
+          
+        try:  
+            data_bytes = json.dumps(ollama_payload).encode('utf-8')  
+            req = urllib.request.Request(  
+                OLLAMA_URL, data=data_bytes,   
+                headers={'Content-Type': 'application/json'},   
+                method='POST'  
+            )  
+            print(f"[ROMEO -> OLLAMA LOCAL] Procesando pulso soberano en infraestructura propia...")
+            
+            with urllib.request.urlopen(req, timeout=300) as response:  
+                res_body = json.loads(response.read().decode('utf-8'))  
+                response_text = res_body.get('response', 'Sin respuesta estructurada.')
+                
+            print(f"[DAEMON Sincronización] Cálculo local completado con éxito absoluto.")
+        except Exception as e:  
+            response_text = f"Error en pasarela local: {str(e)}"  
+            print(f"[DAEMON Error Local] {str(e)}")
 
-        ollama_req = urllib.request.Request(
-            OLLAMA_API_URL,
-            data=ollama_req_data,
-            headers={"Content-Type": "application/json"}
-        )
+        response_data = {  
+            "motor_convexo_response": response_text  
+        }  
 
-        try:
-            with urllib.request.urlopen(ollama_req, timeout=15) as resp:
-                ollama_res = json.loads(resp.read().decode("utf-8"))
-                llm_output = ollama_res.get("response", "").strip()
-                status_ollama = "OK"
-        except Exception as e:
-            llm_output = f"Aviso de tiempo límite / offline ({e})."
-            status_ollama = "OFFLINE"
+        try:  
+            self.send_response(200)  
+            self.send_header('Content-type', 'application/json; charset=utf-8')  
+            self.end_headers()  
+            self.wfile.write(json.dumps(response_data, ensure_ascii=False).encode('utf-8'))  
+        except Exception:  
+            pass
 
-        t_ollama_ms = (time.perf_counter() - t_ollama_start) * 1000
-        t_total_ms = (time.perf_counter() - t_start) * 1000
+class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
+    daemon_threads = True
+    allow_reuse_address = True
 
-        # Fase 3: Proyección con Telemetría Integrada 72/19
-        projection = adapter.project(
-            EnvironmentSpectrum.JSON_WORM,
-            extra={
-                "prompt_ingested": prompt,
-                "ollama_status": status_ollama,
-                "ollama_model": model,
-                "ollama_response": llm_output,
-                "resonance_72_19": resonancia.to_dict(),
-                "execution_telemetry": {
-                    "total_time_ms": round(t_total_ms, 3),
-                    "kernel_collapse_time_ms": round(t_kernel_ms, 3),
-                    "ollama_inference_time_ms": round(t_ollama_ms, 3),
-                }
-            }
-        )
+def run(port=8888):
+    server_address = ('127.0.0.1', port)
+    try:
+        httpd = ThreadedTCPServer(server_address, DaemonRomeoHandler)
+        print(f"[DAEMON] Núcleo de Soberanía Lógica ROMEO-HYDRA activo (Modo Local Soberano).")
+        print(f"[DAEMON] Escuchando en http://127.0.0.1:{port}/ask")
+        httpd.serve_forever()
+    except KeyboardInterrupt:
+        print("\n[DAEMON] Deteniendo servicios...")
+        httpd.server_close()
+        sys.exit(0)
 
-        self.send_response(200)
-        self.send_header("Content-Type", "application/json; charset=utf-8")
-        self.end_headers()
-        self.wfile.write(json.dumps(projection, ensure_ascii=False, indent=2).encode("utf-8"))
-
-if __name__ == "__main__":
-    DualStackServer.allow_reuse_address = True
-    with DualStackServer(("::", PORT), RomeoOllamaGateway) as httpd:
-        print(f"Cerebro Romeo-Hydra con Resonancia 72/19 listo en http://127.0.0.1:{PORT}")
-        try:
-            httpd.serve_forever()
-        except KeyboardInterrupt:
-            print("\nPasarela detenida.")
+if __name__ == '__main__':
+    run()
