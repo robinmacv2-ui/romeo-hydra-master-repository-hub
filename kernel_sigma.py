@@ -44,7 +44,7 @@ class KernelConfig:
     frontier_eps: float = DEFAULT_FRONTIER_EPS
     norm: NormType = NormType.L2
     kernel_version: str = "SIGMA_V3.1"
-    soft_projection: bool = False          # si True, usa suavizado en lugar de hard clip
+    soft_projection: bool = False         # si True, usa suavizado en lugar de hard clip
     soft_temperature: float = 0.1
 
     def fingerprint(self) -> str:
