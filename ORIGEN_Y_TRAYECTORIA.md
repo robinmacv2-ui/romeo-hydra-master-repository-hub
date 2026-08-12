@@ -110,5 +110,5 @@ Eso es ROMEO-HYDRA hasta hoy.
 
 ---
 
-**Luis Ángel Vázquez Martínez**  
+**Luis Angel Vazquez Martinez**  
 Agosto 2026
