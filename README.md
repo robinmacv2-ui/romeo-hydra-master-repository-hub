@@ -1,58 +1,84 @@
 # ROMEO-HYDRA
 
-Hace un mes y medio yo no sabía programar absolutamente nada.
+Hace 45 días no sabía programar.
 
-No sabía qué era Python. No sabía qué era un repositorio. No sabía qué era Zenodo (ahora sé que es un registro del CERN en Suiza). No entendía C++, ni CMake, ni criptografía homomórfica, ni TFHE, ni React, ni TypeScript.
+No entendía Python.  
+No sabía qué era un compilador de C++.  
+No conocía CMake.  
+No sabía que Zenodo existía ni que era un registro del CERN en Suiza.
 
-Y de alguna forma, sin tenerlo planeado, terminé construyendo esto.
+No venía de una carrera técnica.  
+No tenía mentor.  
+No seguí un tutorial pensado para principiantes.
 
-## Qué es esto (en palabras simples)
+La arquitectura no nació de una clase.  
+Nació de una necesidad concreta: el dato en uso es vulnerable y la inteligencia artificial procesa información sensible sin gobernanza real.
 
-ROMEO-HYDRA es un intento de construir una **caja fuerte digital**.  
-Algo que permita trabajar con información sensible sin que nadie (ni siquiera el sistema) pueda verla en claro.  
-Algo que la ciberseguridad necesita, pero que yo todavía estoy entendiendo paso a paso.
+Así que empecé a construir una caja fuerte digital.
 
-Dentro de este repositorio hay:
+---
 
-- Código en C++ que se conecta con motores de cifrado (TFHE)
-- Scripts en Python que intentan organizar y gobernar el flujo
-- Una interfaz hecha con React + TypeScript
-- Bitácoras, manifiestos, experimentos y muchas cosas que todavía estoy ordenando
+## Qué es esto
+
+ROMEO-HYDRA es un intento de resolver dos problemas al mismo tiempo:
+
+1. **Proteger la información mientras se usa** (no solo cuando está guardada).
+2. **Hacerlo con el menor impacto energético posible.**
+
+Dentro del repositorio hay código en C++ conectado a un motor de cifrado homomórfico (TFHE + SPQLIOS_FMA), scripts en Python que intentan gobernar el flujo, y una interfaz en React + TypeScript.
 
 No es un producto terminado.  
 No es un framework listo para producción.  
 Es el resultado de alguien que empezó de cero y no se detuvo.
 
-## Por qué se ve tan denso y técnico
+---
 
-Porque mientras iba aprendiendo, iba construyendo.  
-Cada archivo es una pieza de algo que aún no termino de entender del todo.  
-Algunas partes funcionan. Otras están a medias. Otras son intentos.
+## Cómo se construyó (la verdad)
 
-Si abres el código y encuentras cosas complejas (C++, puentes con TFHE, capas de abstracción, ontologías…), no es porque yo sea un experto.  
-Es porque fui resolviendo problemas uno por uno y el sistema creció más rápido de lo que yo podía explicar.
+Hubo días pelean­do con la terminal de Linux en WSL.  
+Errores de firmware.  
+Fallos de Git.  
+Problemas de autenticación.  
+Compilaciones que se rompían una y otra vez.
 
-## Estado actual (agosto 2026)
+También hubo los momentos que sí importaron:
 
-- Estoy aprendiendo.
-- Estoy ordenando.
-- Estoy documentando lo que sí entiendo.
-- Estoy corrigiendo lo que no.
+- Entender qué era una capa de abstracción.
+- Lograr que Python le ordenara a C++ construir la estructura matemática.
+- Compilar el motor TFHE con aceleración SPQLIOS_FMA directo en el procesador.
+- Ver el mensaje `Everything up-to-date` después de sincronizar todo en GitHub.
 
-Si clonas este repositorio, probablemente no va a funcionar de un solo comando.  
-Todavía falta limpiar, organizar y hacer una guía de instalación real.
+Cuando el código tomó forma, lo registré formalmente en Zenodo (Software, Hardware y Ontología).  
+No por marketing. Por protección.
 
-## Quién soy
+Hoy está en un nivel TRL 4: ya no es solo teoría. Hay código que compila, componentes que se comunican y una interfaz que se puede abrir.
 
-**Luis Ángel Vázquez Martínez**  
-Empecé sin estudios formales en programación.  
-Este proyecto es la prueba de que se puede construir algo ambicioso sin saber de antemano cómo se hace.
-
-No vengo a vender teoría.  
-Vengo a mostrar el proceso real: desde el cero absoluto hasta lo que hay aquí.
+Todavía falta limpiar, ordenar y estabilizar.  
+Pero ya no es una idea en un cuaderno.
 
 ---
 
-Si eres evaluador, inversor o simplemente alguien curioso:  
-mira el código, no solo el texto.  
-Ahí está lo que realmente construí.
+## La jugada
+
+No vengo a competir con nadie.
+
+No vengo a demostrar que sé más que otros.  
+No vengo a vender un framework pulido.
+
+Vengo a ofrecer la oportunidad de ser de los primeros en sumarse a un cambio real:
+
+- Un cambio en cómo se trata la información.
+- Una reestructuración más ecológica del cómputo, minimizando el impacto energético.
+
+La puerta está abierta.  
+El código está aquí.  
+La historia de cómo se construyó también.
+
+Si quieres ser de los primeros, este es el momento.
+
+---
+
+**Luis Ángel Vázquez Martínez**  
+Agosto 2026
+
+Documento completo de origen y trayectoria: [`ORIGEN_Y_TRAYECTORIA.md`](./ORIGEN_Y_TRAYECTORIA.md)
