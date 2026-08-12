@@ -1,6 +1,6 @@
 {
-    "timestamp": "2026-08-05T17:58:06.737476",
-    "total_records": 5,
+    "timestamp": "2026-08-11T18:03:00.000000",
+    "total_records": 6,
     "axioms": [
         {
             "title": "Postulado de Invarianza Homeostática",
@@ -30,6 +30,12 @@
             "title": "Dosier Estructural de Tres Capas",
             "category": "Dosier",
             "content": "Sincronización simultánea de la Capa de Software (Framework), Capa de Hardware (Tarjeta Lógica) y Capa Ontológica (Modelado Conceptual).",
+            "convexity_index": 1.0
+        },
+        {
+            "title": "Pliegue Conceptual a Bajo Nivel – Romeo",
+            "category": "Axioma / Ontología de Abstracción",
+            "content": "En el ámbito de las ciencias de la computación y la ingeniería de software, Romeo genera código fuente C++ ejecutable (ficheros .cpp) especializado en la verificación de circuitos criptográficos homomórficos. A nivel de arquitectura de software y metodologías de abstracción, la interacción con C++ representa la compilación determinista de bajo nivel: la transformación de la lógica abstracta en instrucciones físicas optimizadas para el hardware.\n\n1. El Compilador Romeo (Criptografía Homomórfica)\nEn la literatura técnica de ingeniería, Romeo es un compilador que convierte descripciones de hardware (como Verilog/EDIF) en circuitos cifrados:\n * Generación de código C++: Romeo sintetiza y genera archivos .cpp vinculados a bibliotecas criptográficas (como TFHE).\n * Propósito: Permite que un servidor en la nube ejecute cómputos seguros directamente sobre datos encriptados, generando resultados verificables sin revelar la información subyacente.\n\n2. El Dataset ROMEO (Binarios C/C++ y Ensamblador)\nEn el área de ciberseguridad e inteligencia artificial:\n * Es un ecosistema que toma código fuente C/C++ (del Juliet Test Suite) y genera sus representaciones equivalentes en lenguaje ensamblador y código ejecutable binario x86.\n * Permite que los sistemas analicen vulnerabilidades directamente en el binario compilado, capturando el comportamiento real de la memoria y las optimizaciones que realiza el compilador.\n\n3. La perspectiva de abstracción (Pliegue conceptual a bajo nivel)\nSi se analiza la relación desde la ontología de los lenguajes de programación:\n * Modelado / Orquestación (Alto nivel): Estructura, dobla y orquesta la lógica conceptual sin preocuparse por la arquitectura física.\n * Generación en C++ (Bajo nivel): Desdobla esa lógica abstracta en instrucciones de máquina explícitas: control estricto de memoria, punteros, gestión de ciclos de CPU y tiempo de ejecución estático. Generar C++ es traducir la intención conceptual a la forma más pura y eficiente de ejecución que entiende el procesador.",
             "convexity_index": 1.0
         }
     ]
