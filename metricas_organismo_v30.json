@@ -1,0 +1,13 @@
+{
+  "friccion": 0.2761,
+  "entropia": 0.3061,
+  "temperatura": 1.116,
+  "estado_colapsado": 0.2116,
+  "bias": 0.17742449999999999,
+  "respuesta": 0.57335,
+  "riesgo_predicho": 0.0,
+  "mitosis_celulas": 0,
+  "bonus_mitosis": 0.0,
+  "conduccion_optima": false,
+  "modo": "V3.0_MULTICELULAR"
+}
