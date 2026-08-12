@@ -78,7 +78,7 @@ Si quieres ser de los primeros, este es el momento.
 
 ---
 
-**Luis Ángel Vázquez Martínez**  
+**Luis Angel Vazquez Martinez**  
 Agosto 2026
 
 Documento completo de origen y trayectoria: [`ORIGEN_Y_TRAYECTORIA.md`](./ORIGEN_Y_TRAYECTORIA.md)
