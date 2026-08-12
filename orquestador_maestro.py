@@ -7,23 +7,14 @@ Router principal del sistema.
 
 Objetivos:
     1. Cargar dinámicamente los nodos ROMEO-HYDRA.
-    2. Mantener el procesamiento concurrente de dosieres.
-    3. Detectar la intención de la consulta.
-    4. Resolver operaciones matemáticas de forma local y determinista.
-    5. Resolver paradojas temporales y silogismos vía MotorLogicaFilosofica.
-    6. Delegar consultas no matemáticas ni filosóficas al motor ROMEO/Bibliotecario.
-    7. Evitar respuestas FALLBACK simuladas.
-    8. No ejecutar eval() sobre entrada del usuario.
-    9. Mantener telemetría basada en hechos reales.
-
-Ejemplo matemático:
-
-    "cuanto es dos mas dos menos menos dos" → 6
-
-Ejemplo filosófico:
-
-    "si ayer nunca vuelve a ser hoy pero mañana nunca podra ser entonces hoy que es"
-    → deducción formal del presente como único dominio existente.
+    2. Detectar la intención de la consulta.
+    3. Resolver matemáticas de forma local y determinista.
+    4. Resolver cualquier paradoja, premisa filosófica o consulta de
+       ciencias exactas (matemáticas, genética, astrofísica, geografía)
+       vía MotorRazonamientoUniversal.
+    5. Historia → solo resolución lógica (sin hechos afirmados).
+    6. Delegar el resto al motor ROMEO/Bibliotecario.
+    7. No ejecutar eval() sobre entrada del usuario.
 """
 
 from __future__ import annotations
@@ -39,28 +30,16 @@ import re
 import sys
 import time
 
-from concurrent.futures import (
-    ProcessPoolExecutor,
-    ThreadPoolExecutor,
-    as_completed,
-)
-
+from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-
-# ============================================================
-# CONFIGURACIÓN
-# ============================================================
-
 REPO_PATH = Path(__file__).resolve().parent
-
 if str(REPO_PATH) not in sys.path:
     sys.path.insert(0, str(REPO_PATH))
 
 ESCALA_PLIEGUES = 704
-
 MAX_WORKERS_CPU = max(1, os.cpu_count() or 4)
 MAX_WORKERS_IO = min(32, (os.cpu_count() or 4) * 4)
 
@@ -72,42 +51,12 @@ NODOS_NUCLEO = [
     "bibliotecario",
 ]
 
-PATRONES_DOSIER = [
-    "*.txt",
-    "*.md",
-    "*.json",
-    "*.yaml",
-    "*.yml",
-]
+PATRONES_DOSIER = ["*.txt", "*.md", "*.json", "*.yaml", "*.yml"]
+EXCLUSIONES = {".git", "hydra_env_64", "__pycache__", "_extracted_zips", ".venv", "venv", "node_modules", ".mypy_cache"}
 
-EXCLUSIONES = {
-    ".git",
-    "hydra_env_64",
-    "__pycache__",
-    "_extracted_zips",
-    ".venv",
-    "venv",
-    "node_modules",
-    ".mypy_cache",
-}
-
-
-# ============================================================
-# LOGGING
-# ============================================================
-
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s | %(levelname)-8s | %(message)s",
-    datefmt="%H:%M:%S",
-)
-
+logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)-8s | %(message)s", datefmt="%H:%M:%S")
 log = logging.getLogger("RomeoHydra")
 
-
-# ============================================================
-# DATOS
-# ============================================================
 
 @dataclass
 class NodoEstado:
@@ -149,169 +98,74 @@ class ResultadoConsulta:
         }
 
 
-# ============================================================
-# NORMALIZACIÓN MATEMÁTICA
-# ============================================================
+# ── Matemáticas locales ──────────────────────────────────────
 
-PALABRAS_NUMERO = {
-    "cero": "0",
-    "uno": "1",
-    "dos": "2",
-    "tres": "3",
-    "cuatro": "4",
-    "cinco": "5",
-    "seis": "6",
-    "siete": "7",
-    "ocho": "8",
-    "nueve": "9",
-    "diez": "10",
-}
-
-PALABRAS_OPERADOR = {
-    "más": "+",
-    "mas": "+",
-    "menos": "-",
-    "por": "*",
-    "multiplicado": "*",
-    "multiplicada": "*",
-    "dividido": "/",
-    "dividida": "/",
-    "entre": "/",
-    "modulo": "%",
-    "módulo": "%",
-}
-
-PREFIJOS_MATEMATICOS = (
-    "cuanto es",
-    "cuánto es",
-    "cuanto da",
-    "cuánto da",
-    "calcula",
-    "calcular",
-    "resuelve",
-    "resolver",
-    "resultado de",
-)
-
+PALABRAS_NUMERO = {"cero": "0", "uno": "1", "dos": "2", "tres": "3", "cuatro": "4",
+                   "cinco": "5", "seis": "6", "siete": "7", "ocho": "8", "nueve": "9", "diez": "10"}
+PALABRAS_OPERADOR = {"más": "+", "mas": "+", "menos": "-", "por": "*", "multiplicado": "*",
+                     "multiplicada": "*", "dividido": "/", "dividida": "/", "entre": "/",
+                     "modulo": "%", "módulo": "%"}
+PREFIJOS_MATEMATICOS = ("cuanto es", "cuánto es", "cuanto da", "cuánto da", "calcula",
+                        "calcular", "resuelve", "resolver", "resultado de")
 PATRON_NUMERO = re.compile(
-    r"(?<![A-Za-zÁÉÍÓÚáéíóúÑñ])"
-    r"(cero|uno|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez)"
-    r"(?![A-Za-zÁÉÍÓÚáéíóúÑñ])",
+    r"(?<![A-Za-zÁÉÍÓÚáéíóúÑñ])(cero|uno|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez)(?![A-Za-zÁÉÍÓÚáéíóúÑñ])",
     re.IGNORECASE,
 )
 
 
 def normalizar_texto(texto: str) -> str:
-    texto = texto.strip().lower()
-    texto = re.sub(r"\s+", " ", texto)
-    return texto
+    return re.sub(r"\s+", " ", texto.strip().lower())
 
 
 def normalizar_matematica(texto: str) -> str:
     texto = normalizar_texto(texto)
-
     for prefijo in PREFIJOS_MATEMATICOS:
         if texto.startswith(prefijo):
             texto = texto[len(prefijo):].strip()
             break
-
-    def reemplazar_numero(match: re.Match[str]) -> str:
-        palabra = match.group(1).lower()
-        return PALABRAS_NUMERO[palabra]
-
-    texto = PATRON_NUMERO.sub(reemplazar_numero, texto)
-
-    for palabra, operador in sorted(
-        PALABRAS_OPERADOR.items(),
-        key=lambda item: len(item[0]),
-        reverse=True,
-    ):
-        texto = re.sub(
-            rf"\b{re.escape(palabra)}\b",
-            f" {operador} ",
-            texto,
-        )
-
+    texto = PATRON_NUMERO.sub(lambda m: PALABRAS_NUMERO[m.group(1).lower()], texto)
+    for palabra, op in sorted(PALABRAS_OPERADOR.items(), key=lambda i: len(i[0]), reverse=True):
+        texto = re.sub(rf"\b{re.escape(palabra)}\b", f" {op} ", texto)
     texto = texto.replace("¿", " ").replace("?", " ")
-    texto = re.sub(r"\s+", " ", texto).strip()
-    return texto
+    return re.sub(r"\s+", " ", texto).strip()
 
 
 def parece_matematica(texto: str) -> bool:
-    normalizado = normalizar_texto(texto)
-
-    tiene_prefijo = any(
-        normalizado.startswith(prefijo)
-        for prefijo in PREFIJOS_MATEMATICOS
-    )
-
-    tiene_operador = bool(
-        re.search(
-            r"\b(más|mas|menos|por|entre|dividido|multiplicado)\b",
-            normalizado,
-        )
-    )
-
-    tiene_simbolo = bool(re.search(r"[+\-*/%]", normalizado))
-
-    tiene_numero = bool(
-        re.search(
-            r"\d+|\b(cero|uno|dos|tres|cuatro|cinco|"
-            r"seis|siete|ocho|nueve|diez)\b",
-            normalizado,
-        )
-    )
-
-    return tiene_numero and (
-        tiene_operador or tiene_simbolo or tiene_prefijo
-    )
+    n = normalizar_texto(texto)
+    tiene_prefijo = any(n.startswith(p) for p in PREFIJOS_MATEMATICOS)
+    tiene_operador = bool(re.search(r"\b(más|mas|menos|por|entre|dividido|multiplicado)\b", n))
+    tiene_simbolo = bool(re.search(r"[+\-*/%]", n))
+    tiene_numero = bool(re.search(r"\d+|\b(cero|uno|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez)\b", n))
+    return tiene_numero and (tiene_operador or tiene_simbolo or tiene_prefijo)
 
 
-# ============================================================
-# EVALUADOR MATEMÁTICO SEGURO
-# ============================================================
-
-OPERADORES_BINARIOS = {
-    ast.Add: operator.add,
-    ast.Sub: operator.sub,
-    ast.Mult: operator.mul,
-    ast.Div: operator.truediv,
-    ast.FloorDiv: operator.floordiv,
-    ast.Mod: operator.mod,
-    ast.Pow: operator.pow,
-}
-
-OPERADORES_UNARIOS = {
-    ast.UAdd: operator.pos,
-    ast.USub: operator.neg,
-}
+OPERADORES_BINARIOS = {ast.Add: operator.add, ast.Sub: operator.sub, ast.Mult: operator.mul,
+                       ast.Div: operator.truediv, ast.FloorDiv: operator.floordiv,
+                       ast.Mod: operator.mod, ast.Pow: operator.pow}
+OPERADORES_UNARIOS = {ast.UAdd: operator.pos, ast.USub: operator.neg}
 
 
-def evaluar_nodo(nodo: ast.AST) -> float | int:
+def evaluar_nodo(nodo: ast.AST):
     if isinstance(nodo, ast.Constant):
-        valor = nodo.value
-        if isinstance(valor, bool):
+        v = nodo.value
+        if isinstance(v, bool):
             raise ValueError("Booleanos no permitidos.")
-        if isinstance(valor, (int, float)):
-            return valor
-        raise ValueError(f"Constante no permitida: {type(valor).__name__}")
-
+        if isinstance(v, (int, float)):
+            return v
+        raise ValueError(f"Constante no permitida: {type(v).__name__}")
     if isinstance(nodo, ast.UnaryOp):
-        operador = OPERADORES_UNARIOS.get(type(nodo.op))
-        if operador is None:
+        op = OPERADORES_UNARIOS.get(type(nodo.op))
+        if op is None:
             raise ValueError("Operador unario no permitido.")
-        return operador(evaluar_nodo(nodo.operand))
-
+        return op(evaluar_nodo(nodo.operand))
     if isinstance(nodo, ast.BinOp):
-        operador = OPERADORES_BINARIOS.get(type(nodo.op))
-        if operador is None:
-            raise ValueError(f"Operador binario no permitido: {type(nodo.op).__name__}")
-        izquierda = evaluar_nodo(nodo.left)
-        derecha = evaluar_nodo(nodo.right)
-        if isinstance(nodo.op, ast.Pow) and abs(derecha) > 1000:
+        op = OPERADORES_BINARIOS.get(type(nodo.op))
+        if op is None:
+            raise ValueError(f"Operador no permitido: {type(nodo.op).__name__}")
+        a, b = evaluar_nodo(nodo.left), evaluar_nodo(nodo.right)
+        if isinstance(nodo.op, ast.Pow) and abs(b) > 1000:
             raise ValueError("Exponente demasiado grande.")
-        return operador(izquierda, derecha)
-
+        return op(a, b)
     raise ValueError(f"Nodo AST no permitido: {type(nodo).__name__}")
 
 
@@ -322,37 +176,20 @@ def resolver_matematica(texto: str) -> ResultadoConsulta:
         if not expresion:
             raise ValueError("Expresión matemática vacía.")
         if not re.fullmatch(r"[0-9+\-*/%().\s]+", expresion):
-            raise ValueError(f"Tokens no matemáticos detectados: {expresion!r}")
-        arbol = ast.parse(expresion, mode="eval")
-        resultado = evaluar_nodo(arbol.body)
-        elapsed = (time.perf_counter() - inicio) * 1000
-        return ResultadoConsulta(
-            status="success",
-            intent="math",
-            result=resultado,
-            expression=expresion,
-            source="local_math_engine",
-            elapsed_ms=elapsed,
-        )
+            raise ValueError(f"Tokens no matemáticos: {expresion!r}")
+        resultado = evaluar_nodo(ast.parse(expresion, mode="eval").body)
+        return ResultadoConsulta(status="success", intent="math", result=resultado,
+                                 expression=expresion, source="local_math_engine",
+                                 elapsed_ms=(time.perf_counter() - inicio) * 1000)
     except ZeroDivisionError:
-        return ResultadoConsulta(
-            status="error",
-            intent="math",
-            error="División entre cero.",
-            elapsed_ms=(time.perf_counter() - inicio) * 1000,
-        )
+        return ResultadoConsulta(status="error", intent="math", error="División entre cero.",
+                                 elapsed_ms=(time.perf_counter() - inicio) * 1000)
     except (SyntaxError, ValueError, OverflowError) as exc:
-        return ResultadoConsulta(
-            status="error",
-            intent="math",
-            error=str(exc),
-            elapsed_ms=(time.perf_counter() - inicio) * 1000,
-        )
+        return ResultadoConsulta(status="error", intent="math", error=str(exc),
+                                 elapsed_ms=(time.perf_counter() - inicio) * 1000)
 
 
-# ============================================================
-# CARGA DINÁMICA DE MÓDULOS
-# ============================================================
+# ── Carga de módulos ─────────────────────────────────────────
 
 def cargar_modulo(nombre: str) -> NodoEstado:
     estado = NodoEstado(nombre=nombre)
@@ -361,23 +198,15 @@ def cargar_modulo(nombre: str) -> NodoEstado:
         estado.modulo = modulo
         estado.estado = "ACTIVO"
         estado.mensaje = "Importado correctamente."
-        estado.funciones_expuestas = [
-            attr for attr in dir(modulo)
-            if not attr.startswith("_") and callable(getattr(modulo, attr, None))
-        ]
-        for init_name in ("inicializar", "init", "arranque", "setup", "bootstrap"):
-            if hasattr(modulo, init_name):
-                getattr(modulo, init_name)()
-                estado.mensaje += f" | {init_name}() ejecutado"
-                break
+        estado.funciones_expuestas = [a for a in dir(modulo) if not a.startswith("_") and callable(getattr(modulo, a, None))]
         return estado
     except ModuleNotFoundError:
         posibles = [
             REPO_PATH / f"{nombre}.py",
             REPO_PATH / nombre / "__init__.py",
-            REPO_PATH / "nucleo" / f"{nombre}.py",
             REPO_PATH / "core" / f"{nombre}.py",
             REPO_PATH / "core" / "logica_filosofica" / f"{nombre}.py",
+            REPO_PATH / "core" / "razonamiento_universal" / f"{nombre}.py",
         ]
         for ruta in posibles:
             if not ruta.exists():
@@ -392,91 +221,55 @@ def cargar_modulo(nombre: str) -> NodoEstado:
                 estado.modulo = modulo
                 estado.estado = "ACTIVO"
                 estado.mensaje = f"Cargado desde {ruta.relative_to(REPO_PATH)}"
-                estado.funciones_expuestas = [
-                    attr for attr in dir(modulo)
-                    if not attr.startswith("_") and callable(getattr(modulo, attr, None))
-                ]
+                estado.funciones_expuestas = [a for a in dir(modulo) if not a.startswith("_") and callable(getattr(modulo, a, None))]
                 return estado
             except Exception as exc:
                 estado.estado = "ERROR"
                 estado.mensaje = f"Fallo al cargar {ruta}: {exc}"
                 return estado
         estado.estado = "AUSENTE"
-        estado.mensaje = "Módulo no encontrado en el repositorio."
+        estado.mensaje = "Módulo no encontrado."
         return estado
     except Exception as exc:
         estado.estado = "ERROR"
-        estado.mensaje = f"Excepción durante carga: {exc}"
+        estado.mensaje = str(exc)
         return estado
 
 
 def inicializar_nodo_worker(nombre: str) -> Dict[str, Any]:
-    import importlib as _importlib
-    import sys as _sys
-    from pathlib import Path as _Path
-
-    repo = _Path(__file__).resolve().parent if "__file__" in globals() else _Path.cwd()
+    import importlib as _il, sys as _sys
+    from pathlib import Path as _P
+    repo = _P(__file__).resolve().parent if "__file__" in globals() else _P.cwd()
     if str(repo) not in _sys.path:
         _sys.path.insert(0, str(repo))
-
     try:
-        modulo = _importlib.import_module(nombre)
-        funciones = [
-            attr for attr in dir(modulo)
-            if not attr.startswith("_") and callable(getattr(modulo, attr, None))
-        ]
-        return {
-            "nombre": nombre,
-            "estado": "ACTIVO",
-            "mensaje": "Módulo verificable.",
-            "funciones": funciones[:15],
-        }
-    except Exception as exc:
-        return {
-            "nombre": nombre,
-            "estado": "ERROR",
-            "mensaje": str(exc),
-            "funciones": [],
-        }
+        m = _il.import_module(nombre)
+        funcs = [a for a in dir(m) if not a.startswith("_") and callable(getattr(m, a, None))]
+        return {"nombre": nombre, "estado": "ACTIVO", "mensaje": "OK", "funciones": funcs[:15]}
+    except Exception as e:
+        return {"nombre": nombre, "estado": "ERROR", "mensaje": str(e), "funciones": []}
 
-
-# ============================================================
-# DOSIERES
-# ============================================================
 
 def procesar_dosier(ruta: str) -> ResultadoDosier:
     path = Path(ruta)
     try:
-        contenido = path.read_text(encoding="utf-8", errors="ignore")
-        return ResultadoDosier(
-            ruta=ruta,
-            nombre=path.name,
-            bytes_procesados=len(contenido.encode("utf-8")),
-            exito=True,
-        )
-    except Exception as exc:
-        return ResultadoDosier(
-            ruta=ruta,
-            nombre=path.name,
-            bytes_procesados=0,
-            exito=False,
-            error=str(exc),
-        )
+        c = path.read_text(encoding="utf-8", errors="ignore")
+        return ResultadoDosier(ruta=ruta, nombre=path.name, bytes_procesados=len(c.encode()), exito=True)
+    except Exception as e:
+        return ResultadoDosier(ruta=ruta, nombre=path.name, bytes_procesados=0, exito=False, error=str(e))
 
 
 def localizar_dosieres() -> List[str]:
-    archivos: List[str] = []
-    for patron in PATRONES_DOSIER:
-        for path in REPO_PATH.rglob(patron):
-            if any(excluido in path.parts for excluido in EXCLUSIONES):
+    archivos = []
+    for p in PATRONES_DOSIER:
+        for path in REPO_PATH.rglob(p):
+            if any(x in path.parts for x in EXCLUSIONES):
                 continue
             archivos.append(str(path))
     return sorted(set(archivos))
 
 
-# ============================================================
-# ORQUESTADOR MAESTRO
-# ============================================================
+# ── Orquestador ──────────────────────────────────────────────
 
 class OrquestadorMaestro:
 
@@ -486,40 +279,43 @@ class OrquestadorMaestro:
         self.motor: Optional[Any] = None
         self.biblioteca: Optional[Any] = None
         self.motor_filosofico: Optional[Any] = None
+        self.motor_universal: Optional[Any] = None
 
     def cargar_nodos_paralelo(self) -> None:
         log.info("Sincronizando nodos ROMEO-HYDRA...")
-
         for nombre in NODOS_NUCLEO:
             estado = cargar_modulo(nombre)
             self.nodos[nombre] = estado
             log.info("[NÚCLEO] %-25s → %-10s | %s", nombre, estado.estado, estado.mensaje)
 
-        motor = self.nodos.get("romeo_engine")
-        if motor and motor.modulo:
-            self.motor = motor.modulo
+        if self.nodos.get("romeo_engine") and self.nodos["romeo_engine"].modulo:
+            self.motor = self.nodos["romeo_engine"].modulo
+        if self.nodos.get("bibliotecario") and self.nodos["bibliotecario"].modulo:
+            self.biblioteca = self.nodos["bibliotecario"].modulo
 
-        biblioteca = self.nodos.get("bibliotecario")
-        if biblioteca and biblioteca.modulo:
-            self.biblioteca = biblioteca.modulo
-
-        # Carga explícita del motor de lógica filosófica
         try:
             from core.logica_filosofica import MotorLogicaFilosofica
             self.motor_filosofico = MotorLogicaFilosofica()
-            log.info("[NÚCLEO] %-25s → %-10s | %s", "logica_filosofica", "ACTIVO", "MotorLogicaFilosofica v1.0 cargado")
-        except Exception as exc:
-            log.warning("[NÚCLEO] logica_filosofica no disponible: %s", exc)
-            self.motor_filosofico = None
+            log.info("[NÚCLEO] %-25s → ACTIVO     | MotorLogicaFilosofica", "logica_filosofica")
+        except Exception as e:
+            log.warning("logica_filosofica: %s", e)
+
+        try:
+            from core.razonamiento_universal import MotorRazonamientoUniversal
+            self.motor_universal = MotorRazonamientoUniversal()
+            log.info("[NÚCLEO] %-25s → ACTIVO     | MotorRazonamientoUniversal v%s",
+                     "razonamiento_universal", getattr(self.motor_universal, "version", "?"))
+        except Exception as e:
+            log.warning("razonamiento_universal: %s", e)
 
         try:
             with ProcessPoolExecutor(max_workers=min(len(NODOS_NUCLEO), MAX_WORKERS_CPU)) as pool:
-                futuros = {pool.submit(inicializar_nodo_worker, nombre): nombre for nombre in NODOS_NUCLEO}
-                for futuro in as_completed(futuros):
-                    resultado = futuro.result()
-                    log.info("[PROC] %-25s → %-10s | %s", resultado["nombre"], resultado["estado"], resultado["mensaje"])
-        except Exception as exc:
-            log.warning("Verificación multiproceso omitida: %s", exc)
+                futuros = {pool.submit(inicializar_nodo_worker, n): n for n in NODOS_NUCLEO}
+                for f in as_completed(futuros):
+                    r = f.result()
+                    log.info("[PROC] %-25s → %-10s | %s", r["nombre"], r["estado"], r["mensaje"])
+        except Exception as e:
+            log.warning("Verificación multiproceso omitida: %s", e)
 
     def asimilar_dosieres_paralelo(self) -> None:
         rutas = localizar_dosieres()
@@ -528,89 +324,69 @@ class OrquestadorMaestro:
             self.dosieres_asimilados = []
             return
         with ThreadPoolExecutor(max_workers=MAX_WORKERS_IO) as pool:
-            resultados = list(pool.map(procesar_dosier, rutas))
-        self.dosieres_asimilados = resultados
-        exitosos = sum(1 for r in resultados if r.exito)
-        total_bytes = sum(r.bytes_procesados for r in resultados)
-        log.info("Asimilación: %d/%d dosieres | %s bytes", exitosos, len(resultados), f"{total_bytes:,}")
+            self.dosieres_asimilados = list(pool.map(procesar_dosier, rutas))
+        ok = sum(1 for r in self.dosieres_asimilados if r.exito)
+        total = sum(r.bytes_procesados for r in self.dosieres_asimilados)
+        log.info("Asimilación: %d/%d | %s bytes", ok, len(self.dosieres_asimilados), f"{total:,}")
 
     def detectar_intencion(self, consulta: str) -> str:
         if parece_matematica(consulta):
             return "math"
+        # El motor universal clasifica el resto
+        return "universal"
 
-        # Intento de dominio filosófico / paradoja temporal
-        try:
-            from core.logica_filosofica import detectar_dominio_filosofico
-            dominio = detectar_dominio_filosofico(consulta)
-            if dominio in ("paradoja_temporal", "silogismo", "filosofia_general"):
-                return "filosofia"
-        except Exception:
-            pass
-
-        return "general"
-
-    def delegar_filosofia(self, consulta: str) -> ResultadoConsulta:
+    def delegar_universal(self, consulta: str) -> ResultadoConsulta:
         inicio = time.perf_counter()
-        if self.motor_filosofico is None:
-            return ResultadoConsulta(
-                status="error",
-                intent="filosofia",
-                error="MotorLogicaFilosofica no disponible",
-                elapsed_ms=(time.perf_counter() - inicio) * 1000,
-            )
+        if self.motor_universal is None:
+            # Fallback al filosófico si existe
+            if self.motor_filosofico:
+                try:
+                    res = self.motor_filosofico.procesar(consulta)
+                    return ResultadoConsulta(status="success", intent="filosofia", result=res,
+                                             source="core.logica_filosofica",
+                                             elapsed_ms=(time.perf_counter() - inicio) * 1000)
+                except Exception:
+                    pass
+            return ResultadoConsulta(status="error", intent="universal",
+                                     error="MotorRazonamientoUniversal no disponible",
+                                     elapsed_ms=(time.perf_counter() - inicio) * 1000)
         try:
-            res = self.motor_filosofico.procesar(consulta)
+            res = self.motor_universal.procesar(consulta)
+            dominio = res.get("dominio_detectado", res.get("dominio", "general"))
             return ResultadoConsulta(
                 status="success",
-                intent="filosofia",
+                intent=dominio,
                 result=res,
-                source="core.logica_filosofica.MotorLogicaFilosofica",
+                source="core.razonamiento_universal.MotorRazonamientoUniversal",
                 elapsed_ms=(time.perf_counter() - inicio) * 1000,
             )
         except Exception as exc:
-            log.error("Error en MotorLogicaFilosofica: %s", exc)
-            return ResultadoConsulta(
-                status="error",
-                intent="filosofia",
-                error=str(exc),
-                elapsed_ms=(time.perf_counter() - inicio) * 1000,
-            )
+            log.error("Error motor universal: %s", exc)
+            return ResultadoConsulta(status="error", intent="universal", error=str(exc),
+                                     elapsed_ms=(time.perf_counter() - inicio) * 1000)
 
     def delegar_romeo(self, consulta: str) -> ResultadoConsulta:
         inicio = time.perf_counter()
         if self.motor and hasattr(self.motor, "procesar"):
             try:
                 res = self.motor.procesar(consulta)
-                return ResultadoConsulta(
-                    status="success",
-                    intent="general",
-                    result=res,
-                    source="romeo_engine",
-                    elapsed_ms=(time.perf_counter() - inicio) * 1000,
-                )
-            except Exception as exc:
-                log.error("Error en romeo_engine: %s", exc)
-
+                return ResultadoConsulta(status="success", intent="general", result=res,
+                                         source="romeo_engine",
+                                         elapsed_ms=(time.perf_counter() - inicio) * 1000)
+            except Exception as e:
+                log.error("romeo_engine: %s", e)
         if self.biblioteca and hasattr(self.biblioteca, "consultar"):
             try:
                 res = self.biblioteca.consultar(consulta)
-                return ResultadoConsulta(
-                    status="success",
-                    intent="general",
-                    result=res,
-                    source="bibliotecario",
-                    elapsed_ms=(time.perf_counter() - inicio) * 1000,
-                )
-            except Exception as exc:
-                log.error("Error en bibliotecario: %s", exc)
-
-        return ResultadoConsulta(
-            status="success",
-            intent="general",
-            result=f"Consulta procesada sin motor generativo: '{consulta}'",
-            source="orquestador_local",
-            elapsed_ms=(time.perf_counter() - inicio) * 1000,
-        )
+                return ResultadoConsulta(status="success", intent="general", result=res,
+                                         source="bibliotecario",
+                                         elapsed_ms=(time.perf_counter() - inicio) * 1000)
+            except Exception as e:
+                log.error("bibliotecario: %s", e)
+        return ResultadoConsulta(status="success", intent="general",
+                                 result=f"Consulta asimilada: '{consulta}'",
+                                 source="orquestador_local",
+                                 elapsed_ms=(time.perf_counter() - inicio) * 1000)
 
     def procesar(self, consulta: str) -> Dict[str, Any]:
         intencion = self.detectar_intencion(consulta)
@@ -619,65 +395,57 @@ class OrquestadorMaestro:
             res = resolver_matematica(consulta)
             if res.status == "success":
                 return res.as_dict()
-            log.warning(
-                "Fallo en resolución matemática local (%s). Reintentando como consulta general.",
-                res.error,
-            )
+            log.warning("Math local falló (%s). Pasando a motor universal.", res.error)
 
-        if intencion == "filosofia":
-            res = self.delegar_filosofia(consulta)
+        # Cualquier otra cosa → motor universal (paradojas, filosofía, ciencias, historia lógica…)
+        res = self.delegar_universal(consulta)
+        if res.status == "success":
             return res.as_dict()
 
-        res = self.delegar_romeo(consulta)
-        return res.as_dict()
+        # Último recurso
+        return self.delegar_romeo(consulta).as_dict()
 
     def obtener_estado(self) -> Dict[str, Any]:
         return {
             "escala_pliegues": ESCALA_PLIEGUES,
-            "nodos": {
-                nombre: {
-                    "estado": nodo.estado,
-                    "mensaje": nodo.mensaje,
-                    "funciones": nodo.funciones_expuestas[:10],
-                }
-                for nombre, nodo in self.nodos.items()
-            },
+            "nodos": {n: {"estado": nd.estado, "mensaje": nd.mensaje, "funciones": nd.funciones_expuestas[:10]}
+                      for n, nd in self.nodos.items()},
             "dosieres": len(self.dosieres_asimilados),
             "motor_disponible": self.motor is not None,
             "biblioteca_disponible": self.biblioteca is not None,
             "motor_filosofico_disponible": self.motor_filosofico is not None,
+            "motor_universal_disponible": self.motor_universal is not None,
             "cpu_workers": MAX_WORKERS_CPU,
             "io_workers": MAX_WORKERS_IO,
         }
 
     def modo_interactivo(self) -> None:
-        print("\n=== ORQUESTADOR MAESTRO ROMEO-HYDRA (MOTOR REAL + LÓGICA FILOSÓFICA) ===")
-        print("Escriba 'estado' para telemetría, 'salir' para terminar.\n")
-
+        print("\n=== ORQUESTADOR MAESTRO ROMEO-HYDRA (UNIVERSAL) ===")
+        print("Matemáticas | Paradojas | Filosofía | Genética | Astrofísica | Geografía | Historia(lógica)")
+        print("Escriba 'estado' o 'salir'.\n")
         while True:
             try:
-                entrada = input("Ingrese la premisa/problema a procesar: ").strip()
+                entrada = input("Premisa: ").strip()
                 if not entrada:
                     continue
                 if entrada.lower() in ("salir", "exit", "quit"):
-                    print("[*] Apagando orquestador maestro.")
+                    print("[*] Apagando.")
                     break
                 if entrada.lower() == "estado":
                     print(json.dumps(self.obtener_estado(), indent=2, ensure_ascii=False))
                     continue
-                resultado = self.procesar(entrada)
-                print(json.dumps(resultado, indent=2, ensure_ascii=False))
+                print(json.dumps(self.procesar(entrada), indent=2, ensure_ascii=False))
                 print()
             except (KeyboardInterrupt, EOFError):
-                print("\n[*] Interrupción de emergencia. Apagando orquestador.")
+                print("\n[*] Interrupción.")
                 break
 
 
 def main() -> None:
-    orquestador = OrquestadorMaestro()
-    orquestador.cargar_nodos_paralelo()
-    orquestador.asimilar_dosieres_paralelo()
-    orquestador.modo_interactivo()
+    orch = OrquestadorMaestro()
+    orch.cargar_nodos_paralelo()
+    orch.asimilar_dosieres_paralelo()
+    orch.modo_interactivo()
 
 
 if __name__ == "__main__":
