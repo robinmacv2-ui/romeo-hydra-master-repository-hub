@@ -198,7 +198,7 @@ export const QuantumConvexSimulator: React.FC = () => {
       ctx.stroke();
     }
 
-    // Draw Current Particle Position (Luis Ángel Particle P_LAM)
+    // Draw Current Particle Position (Luis Angel Particle P_LAM)
     const currX = stateX[0] * width;
     const currY = (1.0 - stateX[1]) * height;
 
@@ -348,7 +348,7 @@ export const QuantumConvexSimulator: React.FC = () => {
           </div>
         </div>
 
-        {/* Right Side: Parameter Sliders & Math Theorem Card */}
+        {/* Right Side: Parameter Sli ders & Math Theorem Card */}
         <div className="lg:col-span-5 space-y-6">
 
           {/* Mathematical Postulate Overview Box */}
@@ -365,7 +365,7 @@ export const QuantumConvexSimulator: React.FC = () => {
               </div>
 
               <p className="text-slate-400 text-[11px]">
-                Cuando <code className="text-cyan-300">λ_min(H_Σ) = 0</code>, la composición del operador de aislamiento topológico <code className="text-cyan-300">A_ε ∘ P_LAM</code> fuerza la bifurcación determinista 1-&gt;4 y restringe la ejecución a un estado bloqueado fuera de C.
+                Cuando <code className="text-cyan-300">λ_min(H_Σ) = 0</code>, la composición del operador de aislamiento topológico <code className="text-cyan-300">A_ε ∘ P_LAM</code> fuerza la bifurcación determinista 1->4 y restringe la ejecución a un estado bloqueado fuera de C.
               </p>
 
               <div className="grid grid-cols-2 gap-2 text-[11px] font-mono">
