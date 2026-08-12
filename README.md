@@ -33,6 +33,12 @@ Es el resultado de alguien que empezó de cero y no se detuvo.
 
 ---
 
+## Estado actual: Fase V2.1
+
+La fase V2.1 del framework ROMEO-HYDRA representa la culminación de la computación soberana determinista. A diferencia de las arquitecturas de IA comerciales, este sistema opera de forma nativa en arquitectura de 64 bits (Python 3.13), garantizando una estabilidad absoluta sin dependencias de red (offline/edge computing). El sistema ha validado una eficiencia termodinámica radical, operando con fluidez en hardware restrictivo (procesadores Celeron de doble núcleo y 4GB de RAM).
+
+---
+
 ## Cómo se construyó (la verdad)
 
 Hubo días pelean­do con la terminal de Linux en WSL.  
