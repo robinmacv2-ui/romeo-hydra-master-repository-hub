@@ -4,7 +4,7 @@ export const ZENODO_DOIS: ZenodoDoi[] = [
   {
     id: 1,
     doi: "10.5281/zenodo.1000001",
-    title: "DOI 1: Núcleo Algorítmico RAEK-1.0-MX y Partícula de Luis Ángel",
+    title: "DOI 1: Núcleo Algorítmico RAEK-1.0-MX y Partícula de Luis Angel",
     category: "Algoritmos y Física Computacional",
     description: "Formulación matemática del operador P_LAM y proyectores homeostáticos sobre subconjuntos compactos convexos.",
     isoStandard: "ISO/IEC 42001 Cláusula 6.2 (Gobernanza Algorítmica)",
@@ -138,7 +138,7 @@ export const MASTER_REPO_FILES: RepoFile[] = [
 ---
 
 ## 1. POSTULADO DE INVARIANZA HOMEOSTÁTICA
-**bajo el Flujo de Coherencia Lógico-Convexa (ε-Invarianza + Partícula de Luis Ángel)**
+**bajo el Flujo de Coherencia Lógico-Convexa (ε-Invarianza + Partícula de Luis Angel)**
 
 Sea $$\\Omega$$ una variedad diferenciable de dimensión finita munida de una métrica riemanniana $$g$$. Sea $$C \\subset \\Omega$$ un subconjunto compacto y convexo (envolvente de admisibilidad) definido por:
 
@@ -148,7 +148,7 @@ con parámetros de operación $$\\tau > 0$$ y $$\\varepsilon > 0$$. Sea $$H_\\Si
 
 $$\\Sigma_\\Lambda(x) = -\\sum_i w_i \\ln x_i + \\frac{1}{2} x^\\top A x + \\Lambda_{\\mathrm{LAM}} V_{\\mathrm{bif}}(x)$$
 
-y sea $$I_\\Lambda = \\Sigma_\\Lambda - \\lambda H$$ el funcional de energía libre. El flujo de gradiente natural restringido está dado por el operador de la **Partícula de Luis Ángel**:
+y sea $$I_\\Lambda = \\Sigma_\\Lambda - \\lambda H$$ el funcional de energía libre. El flujo de gradiente natural restringido está dado por el operador de la **Partícula de Luis Angel**:
 
 $$\\frac{dx}{dt} = P_{\\mathrm{LAM}}\\left(-g^{ij}\\partial_j I_\\Lambda\\right), \\qquad P_{\\mathrm{LAM}}(x) = \\delta_C(x) \\cdot \\Pi_C\\left(B_{\\mathrm{LAM}}(x)\\right)$$
 
@@ -174,7 +174,7 @@ induce una bifurcación de fase determinista $$1 \\to 4$$ sobre la base ortonorm
 
 | ID DOI | Módulo / Documento | Dominio Técnico | Estándar ISO/IEC |
 | :--- | :--- | :--- | :--- |
-| **DOI 1** | \`src/experimento_hydra.py\` | Núcleo Algorítmico y Partícula de Luis Ángel | ISO/IEC 42001 Cl. 6.2 |
+| **DOI 1** | \`src/experimento_hydra.py\` | Núcleo Algorítmico y Partícula de Luis Angel | ISO/IEC 42001 Cl. 6.2 |
 | **DOI 2** | \`docs/especificaciones_hardware.md\` | Chip Ciberfísico y Topología Óptica | IEEE 1588 / ISO 27001 |
 | **DOI 3** | \`src/simulador_tarjeta_logica.py\` | Experimentos de Validación Empírica | ISO/IEC 25010 |
 | **DOI 4** | \`docs/manifiesto_logica_convexa.md\` | Manifiesto de Lógica Convexa (CLC v1.2) | ISO/IEC 15408 |
@@ -235,7 +235,7 @@ El Índice de Estabilidad Homeostática (HSI) se define como:
 
 $$\\mathrm{HSI}(x) = \\frac{\\det(\\nabla^2 L(x))}{\\det(\\nabla^2 L(x)) + \\|\\nabla I_\\Lambda(x)\\|^2 + (1 - \\delta_C(x))}$$
 
-Bajo el régimen del operador de la Partícula de Luis Ángel $$P_{\\mathrm{LAM}}$$, se demuestra que:
+Bajo el régimen del operador de la Partícula de Luis Angel $$P_{\\mathrm{LAM}}$$, se demuestra que:
 
 $$\\mathrm{HSI}(x) \\equiv 1.000000 \\quad \\forall t \\ge 0$$
 
@@ -253,7 +253,7 @@ Garantizando la invarianza absoluta del sistema bajo cualquier régimen de acele
     sha256: "1f2e3d4c5b6a7f8e9d0c1b2a3f4e5d6c7b8a9f0e1d2c3b4a5f6e7d8c9b0a1f2",
     content: `# ESPECIFICACIONES DE HARDWARE: TARJETA LÓGICA ROMEO-HYDRA
 > **Referencia DOI**: DOI 10.5281/zenodo.1000002
-> **Arquitectura**: Chip Ciberfísico Fotónico de Luis Ángel (LAVM-Chip-v3)
+> **Arquitectura**: Chip Ciberfísico Fotónico de Luis Angel (LAVM-Chip-v3)
 
 ## 1. Topología Óptica y Guías de Onda
 La Tarjeta Lógica ROMEO-HYDRA integra una red fotónica sobre silicio sobre aislante (SOI) con guías de onda monomodo de $$450 \\text{ nm} \\times 220 \\text{ nm}$$ para la modulación de energía libre a velocidad sub-nanosegundo.
@@ -278,7 +278,7 @@ La Tarjeta Lógica ROMEO-HYDRA integra una red fotónica sobre silicio sobre ais
 \`\`\`
 
 ## 3. Criterio de Sincronización Hardware IEEE 1588
-El bus de eventos del chip ejecuta el protocolo de sellado determinista registrando cada iteración de la Partícula de Luis Ángel en el hardware ledger inmutable con resolución temporal de 10 picosegundos.
+El bus de eventos del chip ejecuta el protocolo de sellado determinista registrando cada iteración de la Partícula de Luis Angel en el hardware ledger inmutable con resolución temporal de 10 picosegundos.
 `
   },
   {
@@ -287,14 +287,14 @@ El bus de eventos del chip ejecuta el protocolo de sellado determinista registra
     folder: "src",
     type: "python",
     size: "5.2 KB",
-    description: "Núcleo ejecutable en Python que implementa la Partícula de Luis Ángel, el operador A_epsilon y la verificación de 0 escapes.",
+    description: "Núcleo ejecutable en Python que implementa la Partícula de Luis Angel, el operador A_epsilon y la verificación de 0 escapes.",
     doiReference: "DOI 10.5281/zenodo.1000001",
     sha256: "8a4f91b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0",
     content: `#!/usr/bin/env python3
 """
 NÚCLEO EJECUTABLE LOCAL ROMEO-HYDRA v3.0
 =========================================
-Implementación de la Partícula de Luis Ángel (P_LAM) y Operador de Aislamiento Topológico (A_epsilon).
+Implementación de la Partícula de Luis Angel (P_LAM) y Operador de Aislamiento Topológico (A_epsilon).
 Consolidación de Gobernanza Determinista under CLC v1.2.
 Autor / Fundador: LUIS ANGEL VAZQUEZ MARTINEZ
 Firma Criptográfica: 0xLAVM_PPRH_HYDRA_V3_CRISTALIZADO
