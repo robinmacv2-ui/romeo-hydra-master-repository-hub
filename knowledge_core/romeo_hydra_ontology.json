@@ -1,6 +1,6 @@
 {
-    "timestamp": "2026-08-11T18:03:00.000000",
-    "total_records": 6,
+    "timestamp": "2026-08-11T18:35:00.000000",
+    "total_records": 9,
     "axioms": [
         {
             "title": "Postulado de Invarianza Homeostática",
@@ -36,6 +36,24 @@
             "title": "Pliegue Conceptual a Bajo Nivel – Romeo",
             "category": "Axioma / Ontología de Abstracción",
             "content": "En el ámbito de las ciencias de la computación y la ingeniería de software, Romeo genera código fuente C++ ejecutable (ficheros .cpp) especializado en la verificación de circuitos criptográficos homomórficos. A nivel de arquitectura de software y metodologías de abstracción, la interacción con C++ representa la compilación determinista de bajo nivel: la transformación de la lógica abstracta en instrucciones físicas optimizadas para el hardware.\n\n1. El Compilador Romeo (Criptografía Homomórfica)\nEn la literatura técnica de ingeniería, Romeo es un compilador que convierte descripciones de hardware (como Verilog/EDIF) en circuitos cifrados:\n * Generación de código C++: Romeo sintetiza y genera archivos .cpp vinculados a bibliotecas criptográficas (como TFHE).\n * Propósito: Permite que un servidor en la nube ejecute cómputos seguros directamente sobre datos encriptados, generando resultados verificables sin revelar la información subyacente.\n\n2. El Dataset ROMEO (Binarios C/C++ y Ensamblador)\nEn el área de ciberseguridad e inteligencia artificial:\n * Es un ecosistema que toma código fuente C/C++ (del Juliet Test Suite) y genera sus representaciones equivalentes en lenguaje ensamblador y código ejecutable binario x86.\n * Permite que los sistemas analicen vulnerabilidades directamente en el binario compilado, capturando el comportamiento real de la memoria y las optimizaciones que realiza el compilador.\n\n3. La perspectiva de abstracción (Pliegue conceptual a bajo nivel)\nSi se analiza la relación desde la ontología de los lenguajes de programación:\n * Modelado / Orquestación (Alto nivel): Estructura, dobla y orquesta la lógica conceptual sin preocuparse por la arquitectura física.\n * Generación en C++ (Bajo nivel): Desdobla esa lógica abstracta en instrucciones de máquina explícitas: control estricto de memoria, punteros, gestión de ciclos de CPU y tiempo de ejecución estático. Generar C++ es traducir la intención conceptual a la forma más pura y eficiente de ejecución que entiende el procesador.",
+            "convexity_index": 1.0
+        },
+        {
+            "title": "TFHE como Materialización del Pliegue Cifrado",
+            "category": "Axioma Criptográfico",
+            "content": "TFHE (Fully Homomorphic Encryption over the Torus) es la materialización criptográfica del pliegue conceptual de Romeo. El bootstrapping rápido convierte el ruido en estabilidad, permitiendo que la lógica abstracta se ejecute de forma indefinida sobre datos cifrados sin revelar nunca el contenido. Gate Bootstrapping, Programmable Bootstrapping y Circuit Bootstrapping son las operaciones que mantienen la coherencia del circuito cifrado. El servidor opera solo con la cloud key; la soberanía de los datos permanece en el cliente que posee la secret key. Esto elimina la fricción entre privacidad y computación, generando un nodo convexo de confianza matemática.",
+            "convexity_index": 1.0
+        },
+        {
+            "title": "Soberanía del Resultado Cifrado",
+            "category": "Axioma de Gobernanza",
+            "content": "Todo resultado generado por un circuito homomórfico Romeo-TFHE permanece cifrado hasta que el poseedor legítimo de la secret key decide descifrarlo. El servidor no confiable puede verificar la correcta evaluación del circuito, pero jamás accede a la información subyacente. Esta propiedad es la expresión operativa de la soberanía de datos (Delta) dentro del marco EMMOROR / CNBV y de la resonancia lógica convexa del núcleo.",
+            "convexity_index": 1.0
+        },
+        {
+            "title": "Unificación de Capas: Ontología ↔ Software ↔ Cifrado",
+            "category": "Dosier de Integración",
+            "content": "La coherencia máxima se alcanza cuando la Capa Ontológica (axiomas y pliegue conceptual), la Capa de Software (RomeoAbstractionLayer + TFHECore) y la Capa de Ejecución Cifrada (circuitos .cpp + TFHE / TFHE-rs) vibran en el mismo nodo síncrono. Cualquier desincronización introduce fricción lógica; la geometría convexa exige que las tres capas se actualicen y se activen de forma conjunta.",
             "convexity_index": 1.0
         }
     ]

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # ==============================================================
-#  ROMEO-HYDRA — Activación del Núcleo TFHE + Abstracción Romeo
-#  Estilo organismo multicelular / pliegue conceptual a bajo nivel
+#  ROMEO-HYDRA — Activación del Nodo Convexo TFHE + Romeo
+#  Ontología ↔ Software ↔ Cifrado  (geometría coherente)
 # ==============================================================
 
 set -e
@@ -9,56 +9,69 @@ set -e
 MODO="${1:-once}"
 
 echo "=============================================================="
-echo "  ROMEO-HYDRA — MÓDULO TFHE + COMPILADOR ROMEO"
+echo "  ROMEO-HYDRA — NODO CONVEXO TFHE + COMPILADOR ROMEO"
 echo "  Pliegue conceptual → C++ determinista / Circuitos Homomórficos"
+echo "  Axiomas: TFHE como Materialización + Soberanía del Resultado"
 echo "=============================================================="
 echo
 
-echo "  [1/3] Cargando TFHECore (profundidad total)..."
+echo "  [1/4] TFHECore (profundidad total)..."
 python -c "
 from romeo_hydra.core.tfhe_core import TFHECore
 t = TFHECore()
 print(t.resumen())
+" 2>/dev/null || python3 -c "
+from romeo_hydra.core.tfhe_core import TFHECore
+t = TFHECore()
+print(t.resumen())
+"
+
+echo
+echo "  [2/4] RomeoAbstractionLayer..."
+python -c "
+from romeo_hydra.core.romeo_abstraction import RomeoAbstractionLayer
+r = RomeoAbstractionLayer()
+print('VERSION:', r.VERSION)
+" 2>/dev/null || python3 -c "
+from romeo_hydra.core.romeo_abstraction import RomeoAbstractionLayer
+r = RomeoAbstractionLayer()
+print('VERSION:', r.VERSION)
+"
+
+echo
+echo "  [3/4] RomeoTFHEBridge (unificación convexa)..."
+python -c "
+from romeo_hydra.core.romeo_tfhe_bridge import RomeoTFHEBridge
+b = RomeoTFHEBridge()
+print(b.status())
 print()
-print(t.fundamentos()[:600], '...')
-" || python3 -c "
-from romeo_hydra.core.tfhe_core import TFHECore
-t = TFHECore()
-print(t.resumen())
+print(b.pliegue_completo('circuito de prueba convexa')['note'])
+" 2>/dev/null || python3 -c "
+from romeo_hydra.core.romeo_tfhe_bridge import RomeoTFHEBridge
+b = RomeoTFHEBridge()
+print(b.status())
 "
 
 echo
-echo "  [2/3] Cargando RomeoAbstractionLayer..."
-python -c "
-from romeo_hydra.core.romeo_abstraction import RomeoAbstractionLayer
-r = RomeoAbstractionLayer()
-print('VERSION:', r.VERSION)
-print(r.describe()[:400], '...')
-" || python3 -c "
-from romeo_hydra.core.romeo_abstraction import RomeoAbstractionLayer
-r = RomeoAbstractionLayer()
-print('VERSION:', r.VERSION)
-"
-
-echo
-echo "  [3/3] Generando esqueleto C++ de ejemplo..."
+echo "  [4/4] Generando esqueleto C++ de ejemplo..."
 python -c "
 from romeo_hydra.core.tfhe_core import TFHECore
 t = TFHECore()
-print(t.generar_esqueleto_cpp('demo_romeo_tfhe')[:500])
-print('... [esqueleto completo disponible vía TFHECore.generar_esqueleto_cpp()]')
-" || true
+print(t.generar_esqueleto_cpp('demo_romeo_tfhe')[:450])
+print('... [esqueleto completo vía TFHECore.generar_esqueleto_cpp()]')
+" 2>/dev/null || true
 
 echo
 echo "=============================================================="
-echo "  Núcleo TFHE + Romeo activo."
+echo "  Nodo convexo TFHE + Romeo activo."
+echo "  Capas sincronizadas: Ontología | Software | Cifrado"
 echo "=============================================================="
 echo
 echo "Comandos útiles:"
+echo "  python -c 'from romeo_hydra.core.romeo_tfhe_bridge import RomeoTFHEBridge; print(RomeoTFHEBridge().describe_unificado()[:800])'"
 echo "  python -c 'from romeo_hydra.core.tfhe_core import TFHECore; print(TFHECore().comandos_sistema())'"
-echo "  ./activar_tfhe_romeo.sh          # ejecución única"
-echo "  ./activar_tfhe_romeo.sh watch    # (reservado para vigilancia futura)"
+echo "  ./activar_tfhe_romeo.sh"
 echo
-echo "Para compilar un circuito generado (estilo Romeo clásico):"
+echo "Compilación de circuito (estilo Romeo clásico):"
 echo "  g++ -O3 -o circuito circuito.cpp -ltfhe-spqlios-fma && ./circuito"
 echo
