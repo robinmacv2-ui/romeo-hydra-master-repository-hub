@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-ROMEO-HYDRA 0.1.0 (TRL-5)
+ROMEO-HYDRA 0.1.1 (TRL-5)
 =========================
 Ontological Framework & Biomimetic Computing Engine.
 
@@ -16,16 +16,17 @@ DOI Concept: https://doi.org/10.5281/zenodo.21744014
 
 from __future__ import annotations
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 __trl__ = "5"
 __status__ = "TRL-5: Component validation in relevant environment"
 __author__ = "Luis Ángel Vázquez Martínez"
 __license__ = "AGPL-3.0-or-later / Comercial EMMOROR"
 
-# ── Core (Abstracción + TFHE conceptual) ─────────────────────────────────────
+# ── Core (Abstracción + TFHE + HElib BGV/CKKS) ───────────────────────────────
 from romeo_hydra.core import (
     RomeoAbstractionLayer,
     TFHECore,
+    HElibCore,
     RomeoTFHEBridge,
 )
 
@@ -50,6 +51,7 @@ __all__ = [
     # Core
     "RomeoAbstractionLayer",
     "TFHECore",
+    "HElibCore",
     "RomeoTFHEBridge",
     # Kernel
     "KernelConfig",
@@ -75,4 +77,5 @@ def get_info() -> dict:
         "license": __license__,
         "doi_concept": "10.5281/zenodo.21744014",
         "python_requires": ">=3.11",
+        "he_backends": ["TFHE", "HElib (BGV/CKKS)"],
     }
