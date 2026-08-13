@@ -1,0 +1,64 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "romeo-hydra"
+version = "0.1.0"
+description = "ROMEO-HYDRA: Ontological Framework & Biomimetic Computing Engine — Kernel Sigma + Abstraction Layer (TRL-5)"
+readme = "PACKAGE_README.md"
+license = {text = "AGPL-3.0-or-later"}
+authors = [
+    {name = "Luis Ángel Vázquez Martínez", email = "robinmac.v2@gmail.com"}
+]
+maintainers = [
+    {name = "Luis Ángel Vázquez Martínez", email = "emmororromeohydra@gmail.com"}
+]
+keywords = ["romeo-hydra", "ontological", "biomimetic", "tfhe", "governance", "kernel-sigma", "homomorphic"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU Affero General Public License v3",
+    "License :: Other/Proprietary License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Security :: Cryptography",
+    "Typing :: Typed",
+]
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=1.24",
+]
+
+[project.optional-dependencies]
+full = [
+    "sympy>=1.12",
+    "biopython>=1.81",
+    "astropy>=5.3",
+]
+dev = [
+    "pytest>=7.0",
+    "ruff>=0.4",
+]
+
+[project.urls]
+Homepage = "https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub"
+Documentation = "https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub#readme"
+Repository = "https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub"
+"DOI (Concept)" = "https://doi.org/10.5281/zenodo.21744014"
+"Bug Tracker" = "https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub/issues"
+
+[project.scripts]
+romeo-hydra = "romeo_hydra.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["romeo_hydra*"]
+exclude = ["tests*", "examples*", "*.egg-info*"]
+
+[tool.setuptools.package-data]
+romeo_hydra = ["py.typed"]
