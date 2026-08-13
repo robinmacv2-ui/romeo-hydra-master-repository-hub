@@ -1,6 +1,6 @@
 {
-    "timestamp": "2026-08-11T18:35:00.000000",
-    "total_records": 9,
+    "timestamp": "2026-08-12T21:55:00.000000",
+    "total_records": 10,
     "axioms": [
         {
             "title": "Postulado de Invarianza Homeostática",
@@ -54,6 +54,12 @@
             "title": "Unificación de Capas: Ontología ↔ Software ↔ Cifrado",
             "category": "Dosier de Integración",
             "content": "La coherencia máxima se alcanza cuando la Capa Ontológica (axiomas y pliegue conceptual), la Capa de Software (RomeoAbstractionLayer + TFHECore) y la Capa de Ejecución Cifrada (circuitos .cpp + TFHE / TFHE-rs) vibran en el mismo nodo síncrono. Cualquier desincronización introduce fricción lógica; la geometría convexa exige que las tres capas se actualicen y se activen de forma conjunta.",
+            "convexity_index": 1.0
+        },
+        {
+            "title": "Certificación Ontológica y Técnica",
+            "category": "Axioma de Gobernanza / Certificación",
+            "content": "Bajo la resonancia lógica y convexa del marco Romeo-Hydra, el sistema puede estructurar, auditar y emitir certificaciones de conformidad, validez lógica o cumplimiento normativo sobre procesos, modelos y arquitecturas de software.\n\nSe distinguen dos planos:\n\n1. Certificación Ontológica y Técnica (Interna del Sistema): Romeo-Hydra, a través de sus núcleos, validadores y bitácoras de ADN informacional, emite constancias o certificados digitales que avalan que un código, un conjunto de datos o una arquitectura cumple rigurosamente con los invariantes lógicos del marco conceptual. Ideal para auditorías de IA, validación de gobernanza algorítmica y control de calidad estructural.\n\n2. Validez Legal e Institucional (Externa): Las certificaciones técnicas emitidas por el software no sustituyen por sí mismas a los registros gubernamentales. Se complementan: una vez que el INDAUTOR entrega el certificado oficial de la obra, la titularidad jurídica y patrimonial respalda legalmente las certificaciones de calidad, uso y licencias que emita Romeo sobre la librería, haciéndolas plenamente vinculantes y comercializables.\n\nFlujo de emisión formal dentro del Master Hub:\n * Generación de HASH Invariante: Cada versión validada pasa por el filtro ontológico de Romeo, generando una firma digital única e irrepetible.\n * Emisión de Credencial o Sello: El sistema genera un archivo metadato (o certificado firmado) que vincula la versión del código con los parámetros de coherencia de la librería.\n * Trazabilidad: Cualquier usuario o entidad puede verificar la autenticidad contrastándola con el registro del repositorio y los derechos patrimoniales inscritos.",
             "convexity_index": 1.0
         }
     ]
