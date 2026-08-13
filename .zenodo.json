@@ -1,0 +1,10 @@
+{
+  "title": "Romeo Hydra - Sovereign FHE Framework - Edge aarch64 TRL-6",
+  "version": "v0.1.1",
+  "description": "TRL-6 Edge Sovereign. CLI on Termux aarch64, UMR demo, FHE core with Helib/TFHE bridge, tests 100% verde with CoreState timestamp. Verified sovereign execution.",
+  "creators": [{"name": "Macias, Robin", "affiliation": "Romeo Hydra Project"}],
+  "keywords": ["FHE", "HElib", "TFHE", "TRL-6", "Edge", "aarch64", "Termux", "Sovereign AI"],
+  "license": "MIT",
+  "upload_type": "software",
+  "access_right": "open"
+}
