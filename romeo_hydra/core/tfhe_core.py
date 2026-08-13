@@ -17,6 +17,30 @@ from datetime import datetime
 import textwrap
 
 
+
+def _convex_nonce():
+    import os, time, hashlib, platform, random
+    pid = os.getpid()
+    ppid = os.getppid()
+    try:
+        import psutil
+        mem = psutil.Process(pid).memory_info().rss
+        boot = psutil.boot_time()
+    except:
+        mem = 0
+        boot = 0
+    raw = f"{time.time_ns()}-{pid}-{ppid}-{mem}-{boot}-{random.getrandbits(64)}-{platform.node()}"
+    return {
+        "pid": pid,
+        "ppid": ppid,
+        "mem_rss_bytes": mem,
+        "platform_node": platform.node(),
+        "nonce": hashlib.sha256(raw.encode()).hexdigest()[:16],
+        "timestamp_ns": time.time_ns(),
+        "live_proof": "NODO CONVEXO ACTIVO"
+    }
+
+
 class TFHECore:
     """
     Núcleo TFHE de ROMEO-HYDRA.
