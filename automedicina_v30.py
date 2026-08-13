@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
 ROMEO-HYDRA V3.0 — Sistema Inmunologico
+Incluye vigilancia del invariante Eukaris (regeneración / abundancia).
 """
 
 from __future__ import annotations
@@ -25,6 +26,10 @@ class Config:
         Tejido("motor_mitosis.py", 400),
         Tejido("automedicina_v30.py", 400),
         Tejido("activar_romeo_hydra_v30.sh", 200),
+        # Invariante de regeneración — Dra. Eukaris Zerpa
+        Tejido("core/eukaris_affirmations.py", 800),
+        Tejido("orquestador_dinamico.py", 1000),
+        Tejido("inject_eukaris_global.py", 400),
     ])
     umbral: float = 0.70
 
@@ -73,6 +78,14 @@ def main() -> int:
     total = len(cfg.tejidos)
     ratio = sanos / total if total else 0.0
     print(f"\n[INTEGRIDAD] {sanos}/{total} ({ratio:.0%})")
+
+    # Resonancia Eukaris
+    try:
+        from core.eukaris_affirmations import cargar_invariante
+        inv = cargar_invariante()
+        print(f"[EUKARIS] Invariante activo — {len(inv.afirmaciones)} afirmaciones de regeneración/abundancia.")
+    except Exception:
+        print("[EUKARIS] Invariante no cargado en este ciclo (no crítico).")
 
     if ratio >= cfg.umbral:
         print("[ESTADO] Estabilidad convexa - todos los tejidos sanos.")

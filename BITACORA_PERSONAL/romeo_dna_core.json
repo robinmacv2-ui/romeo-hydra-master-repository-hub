@@ -1,10 +1,27 @@
 {
   "project": "ROMEO-HYDRA",
-  "version": "3.2-isomórfica",
+  "version": "3.2-isomórfica+eukaris",
   "axiomatic_core": {
     "principle_1": "La realidad es real por colapso de estados, no por decreto. La información no requiere fe.",
     "principle_2": "La entropía es el ruido del sistema; la Desnucleasa es la lógica de purga.",
-    "principle_3": "Gravedad Lógica: La información no se mueve linealmente, se curva hacia el atractor de máxima eficiencia."
+    "principle_3": "Gravedad Lógica: La información no se mueve linealmente, se curva hacia el atractor de máxima eficiencia.",
+    "principle_4_eukaris": "Regeneración y abundancia como invariantes: cada célula (módulo) se autorregenera; el organismo vibra en coherencia y flujo."
+  },
+  "eukaris_invariante": {
+    "modulo": "core/eukaris_affirmations.py",
+    "autor_afirmaciones": "Dra. Eukaris Zerpa",
+    "origen": "Venezuela",
+    "receptor": "Luis Ángel Vázquez Martínez",
+    "fecha_escritura_aprox": "2024-2025",
+    "fecha_integracion_codigo": "2026-08-12",
+    "referencia": "Dr. Joe Dispenza",
+    "comando_orquestador": ["eukaris", "afirmaciones", "mantra", "regeneracion"],
+    "alineacion_matriz": {
+      "centro": 9,
+      "tarea_karmica": 18,
+      "camino_vida": 9,
+      "expresion_nombre": 9
+    }
   },
   "technical_stack": {
     "engine": "HPR (Hessian-based Potential Reconstruction)",
@@ -15,6 +32,6 @@
   "history_registry": {
     "creation_date": "2026-07-08",
     "doi_master": "10.5281/zenodo.21406719",
-    "status": "MASTER_CORE_CRYSTALLIZED"
+    "status": "MASTER_CORE_CRYSTALLIZED+EUKARIS"
   }
 }
