@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
 ROMEO-HYDRA V3.0 — Nucleo Central
+Incluye resonancia del invariante Eukaris (regeneración / abundancia).
 """
 
 from __future__ import annotations
@@ -46,9 +47,19 @@ def predecir_riesgo(historial: list) -> float:
     riesgo = max(0.0, df) * 2.0 + max(0.0, -dr) * 1.8 + (1.0 - resp[-1]) * 0.6
     return round(min(1.0, riesgo), 4)
 
+def resonar_eukaris() -> None:
+    """Carga el invariante de regeneración si está disponible."""
+    try:
+        from core.eukaris_affirmations import cargar_invariante
+        inv = cargar_invariante()
+        print(f"[EUKARIS] Resonancia activa — {len(inv.afirmaciones)} afirmaciones | regeneración celular alineada.")
+    except Exception:
+        pass
+
 def main() -> int:
     cfg = ConfigV30()
     print("[NUCLEO V3.0] Iniciando organismo multicelular...")
+    resonar_eukaris()
 
     entorno = tejido_sensorial.leer_entorno()
     friccion = entorno["friccion"]
@@ -121,7 +132,7 @@ def main() -> int:
         "mitosis_celulas": len(resultados_mitosis),
         "bonus_mitosis": round(bonus_mitosis, 4),
         "conduccion_optima": respuesta >= cfg.umbral_conduccion,
-        "modo": "V3.0_MULTICELULAR"
+        "modo": "V3.0_MULTICELULAR+EUKARIS"
     }
     tejido_memoria.guardar_metricas(metricas)
 
