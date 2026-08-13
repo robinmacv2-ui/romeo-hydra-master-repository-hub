@@ -1,6 +1,6 @@
 {
-    "timestamp": "2026-08-12T21:55:00.000000",
-    "total_records": 10,
+    "timestamp": "2026-08-12T22:05:00.000000",
+    "total_records": 11,
     "axioms": [
         {
             "title": "Postulado de Invarianza Homeostática",
@@ -45,15 +45,21 @@
             "convexity_index": 1.0
         },
         {
+            "title": "HElib como Motor Aritmético Matricial (BGV/CKKS)",
+            "category": "Axioma Criptográfico",
+            "content": "HElib (basada en los esquemas BGV y CKKS) es el motor aritmético del marco Romeo-Hydra. Está optimizada para operaciones aritméticas matriciales y vectoriales (álgebra lineal, multiplicaciones y sumas de números enteros o de punto flotante grandes en paralelo). Es la preferida cuando se necesita procesamiento pesado de datos numéricos o modelos matemáticos densos, como los requeridos en RegTech y analítica financiera profunda.\n\nBGV aporta aritmética exacta y batching SIMD; CKKS aporta aritmética aproximada sobre reales/complejos. Ambos conviven con TFHE bajo la misma geometría convexa: TFHE para circuitos booleanos y control lógico; HElib para el cómputo numérico denso. La soberanía del resultado cifrado se mantiene: el servidor evalúa sin ver los datos; solo el poseedor de la secret key descifra.",
+            "convexity_index": 1.0
+        },
+        {
             "title": "Soberanía del Resultado Cifrado",
             "category": "Axioma de Gobernanza",
-            "content": "Todo resultado generado por un circuito homomórfico Romeo-TFHE permanece cifrado hasta que el poseedor legítimo de la secret key decide descifrarlo. El servidor no confiable puede verificar la correcta evaluación del circuito, pero jamás accede a la información subyacente. Esta propiedad es la expresión operativa de la soberanía de datos (Delta) dentro del marco EMMOROR / CNBV y de la resonancia lógica convexa del núcleo.",
+            "content": "Todo resultado generado por un circuito homomórfico Romeo-TFHE o Romeo-HElib permanece cifrado hasta que el poseedor legítimo de la secret key decide descifrarlo. El servidor no confiable puede verificar la correcta evaluación del circuito, pero jamás accede a la información subyacente. Esta propiedad es la expresión operativa de la soberanía de datos (Delta) dentro del marco EMMOROR / CNBV y de la resonancia lógica convexa del núcleo.",
             "convexity_index": 1.0
         },
         {
             "title": "Unificación de Capas: Ontología ↔ Software ↔ Cifrado",
             "category": "Dosier de Integración",
-            "content": "La coherencia máxima se alcanza cuando la Capa Ontológica (axiomas y pliegue conceptual), la Capa de Software (RomeoAbstractionLayer + TFHECore) y la Capa de Ejecución Cifrada (circuitos .cpp + TFHE / TFHE-rs) vibran en el mismo nodo síncrono. Cualquier desincronización introduce fricción lógica; la geometría convexa exige que las tres capas se actualicen y se activen de forma conjunta.",
+            "content": "La coherencia máxima se alcanza cuando la Capa Ontológica (axiomas y pliegue conceptual), la Capa de Software (RomeoAbstractionLayer + TFHECore + HElibCore) y la Capa de Ejecución Cifrada (circuitos .cpp + TFHE / TFHE-rs + HElib BGV/CKKS) vibran en el mismo nodo síncrono. Cualquier desincronización introduce fricción lógica; la geometría convexa exige que las capas se actualicen y se activen de forma conjunta. TFHE cubre la lógica booleana; HElib cubre la aritmética matricial y vectorial para RegTech y analítica financiera.",
             "convexity_index": 1.0
         },
         {
