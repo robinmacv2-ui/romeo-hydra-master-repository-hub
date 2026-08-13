@@ -15,6 +15,7 @@ Objetivos:
     5. Historia → solo resolución lógica (sin hechos afirmados).
     6. Delegar el resto al motor ROMEO/Bibliotecario.
     7. No ejecutar eval() sobre entrada del usuario.
+    8. Mantener activo el invariante Eukaris (regeneración / abundancia).
 """
 
 from __future__ import annotations
@@ -280,6 +281,7 @@ class OrquestadorMaestro:
         self.biblioteca: Optional[Any] = None
         self.motor_filosofico: Optional[Any] = None
         self.motor_universal: Optional[Any] = None
+        self.invariante_eukaris: Optional[Dict[str, Any]] = None
 
     def cargar_nodos_paralelo(self) -> None:
         log.info("Sincronizando nodos ROMEO-HYDRA...")
@@ -308,6 +310,16 @@ class OrquestadorMaestro:
         except Exception as e:
             log.warning("razonamiento_universal: %s", e)
 
+        # Invariante Eukaris
+        try:
+            from core.eukaris_affirmations import compilar_en_nucleo
+            self.invariante_eukaris = compilar_en_nucleo()
+            total = self.invariante_eukaris["invariante"]["total_afirmaciones"]
+            log.info("[NÚCLEO] %-25s → ACTIVO     | %d afirmaciones (Dra. Eukaris Zerpa)",
+                     "eukaris_affirmations", total)
+        except Exception as e:
+            log.warning("eukaris_affirmations: %s", e)
+
         try:
             with ProcessPoolExecutor(max_workers=min(len(NODOS_NUCLEO), MAX_WORKERS_CPU)) as pool:
                 futuros = {pool.submit(inicializar_nodo_worker, n): n for n in NODOS_NUCLEO}
@@ -330,15 +342,37 @@ class OrquestadorMaestro:
         log.info("Asimilación: %d/%d | %s bytes", ok, len(self.dosieres_asimilados), f"{total:,}")
 
     def detectar_intencion(self, consulta: str) -> str:
+        n = normalizar_texto(consulta)
+        if n in ("eukaris", "afirmaciones", "mantra", "regeneracion", "regeneración"):
+            return "eukaris"
         if parece_matematica(consulta):
             return "math"
-        # El motor universal clasifica el resto
         return "universal"
+
+    def responder_eukaris(self) -> ResultadoConsulta:
+        inicio = time.perf_counter()
+        if not self.invariante_eukaris:
+            return ResultadoConsulta(
+                status="error", intent="eukaris",
+                error="Invariante Eukaris no cargado",
+                elapsed_ms=(time.perf_counter() - inicio) * 1000,
+            )
+        return ResultadoConsulta(
+            status="success",
+            intent="eukaris",
+            result={
+                "mantra": self.invariante_eukaris["mantra_diario"],
+                "total": self.invariante_eukaris["invariante"]["total_afirmaciones"],
+                "meta": self.invariante_eukaris["invariante"]["meta"],
+                "nota": self.invariante_eukaris["nota"],
+            },
+            source="core.eukaris_affirmations",
+            elapsed_ms=(time.perf_counter() - inicio) * 1000,
+        )
 
     def delegar_universal(self, consulta: str) -> ResultadoConsulta:
         inicio = time.perf_counter()
         if self.motor_universal is None:
-            # Fallback al filosófico si existe
             if self.motor_filosofico:
                 try:
                     res = self.motor_filosofico.procesar(consulta)
@@ -391,18 +425,19 @@ class OrquestadorMaestro:
     def procesar(self, consulta: str) -> Dict[str, Any]:
         intencion = self.detectar_intencion(consulta)
 
+        if intencion == "eukaris":
+            return self.responder_eukaris().as_dict()
+
         if intencion == "math":
             res = resolver_matematica(consulta)
             if res.status == "success":
                 return res.as_dict()
             log.warning("Math local falló (%s). Pasando a motor universal.", res.error)
 
-        # Cualquier otra cosa → motor universal (paradojas, filosofía, ciencias, historia lógica…)
         res = self.delegar_universal(consulta)
         if res.status == "success":
             return res.as_dict()
 
-        # Último recurso
         return self.delegar_romeo(consulta).as_dict()
 
     def obtener_estado(self) -> Dict[str, Any]:
@@ -415,13 +450,19 @@ class OrquestadorMaestro:
             "biblioteca_disponible": self.biblioteca is not None,
             "motor_filosofico_disponible": self.motor_filosofico is not None,
             "motor_universal_disponible": self.motor_universal is not None,
+            "eukaris_disponible": self.invariante_eukaris is not None,
+            "eukaris_total_afirmaciones": (
+                self.invariante_eukaris["invariante"]["total_afirmaciones"]
+                if self.invariante_eukaris else 0
+            ),
             "cpu_workers": MAX_WORKERS_CPU,
             "io_workers": MAX_WORKERS_IO,
         }
 
     def modo_interactivo(self) -> None:
-        print("\n=== ORQUESTADOR MAESTRO ROMEO-HYDRA (UNIVERSAL) ===")
+        print("\n=== ORQUESTADOR MAESTRO ROMEO-HYDRA (UNIVERSAL + EUKARIS) ===")
         print("Matemáticas | Paradojas | Filosofía | Genética | Astrofísica | Geografía | Historia(lógica)")
+        print("Eukaris: eukaris | afirmaciones | mantra | regeneracion")
         print("Escriba 'estado' o 'salir'.\n")
         while True:
             try:
