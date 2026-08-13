@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+title: "Romeo Hydra Master Repository Hub"
+version: 0.1.1
+doi: 10.5281/zenodo.21918611
+message: "If you use this software, please cite it as below."
+authors:
+    - family-names: Macias
+    given-names: Robin
+    orcid: https://orcid.org/0009-0000-0000-0000
+license: MIT
+repository-code: "https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub"
+keywords: [FHE, HElib, TFHE, TRL-6, Edge, aarch64, Termux, Zenodo, DOI]
