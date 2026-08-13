@@ -1,88 +1,71 @@
-# ROMEO-HYDRA 0.1.0 — TRL-5
+# ROMEO-HYDRA 0.1.1 — TRL-5/6
 
 **Ontological Framework & Biomimetic Computing Engine**
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21744014.svg)](https://doi.org/10.5281/zenodo.21744014)
+[![TRL](https://img.shields.io/badge/TRL-5%2F6-orange.svg)](https://en.wikipedia.org/wiki/Technology_readiness_level)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-AGPL--3.0%20%2F%20Comercial-green.svg)](#licencia)
-[![TRL](https://img.shields.io/badge/TRL-5-orange.svg)](https://en.wikipedia.org/wiki/Technology_readiness_level)
+[![Tests](https://img.shields.io/badge/tests-no--plaintext--leak-success.svg)](#tests-trl-6)
 
 > Paradigm shift from brute-force hardware scaling to **ontological coherence**.
 
-## Qué es esto (UMR TRL-5)
+## Qué es esto
 
-Paquete Python limpio e instalable que expone el núcleo estable de ROMEO-HYDRA:
+Paquete Python limpio e instalable del núcleo estable de ROMEO-HYDRA:
 
-- **Kernel Sigma V∞** — controlador de estabilidad con proyección, criba 6k, métricas de Hessiano y adaptador mimético multi-espectro.
-- **Romeo Abstraction Layer** — pliegue conceptual ↔ generación de esqueletos C++ orientados a verificación de circuitos (estilo TFHE).
+- **Kernel Sigma V∞** — controlador de estabilidad, proyección, criba 6k, Hessiano y adaptador mimético multi-espectro.
+- **Romeo Abstraction Layer** — pliegue conceptual ↔ esqueletos C++ orientados a verificación de circuitos (estilo TFHE/HElib).
 - **Cerebro Resonador 72/19** — módulo de resonancia ontológica.
 
-Nivel **TRL-5**: validación de componentes en entorno relevante (ejecutable offline, determinista, auditable).
+**TRL-5 sellado** · **TRL-6 en curso** (tests de no-exposición de plaintext + estabilidad).
 
 ## Instalación
 
 ```bash
-# Desde el repositorio (recomendado para desarrollo)
 git clone https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub.git
 cd romeo-hydra-master-repository-hub
 pip install -e .
-
-# O solo las dependencias mínimas
-pip install numpy
+# opcional: tests
+pip install -e ".[dev]"
+pytest tests/ -q
 ```
 
-## Uso rápido (demo reproducible)
+## Uso rápido
 
 ```bash
 python -m romeo_hydra
+python examples/umr_trl5_demo.py
 ```
 
-O desde código:
-
 ```python
+from romeo_hydra import get_info, KernelConfig, KernelSigmaController, RomeoAbstractionLayer
 import numpy as np
-from romeo_hydra import (
-    KernelConfig,
-    KernelSigmaController,
-    RomeoAbstractionLayer,
-    get_info,
-)
 
 print(get_info())
 
-# Kernel de estabilidad
 cfg = KernelConfig(state_dimension=64)
 kernel = KernelSigmaController(cfg)
-current = np.zeros(64)
-candidate = np.random.randn(64) * 0.2
-result = kernel.evaluate_and_collapse(current, candidate)
+result = kernel.evaluate_and_collapse(np.zeros(64), np.random.randn(64)*0.2)
 print(result.final_entropy, result.hessian_ok)
-
-# Capa de abstracción
-romeo = RomeoAbstractionLayer()
-print(romeo.fold_high_level("coherencia lógica convexa"))
 ```
 
-## Estructura del paquete
+## Tests TRL-6
 
+```bash
+pytest tests/test_no_plaintext_leak.py tests/test_kernel_stability.py -v
 ```
-romeo_hydra/
-├── __init__.py          # API pública + metadatos TRL-5
-├── __main__.py          # CLI mínima (python -m romeo_hydra)
-├── py.typed
-├── core/
-│   ├── romeo_abstraction.py
-│   ├── tfhe_core.py
-│   └── romeo_tfhe_bridge.py
-└── kernel/
-    ├── sigma_chameleon.py   # Kernel Sigma + MimeticSurfaceAdapter
-    └── cerebro_7219.py
-```
+
+Cubre:
+- Determinismo del hash de CoreState
+- Ningún fenotipo del adaptador mimético contiene secretos en claro
+- Abstraction Layer no genera stubs con claves
+- Proyección correcta del Kernel cuando la entropía supera la tolerancia
 
 ## Licencia Dual
 
 - **AGPL-3.0** → investigación, academia, evaluación y uso no comercial.
-- **Comercial EMMOROR** → producción en entidades financieras / reguladas (CNBV y equivalentes).
+- **Comercial EMMOROR** → producción en entidades financieras / reguladas.
 
 Contacto comercial: **emmororromeohydra@gmail.com**
 
@@ -92,19 +75,13 @@ Contacto comercial: **emmororromeohydra@gmail.com**
 @software{romeo_hydra_2026,
   author       = {Vázquez Martínez, Luis Ángel},
   title        = {ROMEO-HYDRA: Ontological Framework \& Biomimetic Computing Engine},
-  version      = {0.1.0},
+  version      = {0.1.1},
   year         = {2026},
   publisher    = {Zenodo},
   doi          = {10.5281/zenodo.21744014},
   url          = {https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub}
 }
 ```
-
-## Estado
-
-- **TRL-5** alcanzado (componente validado en entorno relevante).
-- API pública estable para el núcleo.
-- Listo para integración en los repositorios con DOI de Zenodo como dependencia o submodule ligero.
 
 ---
 
