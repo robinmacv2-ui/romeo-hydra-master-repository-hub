@@ -6,61 +6,77 @@
 [![License](https://img.shields.io/badge/license-AGPL--3.0%20%2F%20Comercial-green.svg)](#licencia)
 [![Downloads](https://img.shields.io/github/downloads/robinmacv2-ui/romeo-hydra-master-repository-hub/total?label=downloads&logo=github)](https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub/releases)
 
-Codigo offline. Empaquetado (~56K). DOI Zenodo. Vision de computo confidencial — bases ya ejecutables.
+Paquete Python **offline**, instalable, con DOI en Zenodo.  
+Build ~55K (wheel + sdist). Corre en laptop, Git Bash y Termux aarch64.
 
-> Evaluadores: [`FOR_EVALUATORS.md`](./FOR_EVALUATORS.md)  
-> Arquitectura (vision vs hoy): [`ARCHITECTURE.md`](./ARCHITECTURE.md)  
-> Estado cripto: [`docs/FHE_STATUS.md`](./docs/FHE_STATUS.md)  
-> Kit piloto: [`pilot/README.md`](./pilot/README.md)
+> **Evaluadores:** [`FOR_EVALUATORS.md`](./FOR_EVALUATORS.md) — 2 DOIs, que no se reclama, como verificar  
+> **Auditoria limpia:** `bash scripts/audit_judge.sh`  
+> **Reglas de equipo:** [`OPS_RULES.md`](./OPS_RULES.md)  
+> **Cripto (honesto):** [`docs/FHE_STATUS.md`](./docs/FHE_STATUS.md)
 
-**DOI a citar:** [10.5281/zenodo.21922106](https://doi.org/10.5281/zenodo.21922106) (v0.1.2)
+**DOI a citar:** [10.5281/zenodo.21922106](https://doi.org/10.5281/zenodo.21922106)  
+**Concept:** [10.5281/zenodo.21744014](https://doi.org/10.5281/zenodo.21744014)
 
----
-
-## Que es (en corto)
-
-Un intento de proteger datos **mientras se usan**, no solo en reposo, sin depender de cloud.
-
-Empece sin saber programar. Hoy hay un paquete instalable, tests, piloto offline y registro en Zenodo. No es un producto bancario terminado.
+Autor: **Luis Angel Vazquez Martinez**
 
 ---
 
-## Arquitectura: objetivo vs v0.1.2
+## Que es (sin humo)
 
-**Objetivo (a donde vamos):**  
-Computo confidencial offline en dos capas — (1) calcular sobre datos cifrados (TFHE para logica rapida, HElib para aritmetica vectorial) y (2) anclar resultados con SHA-256 + RSA para integridad y autenticacion. La entidad no manda datos en claro; manda cifrado, recibe cifrado.
-
-**Estado actual v0.1.2 (lo que un juez puede ejecutar hoy):**
-
-| Pieza | Estado |
-|-------|--------|
-| SHA-256 | Real (`hashlib` + nativo C++ opcional) |
-| RSA-OAEP-SHA256 | Real (`cryptography` / OpenSSL, se instala con pip como numpy) |
-| HE parcial Paillier | Real — prueba de computo sobre cifrados (`Dec(Enc(a)*Enc(b))=a+b`) |
-| Slot nativo TFHE/HElib | CMake + ctypes implementados; `available: false` hasta compilar las libs C++ |
-| Kernel + piloto offline | Real — rastro de auditoria / scoring sintetico sin PII |
-
-Detalle defendible: [`ARCHITECTURE.md`](./ARCHITECTURE.md).
+Codigo para evidencia offline (ledgers SHA-256), kernel de estabilidad y un puente **conceptual** hacia cifrado homomorfico.  
+**No** es TFHE compilado dentro del wheel. **No** es folio CNBV. **No** hay clientes de pago todavia.
 
 ---
 
-## Como probarlo
+## Requisitos
+
+- Python 3.11+ (3.10 puede funcionar; CI mental del proyecto es 3.11+)
+- Git
+- Terminal: Bash, PowerShell, Termux o Git Bash
+
+---
+
+## Guia rapida para evaluadores (< 3 min)
 
 ```bash
 git clone https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub.git
 cd romeo-hydra-master-repository-hub
-pip install -e ".[dev]"   # instala numpy + cryptography
-python -m romeo_hydra
-python -c "from romeo_hydra.crypto import HERuntime; print(HERuntime().demo_stack())"
-pytest tests/ -v
-python -m pilot.run_scoring_audit --entity "SOFIPO-DEMO" --n 20
+python3 -m venv .venv
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
+pip install -U pip setuptools wheel
+pip install -r requirements.txt
+pip install -e .
+python main.py
+python -m pilot.run_scoring_audit --entity EVAL --n 20
+python -m pilot.run_offline_audit --days 30 --entity EVAL
 ```
 
-Backend C++ (opcional):
+Prueba automatica en directorio aislado:
 
 ```bash
-cd native && mkdir -p build && cd build && cmake .. && cmake --build . && ./romeo_native_smoke
+bash scripts/audit_judge.sh
 ```
+
+---
+
+## Estructura (auditoria de un vistazo)
+
+| Ruta | Rol |
+|------|-----|
+| `romeo_hydra/` | Paquete instalable (kernel, abstraccion, cripto opcional) |
+| `pilot/` | Evidencia offline **solo stdlib** (scoring / audit) |
+| `native/` | Backend C++ CMake opcional (stub TFHE/HElib) |
+| `tests/` | Tests (requiere `pip install pytest`) |
+| `FOR_EVALUATORS.md` | Texto corto para jurado |
+| `OPS_RULES.md` | No romper Termux / DOIs / main |
+| `feat/fhe-next-level` | Rama separada: PHE Paillier (`phe`), no mezclar en main a la ligera |
+
+---
+
+## Air-gapped / offline
+
+Tras `pip install` (o wheel + deps en USB), los pilotos de ledger **no** llaman APIs externas.  
+Sirve para demos en red cerrada o edge. Eso no equivale a certificacion de seguridad de infraestructura critica.
 
 ---
 
@@ -75,11 +91,10 @@ emmororromeohydra@gmail.com
 
 ## Lo que no finjo
 
-- 0 clientes de pago, 0 MRR
-- No hay patente ni empresa constituida todavia
-- No hay dictamen ni certificacion CNBV
-- DOI Zenodo = trazabilidad de software, **no** certificacion criptografica (FIPS/SGS)
-- TFHE/HElib de circuito completo **no** estan activos hasta link nativo
+- 0 MRR, 0 clientes de pago
+- Wheel ≠ binario TFHE multi-MB
+- Folio del piloto = **interno**, no CNBV
+- DOI Zenodo = trazabilidad de software, no certificacion criptografica FIPS/SGS
 
 ---
 

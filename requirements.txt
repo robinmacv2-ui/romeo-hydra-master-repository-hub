@@ -1,0 +1,7 @@
+# Dependencias minimas para evaluacion limpia (main).
+# Compatible Termux aarch64 sin Rust/maturin.
+numpy>=1.24
+
+# Opcional (NO requerido para pilotos de ledger):
+# cryptography>=41
+# pytest>=7.0
