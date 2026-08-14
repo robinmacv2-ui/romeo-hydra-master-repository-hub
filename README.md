@@ -6,65 +6,61 @@
 [![License](https://img.shields.io/badge/license-AGPL--3.0%20%2F%20Comercial-green.svg)](#licencia)
 [![Downloads](https://img.shields.io/github/downloads/robinmacv2-ui/romeo-hydra-master-repository-hub/total?label=downloads&logo=github)](https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub/releases)
 
-Codigo que corre offline. Empaquetado (~56K: 28K wheel + 27K tar.gz). Con DOI en Zenodo.
+Codigo offline. Empaquetado (~56K). DOI Zenodo. Vision de computo confidencial — bases ya ejecutables.
 
 > Evaluadores: [`FOR_EVALUATORS.md`](./FOR_EVALUATORS.md)  
-> Estado real: [`STATUS.md`](./STATUS.md)  
-> Kit piloto: [`pilot/README.md`](./pilot/README.md)  
-> Historial de DOIs (anexo): [`DOI_HISTORY.md`](./DOI_HISTORY.md)
+> Arquitectura (vision vs hoy): [`ARCHITECTURE.md`](./ARCHITECTURE.md)  
+> Estado cripto: [`docs/FHE_STATUS.md`](./docs/FHE_STATUS.md)  
+> Kit piloto: [`pilot/README.md`](./pilot/README.md)
 
-**DOI a citar:** [10.5281/zenodo.21922106](https://doi.org/10.5281/zenodo.21922106) (v0.1.2)  
-**Concept:** [10.5281/zenodo.21744014](https://doi.org/10.5281/zenodo.21744014)
+**DOI a citar:** [10.5281/zenodo.21922106](https://doi.org/10.5281/zenodo.21922106) (v0.1.2)
 
 ---
 
-## Que es esto (en corto)
+## Que es (en corto)
 
-Un intento de proteger datos **mientras se usan**, no solo cuando estan guardados, y de hacerlo sin depender de cloud.
+Un intento de proteger datos **mientras se usan**, no solo en reposo, sin depender de cloud.
 
-Empece sin saber programar. En pocas semanas arme un paquete Python instalable, tests que pasan, un nodo de auditoria offline y registro en Zenodo. No es un producto bancario terminado. Es codigo que se puede instalar, correr y revisar.
+Empece sin saber programar. Hoy hay un paquete instalable, tests, piloto offline y registro en Zenodo. No es un producto bancario terminado.
+
+---
+
+## Arquitectura: objetivo vs v0.1.2
+
+**Objetivo (a donde vamos):**  
+Computo confidencial offline en dos capas — (1) calcular sobre datos cifrados (TFHE para logica rapida, HElib para aritmetica vectorial) y (2) anclar resultados con SHA-256 + RSA para integridad y autenticacion. La entidad no manda datos en claro; manda cifrado, recibe cifrado.
+
+**Estado actual v0.1.2 (lo que un juez puede ejecutar hoy):**
+
+| Pieza | Estado |
+|-------|--------|
+| SHA-256 | Real (`hashlib` + nativo C++ opcional) |
+| RSA-OAEP-SHA256 | Real (`cryptography` / OpenSSL, se instala con pip como numpy) |
+| HE parcial Paillier | Real — prueba de computo sobre cifrados (`Dec(Enc(a)*Enc(b))=a+b`) |
+| Slot nativo TFHE/HElib | CMake + ctypes implementados; `available: false` hasta compilar las libs C++ |
+| Kernel + piloto offline | Real — rastro de auditoria / scoring sintetico sin PII |
+
+Detalle defendible: [`ARCHITECTURE.md`](./ARCHITECTURE.md).
 
 ---
 
 ## Como probarlo
 
-### Con internet (FIAB / laptop)
-
 ```bash
 git clone https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub.git
 cd romeo-hydra-master-repository-hub
-pip install -e ".[dev]"
+pip install -e ".[dev]"   # instala numpy + cryptography
 python -m romeo_hydra
-python examples/umr_trl5_demo.py
+python -c "from romeo_hydra.crypto import HERuntime; print(HERuntime().demo_stack())"
 pytest tests/ -v
-python -m pilot.run_scoring_audit --entity "SOFIPO-DEMO" --n 50
+python -m pilot.run_scoring_audit --entity "SOFIPO-DEMO" --n 20
 ```
 
-### Offline / edge (BIND / planta / Termux)
-
-Baja antes el wheel del release v0.1.2 (27,913 bytes), luego sin red:
+Backend C++ (opcional):
 
 ```bash
-pip install --no-index --find-links=. romeo_hydra-0.1.2-py3-none-any.whl
-python -c "from romeo_hydra import get_info; print(get_info())"
-python -m romeo_hydra
+cd native && mkdir -p build && cd build && cmake .. && cmake --build . && ./romeo_native_smoke
 ```
-
-Release: https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub/releases/tag/v0.1.2
-
----
-
-## Que hay adentro (honesto)
-
-| Parte | Que hace hoy |
-|-------|----------------|
-| `romeo_hydra/` | Paquete instalable |
-| `tests/` | Estabilidad + no filtrar secretos |
-| `pilot/` | Piloto 30 dias + scoring sintetico |
-| `DOI_HISTORY.md` | Trazabilidad de todos los DOIs (no son la cita principal) |
-| Resto | Laboratorio |
-
-**TFHE / HElib:** puentes / conceptual. Valor que corre hoy: offline, rastro, build pequeno.
 
 ---
 
@@ -77,13 +73,13 @@ emmororromeohydra@gmail.com
 
 ---
 
-## Lo que no tengo (y no finjo)
+## Lo que no finjo
 
 - 0 clientes de pago, 0 MRR
 - No hay patente ni empresa constituida todavia
 - No hay dictamen ni certificacion CNBV
-
-LOI piloto: [`pilot/LOI_TEMPLATE.md`](./pilot/LOI_TEMPLATE.md)
+- DOI Zenodo = trazabilidad de software, **no** certificacion criptografica (FIPS/SGS)
+- TFHE/HElib de circuito completo **no** estan activos hasta link nativo
 
 ---
 
