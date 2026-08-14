@@ -6,11 +6,14 @@
 [![License](https://img.shields.io/badge/license-AGPL--3.0%20%2F%20Comercial-green.svg)](#licencia)
 [![Downloads](https://img.shields.io/github/downloads/robinmacv2-ui/romeo-hydra-master-repository-hub/total?label=downloads&logo=github)](https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub/releases)
 
-Codigo que corre offline. Empaqueteado. Con DOI en Zenodo.
+Codigo que corre offline. Empaquetado (~56K: 28K wheel + 27K tar.gz). Con DOI en Zenodo.
 
-> Evaluadores FIAB / BIND / concursos: [`FOR_EVALUATORS.md`](./FOR_EVALUATORS.md)  
-> Estado real (sin humo): [`STATUS.md`](./STATUS.md)  
-> Kit de piloto 30 dias: [`pilot/README.md`](./pilot/README.md)
+> Evaluadores: [`FOR_EVALUATORS.md`](./FOR_EVALUATORS.md)  
+> Estado real: [`STATUS.md`](./STATUS.md)  
+> Kit piloto 30 dias: [`pilot/README.md`](./pilot/README.md)
+
+**DOI a citar (unico):** [10.5281/zenodo.21918611](https://doi.org/10.5281/zenodo.21918611)  
+**Concept:** [10.5281/zenodo.21744014](https://doi.org/10.5281/zenodo.21744014)
 
 ---
 
@@ -22,7 +25,9 @@ Empece sin saber programar. En pocas semanas arme un paquete Python instalable, 
 
 ---
 
-## Como probarlo (3 minutos)
+## Como probarlo
+
+### Con internet (FIAB / laptop)
 
 ```bash
 git clone https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub.git
@@ -31,23 +36,20 @@ pip install -e ".[dev]"
 python -m romeo_hydra
 python examples/umr_trl5_demo.py
 pytest tests/ -v
+python -m pilot.run_scoring_audit --entity "SOFIPO-DEMO" --n 50
 ```
+
+### Offline / edge (BIND / planta / Termux)
+
+Baja antes el wheel del release v0.1.2 (27,913 bytes), luego sin red:
 
 ```bash
-# Nodo de piloto offline (simula 30 dias de auditoria)
-python -m pilot.run_offline_audit --days 30 --entity "SOFIPO-DEMO"
+pip install --no-index --find-links=. romeo_hydra-0.1.2-py3-none-any.whl
+python -c "from romeo_hydra import get_info; print(get_info())"
+python -m romeo_hydra
 ```
 
-```python
-from romeo_hydra import get_info, KernelConfig, KernelSigmaController
-import numpy as np
-
-print(get_info())
-cfg = KernelConfig(state_dimension=64)
-k = KernelSigmaController(cfg)
-r = k.evaluate_and_collapse(np.zeros(64), np.random.randn(64) * 0.2)
-print(r.final_entropy, r.hessian_ok)
-```
+Release: https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub/releases/tag/v0.1.2
 
 ---
 
@@ -55,44 +57,32 @@ print(r.final_entropy, r.hessian_ok)
 
 | Parte | Que hace hoy |
 |-------|----------------|
-| `romeo_hydra/` | Paquete instalable: Kernel Sigma (estabilidad) + capa de abstraccion |
-| `tests/` | Tests de estabilidad y de que no se filtren secretos en los rastros |
-| `pilot/` | Kit para que una entidad pruebe 30 dias offline y genere evidencia |
-| Resto del repo | Laboratorio: scripts, experimentos, bitacora. No es el producto |
+| `romeo_hydra/` | Paquete instalable: Kernel Sigma + capa de abstraccion |
+| `tests/` | Estabilidad + no filtrar secretos en rastros |
+| `pilot/` | Piloto 30 dias offline + auditoria de scoring sintetico |
+| Resto del repo | Laboratorio. No es el producto |
 
-**Sobre cifrado homomorfico (TFHE / HElib):** hay puentes y esqueletos. No es una libreria de produccion completa tipo Zama. El valor inmediato que si corre es el control de estabilidad, el rastro auditable y que funciona offline.
-
----
-
-## DOIs
-
-| Tipo | DOI |
-|------|-----|
-| Version (citar este) | [10.5281/zenodo.21918611](https://doi.org/10.5281/zenodo.21918611) |
-| Concept | [10.5281/zenodo.21744014](https://doi.org/10.5281/zenodo.21744014) |
+**Sobre TFHE / HElib:** hay puentes y esqueletos. No es una libreria FHE de produccion. El valor que si corre hoy: estabilidad, rastro auditable, offline, build pequeno.
 
 ---
 
 ## Licencia
 
-- **AGPL-3.0** — investigacion, evaluacion, concursos, PoC interno
-- **Comercial EMMOROR** — uso en produccion regulada (hay que contactar)
+- **AGPL-3.0** — investigacion, evaluacion, concursos, PoC
+- **Comercial EMMOROR** — produccion regulada (contactar)
 
-Contacto: emmororromeohydra@gmail.com
-
-Detalle: [`LICENSE`](./LICENSE)
+emmororromeohydra@gmail.com · [`LICENSE`](./LICENSE)
 
 ---
 
-## Lo que no tengo (y no voy a fingir)
+## Lo que no tengo (y no finjo)
 
 - 0 clientes de pago, 0 MRR
 - No hay patente
 - No hay empresa constituida todavia
 - No hay dictamen ni certificacion de la CNBV
-- No compito con quien levanto decenas de millones en FHE cloud; estoy en offline / edge
 
-Si alguien quiere probar el nodo 30 dias con datos sinteticos o controlados, el kit de piloto esta listo. Plantilla de carta de intencion: [`pilot/LOI_TEMPLATE.md`](./pilot/LOI_TEMPLATE.md)
+Plantilla LOI piloto: [`pilot/LOI_TEMPLATE.md`](./pilot/LOI_TEMPLATE.md)
 
 ---
 

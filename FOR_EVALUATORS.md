@@ -1,8 +1,10 @@
-# FOR EVALUATORS — FIAB / BIND / revision tecnica
+# FOR EVALUATORS — FIAB / BIND / 500 LATAM
 
-**ROMEO-HYDRA · paquete 0.1.1**
+**ROMEO-HYDRA · paquete 0.1.2**
 
 Texto corto para jueces y revisores. Sin marketing.
+
+Autor: **Luis Angel Vazquez Martinez**
 
 ---
 
@@ -13,13 +15,49 @@ Un paquete Python instalable que corre **offline**. Incluye:
 - un controlador de estabilidad (Kernel Sigma)
 - una capa de abstraccion orientada a esqueletos de verificacion
 - tests de que no se filtren secretos en los rastros
-- un kit de piloto de 30 dias que genera un ledger de evidencia
+- un kit de piloto de 30 dias (auditoria general + scoring sintetico)
 
-Autor: Luis Angel Vazquez Martinez. Empezo sin formacion formal en programacion. El codigo y el DOI existen y se pueden verificar.
+Empece sin formacion formal en programacion. El codigo, el build y el DOI existen y se pueden verificar.
 
 ---
 
-## 2. Como verificarlo (< 3 min)
+## 2. DOIs (una sola verdad)
+
+Usa **solo** estos. Cualquier otro DOI en posts viejos queda fuera de fecha.
+
+| Tipo | DOI | Uso |
+|------|-----|-----|
+| **Version** (citar este) | **10.5281/zenodo.21918611** | Pitch, FIAB, BIND, data room |
+| Concept | **10.5281/zenodo.21744014** | Todas las versiones |
+
+- Version DOI: https://doi.org/10.5281/zenodo.21918611
+- Concept DOI: https://doi.org/10.5281/zenodo.21744014
+
+---
+
+## 3. Prueba forense del build (~56K)
+
+Release **v0.1.2** en GitHub:
+
+| Artefacto | Peso |
+|-----------|------|
+| `romeo_hydra-0.1.2-py3-none-any.whl` | **27,913 bytes** (~28K) |
+| `romeo_hydra-0.1.2.tar.gz` | **27,362 bytes** (~27K) |
+| **Total** | **~55.3K** (narrativa “56K”) |
+
+Descarga directa:
+
+- Wheel: https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub/releases/download/v0.1.2/romeo_hydra-0.1.2-py3-none-any.whl
+- Tar.gz: https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub/releases/download/v0.1.2/romeo_hydra-0.1.2.tar.gz
+- Release: https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub/releases/tag/v0.1.2
+
+Validacion en edge (documentada en el release): Termux **ARM64**, MINGW64 x86_64, PowerShell nativo. El punto de la narrativa no es “necesito 8GB en cloud”: es que el paquete es pequeno y corre en entorno restringido.
+
+---
+
+## 4. Verificacion en dos modos
+
+### Modo A — FIAB / evaluacion con internet (~3 min)
 
 ```bash
 git clone https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub.git
@@ -28,23 +66,48 @@ pip install -e ".[dev]"
 python -m romeo_hydra
 python examples/umr_trl5_demo.py
 pytest tests/ -v
-python -m pilot.run_offline_audit --days 7 --entity "EVAL"
+python -m pilot.run_scoring_audit --entity "EVAL" --n 20
 ```
 
 Se espera: tests en verde, demo determinista, ledger en `pilot/output/`.
 
+### Modo B — BIND / planta / offline (sin depender de git+pip en vivo)
+
+Precondicion: alguien bajo **antes** el wheel (28K) a un USB o carpeta local.
+
+```bash
+# En maquina con red (una sola vez): descargar el .whl del release v0.1.2
+# Luego en planta / edge SIN internet:
+
+pip install --no-index --find-links=. romeo_hydra-0.1.2-py3-none-any.whl
+# o, si ya esta el repo completo en USB:
+pip install --no-index --find-links=./dist -e .
+
+python -c "from romeo_hydra import get_info; print(get_info())"
+python -m romeo_hydra
+```
+
+Si el entorno es Termux ARM64 u otro edge:
+
+```bash
+# Mismo wheel; no requiere Docker ni 8GB RAM de cloud
+python -c "from romeo_hydra import get_info; print(get_info()['version'], get_info()['doi_version'])"
+```
+
+Objetivo del Modo B: demostrar que la evaluacion **no exige cloud** en el momento de la prueba.
+
 ---
 
-## 3. DOIs (Zenodo / CERN)
+## 5. Que no se reclama
 
-| Tipo | DOI |
-|------|-----|
-| Version | https://doi.org/10.5281/zenodo.21918611 |
-| Concept | https://doi.org/10.5281/zenodo.21744014 |
+- No es sistema bancario en produccion
+- No esta auditado por tercero ni certificado por CNBV
+- La parte homomorfica es puente / conceptual (no libreria FHE de produccion)
+- No hay clientes de pago ni MRR
 
 ---
 
-## 4. Licencia
+## 6. Licencia
 
 | Uso | Licencia |
 |-----|----------|
@@ -55,30 +118,22 @@ emmororromeohydra@gmail.com
 
 ---
 
-## 5. Que no se reclama
-
-- No es sistema bancario en produccion
-- No esta auditado por tercero ni certificado por CNBV
-- La parte homomorfica es puente / conceptual, no libreria FHE de produccion
-- No hay clientes de pago ni MRR al dia de hoy
-
----
-
-## 6. Estructura util
+## 7. Estructura util
 
 | Ruta | Para que |
 |------|----------|
 | `romeo_hydra/` | Producto instalable |
 | `tests/` | Suite de pruebas |
-| `pilot/` | Kit de piloto offline 30 dias |
-| `STATUS.md` | Estado comercial honesto |
+| `pilot/` | Kit piloto offline 30 dias + scoring sintetico |
+| `STATUS.md` | Estado comercial honesto (0 MRR) |
+| Release v0.1.2 | Build forense ~56K (28K + 27K) |
 | Resto | Laboratorio / experimentos |
 
 ---
 
-## 7. Una linea
+## 8. Una linea
 
-Codigo offline verificable, con DOI, listo para un piloto tecnico de 30 dias — no un producto terminado de banca.
+Codigo offline verificable, build ~56K, DOI 10.5281/zenodo.21918611, listo para un piloto tecnico de 30 dias — no un producto terminado de banca.
 
 ---
 
