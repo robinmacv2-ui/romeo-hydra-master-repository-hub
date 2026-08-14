@@ -2,12 +2,12 @@ cff-version: 1.2.0
 title: "ROMEO-HYDRA"
 message: "If you use this software, please cite it using the metadata from this file."
 type: software
-version: 0.1.1
-doi: 10.5281/zenodo.21918611
+version: 0.1.2
+doi: 10.5281/zenodo.21922106
 identifiers:
   - type: doi
-    value: 10.5281/zenodo.21918611
-    description: Version DOI for v0.1.1
+    value: 10.5281/zenodo.21922106
+    description: Version DOI for v0.1.2
   - type: doi
     value: 10.5281/zenodo.21744014
     description: Concept DOI
@@ -17,7 +17,7 @@ authors:
     email: "robinmac.v2@gmail.com"
 license: "AGPL-3.0-or-later"
 repository-code: "https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub"
-url: "https://doi.org/10.5281/zenodo.21918611"
+url: "https://doi.org/10.5281/zenodo.21922106"
 keywords:
   - romeo-hydra
   - offline
@@ -25,6 +25,6 @@ keywords:
   - kernel-sigma
   - zenodo
 abstract: >-
-  Installable offline Python package with a stability kernel, abstraction
+  Installable offline Python package with stability kernel, abstraction
   layer, tests, and a 30-day pilot kit. Dual-licensed. Homomorphic parts
-  are bridge-level, not a full production FHE library.
+  are bridge-level. Full DOI history of the ecosystem is in DOI_HISTORY.md.

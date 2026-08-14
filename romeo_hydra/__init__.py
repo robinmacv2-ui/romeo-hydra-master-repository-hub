@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-ROMEO-HYDRA 0.1.1
+ROMEO-HYDRA 0.1.2
 =================
 Paquete publico: Kernel Sigma + capa de abstraccion.
 Corre offline. Con tests. Con DOI en Zenodo.
@@ -10,19 +10,19 @@ Licencia dual:
   - Comercial EMMOROR → produccion regulada (requiere contacto)
 
 Autor: Luis Angel Vazquez Martinez
+DOI Version (citar): https://doi.org/10.5281/zenodo.21922106
 DOI Concept: https://doi.org/10.5281/zenodo.21744014
-DOI Version: https://doi.org/10.5281/zenodo.21918611
 """
 
 from __future__ import annotations
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 __trl__ = "6"
 __status__ = "paquete instalable + tests + DOI version; piloto offline disponible"
 __author__ = "Luis Angel Vazquez Martinez"
 __license__ = "AGPL-3.0-or-later / Comercial EMMOROR"
 __doi_concept__ = "10.5281/zenodo.21744014"
-__doi_version__ = "10.5281/zenodo.21918611"
+__doi_version__ = "10.5281/zenodo.21922106"
 
 from romeo_hydra.core import (
     RomeoAbstractionLayer,
@@ -66,7 +66,6 @@ __all__ = [
 
 
 def get_info() -> dict:
-    """Metadatos del paquete (auditoria y demos)."""
     return {
         "name": "romeo-hydra",
         "version": __version__,

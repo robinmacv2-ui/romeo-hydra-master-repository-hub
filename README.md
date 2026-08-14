@@ -1,6 +1,6 @@
 # ROMEO-HYDRA
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21918611.svg)](https://doi.org/10.5281/zenodo.21918611)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21922106.svg)](https://doi.org/10.5281/zenodo.21922106)
 [![Concept DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21744014.svg)](https://doi.org/10.5281/zenodo.21744014)
 [![Python](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-AGPL--3.0%20%2F%20Comercial-green.svg)](#licencia)
@@ -10,9 +10,10 @@ Codigo que corre offline. Empaquetado (~56K: 28K wheel + 27K tar.gz). Con DOI en
 
 > Evaluadores: [`FOR_EVALUATORS.md`](./FOR_EVALUATORS.md)  
 > Estado real: [`STATUS.md`](./STATUS.md)  
-> Kit piloto 30 dias: [`pilot/README.md`](./pilot/README.md)
+> Kit piloto: [`pilot/README.md`](./pilot/README.md)  
+> Historial de DOIs (anexo): [`DOI_HISTORY.md`](./DOI_HISTORY.md)
 
-**DOI a citar (unico):** [10.5281/zenodo.21918611](https://doi.org/10.5281/zenodo.21918611)  
+**DOI a citar:** [10.5281/zenodo.21922106](https://doi.org/10.5281/zenodo.21922106) (v0.1.2)  
 **Concept:** [10.5281/zenodo.21744014](https://doi.org/10.5281/zenodo.21744014)
 
 ---
@@ -57,12 +58,13 @@ Release: https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub/rele
 
 | Parte | Que hace hoy |
 |-------|----------------|
-| `romeo_hydra/` | Paquete instalable: Kernel Sigma + capa de abstraccion |
-| `tests/` | Estabilidad + no filtrar secretos en rastros |
-| `pilot/` | Piloto 30 dias offline + auditoria de scoring sintetico |
-| Resto del repo | Laboratorio. No es el producto |
+| `romeo_hydra/` | Paquete instalable |
+| `tests/` | Estabilidad + no filtrar secretos |
+| `pilot/` | Piloto 30 dias + scoring sintetico |
+| `DOI_HISTORY.md` | Trazabilidad de todos los DOIs (no son la cita principal) |
+| Resto | Laboratorio |
 
-**Sobre TFHE / HElib:** hay puentes y esqueletos. No es una libreria FHE de produccion. El valor que si corre hoy: estabilidad, rastro auditable, offline, build pequeno.
+**TFHE / HElib:** puentes / conceptual. Valor que corre hoy: offline, rastro, build pequeno.
 
 ---
 
@@ -71,18 +73,17 @@ Release: https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub/rele
 - **AGPL-3.0** — investigacion, evaluacion, concursos, PoC
 - **Comercial EMMOROR** — produccion regulada (contactar)
 
-emmororromeohydra@gmail.com · [`LICENSE`](./LICENSE)
+emmororromeohydra@gmail.com
 
 ---
 
 ## Lo que no tengo (y no finjo)
 
 - 0 clientes de pago, 0 MRR
-- No hay patente
-- No hay empresa constituida todavia
-- No hay dictamen ni certificacion de la CNBV
+- No hay patente ni empresa constituida todavia
+- No hay dictamen ni certificacion CNBV
 
-Plantilla LOI piloto: [`pilot/LOI_TEMPLATE.md`](./pilot/LOI_TEMPLATE.md)
+LOI piloto: [`pilot/LOI_TEMPLATE.md`](./pilot/LOI_TEMPLATE.md)
 
 ---
 

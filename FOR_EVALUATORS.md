@@ -21,43 +21,40 @@ Empece sin formacion formal en programacion. El codigo, el build y el DOI existe
 
 ---
 
-## 2. DOIs (una sola verdad)
+## 2. DOIs maestros (solo estos dos)
 
-Usa **solo** estos. Cualquier otro DOI en posts viejos queda fuera de fecha.
+| Rol | DOI |
+|-----|-----|
+| **Version a citar (v0.1.2)** | **[10.5281/zenodo.21922106](https://doi.org/10.5281/zenodo.21922106)** |
+| Concept (todas las versiones del hub) | [10.5281/zenodo.21744014](https://doi.org/10.5281/zenodo.21744014) |
 
-| Tipo | DOI | Uso |
-|------|-----|-----|
-| **Version** (citar este) | **10.5281/zenodo.21918611** | Pitch, FIAB, BIND, data room |
-| Concept | **10.5281/zenodo.21744014** | Todas las versiones |
+Historial completo del ecosistema (satelites + versiones anteriores): [`DOI_HISTORY.md`](./DOI_HISTORY.md)
 
-- Version DOI: https://doi.org/10.5281/zenodo.21918611
-- Concept DOI: https://doi.org/10.5281/zenodo.21744014
+No hay que citar 11 DOIs. Hay que citar **uno de version** y, si hace falta, el de concepto.
 
 ---
 
 ## 3. Prueba forense del build (~56K)
 
-Release **v0.1.2** en GitHub:
+Release **v0.1.2**:
 
 | Artefacto | Peso |
 |-----------|------|
 | `romeo_hydra-0.1.2-py3-none-any.whl` | **27,913 bytes** (~28K) |
 | `romeo_hydra-0.1.2.tar.gz` | **27,362 bytes** (~27K) |
-| **Total** | **~55.3K** (narrativa “56K”) |
-
-Descarga directa:
+| **Total** | **~55.3K** |
 
 - Wheel: https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub/releases/download/v0.1.2/romeo_hydra-0.1.2-py3-none-any.whl
 - Tar.gz: https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub/releases/download/v0.1.2/romeo_hydra-0.1.2.tar.gz
 - Release: https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub/releases/tag/v0.1.2
 
-Validacion en edge (documentada en el release): Termux **ARM64**, MINGW64 x86_64, PowerShell nativo. El punto de la narrativa no es “necesito 8GB en cloud”: es que el paquete es pequeno y corre en entorno restringido.
+Validacion en edge (release notes): Termux ARM64, MINGW64 x86_64, PowerShell nativo. Sin Docker obligatorio ni 8GB en cloud.
 
 ---
 
 ## 4. Verificacion en dos modos
 
-### Modo A — FIAB / evaluacion con internet (~3 min)
+### Modo A — FIAB / con internet (~3 min)
 
 ```bash
 git clone https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub.git
@@ -69,32 +66,17 @@ pytest tests/ -v
 python -m pilot.run_scoring_audit --entity "EVAL" --n 20
 ```
 
-Se espera: tests en verde, demo determinista, ledger en `pilot/output/`.
+### Modo B — BIND / planta / offline
 
-### Modo B — BIND / planta / offline (sin depender de git+pip en vivo)
-
-Precondicion: alguien bajo **antes** el wheel (28K) a un USB o carpeta local.
+Bajar antes el wheel (28K) a USB o carpeta local. Luego sin red:
 
 ```bash
-# En maquina con red (una sola vez): descargar el .whl del release v0.1.2
-# Luego en planta / edge SIN internet:
-
 pip install --no-index --find-links=. romeo_hydra-0.1.2-py3-none-any.whl
-# o, si ya esta el repo completo en USB:
-pip install --no-index --find-links=./dist -e .
-
 python -c "from romeo_hydra import get_info; print(get_info())"
 python -m romeo_hydra
 ```
 
-Si el entorno es Termux ARM64 u otro edge:
-
-```bash
-# Mismo wheel; no requiere Docker ni 8GB RAM de cloud
-python -c "from romeo_hydra import get_info; print(get_info()['version'], get_info()['doi_version'])"
-```
-
-Objetivo del Modo B: demostrar que la evaluacion **no exige cloud** en el momento de la prueba.
+Objetivo: la prueba no exige cloud en el momento de la evaluacion.
 
 ---
 
@@ -124,16 +106,17 @@ emmororromeohydra@gmail.com
 |------|----------|
 | `romeo_hydra/` | Producto instalable |
 | `tests/` | Suite de pruebas |
-| `pilot/` | Kit piloto offline 30 dias + scoring sintetico |
-| `STATUS.md` | Estado comercial honesto (0 MRR) |
-| Release v0.1.2 | Build forense ~56K (28K + 27K) |
-| Resto | Laboratorio / experimentos |
+| `pilot/` | Kit piloto offline + scoring sintetico |
+| `STATUS.md` | Estado comercial honesto |
+| `DOI_HISTORY.md` | Trazabilidad de todos los DOIs (anexo) |
+| Release v0.1.2 | Build forense ~56K |
+| Resto | Laboratorio |
 
 ---
 
 ## 8. Una linea
 
-Codigo offline verificable, build ~56K, DOI 10.5281/zenodo.21918611, listo para un piloto tecnico de 30 dias — no un producto terminado de banca.
+Codigo offline verificable, build ~56K, DOI **10.5281/zenodo.21922106**, listo para un piloto tecnico de 30 dias — no un producto terminado de banca.
 
 ---
 
