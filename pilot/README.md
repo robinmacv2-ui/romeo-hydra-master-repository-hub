@@ -1,77 +1,73 @@
-# PILOT KIT — ROMEO-HYDRA Offline (30 días)
+# PILOT KIT — ROMEO-HYDRA Offline (30 dias)
 
-**Objetivo:** que una SOFIPO / entidad regulada pueda correr un nodo offline
-por 30 días y generar evidencia auditable, sin cloud y sin exponer datos en claro.
+Objetivo concreto de la critica: **1 piloto con una SOFIPO** usando el nodo
+offline para auditar scoring / decisiones, con rastro y sin cloud.
 
-> Esto **no** es certificación CNBV ni producto bancario terminado.
-> Es un piloto técnico reproducible para validación y carta de intención.
-
----
-
-## Qué resuelve el piloto
-
-| Dolor | Qué demuestra el nodo |
-|-------|------------------------|
-| Datos en uso expuestos | Kernel + abstraction layer operan sin revelar plaintext en rastros |
-| Dependencia de cloud | Todo corre offline (Termux ARM64 / laptop / edge) |
-| Falta de rastro auditable | Genera `audit_ledger.jsonl` con hash, timestamp y folio sintético |
-| Coste de inspección | Entrega un paquete de evidencia listo para revisión interna |
+Esto no es certificacion CNBV. No evita multas por si solo. Es evidencia
+tecnica para una carta de intencion (LOI).
 
 ---
 
-## Requisitos
+## Dos modos
 
-- Python ≥ 3.11
-- `pip install -e .` desde la raíz del repo (o el wheel del release)
-- Sin internet durante la ejecución del piloto
+| Comando | Para que |
+|---------|----------|
+| `python -m pilot.run_offline_audit --days 30 --entity "SOFIPO-X"` | Nodo de estabilidad + ledger general |
+| `python -m pilot.run_scoring_audit --entity "SOFIPO-X" --n 50` | Auditoria de **scoring** con decisiones sinteticas |
+
+Salida en `pilot/output/`:
+
+- `audit_ledger.jsonl` / `scoring_ledger.jsonl`
+- `pilot_summary.json` / `scoring_summary.json`
+- `evidence_bundle.md` (modo audit general)
 
 ---
 
-## Cómo correr el piloto (5 minutos)
+## Como correrlo
 
 ```bash
 cd romeo-hydra-master-repository-hub
 pip install -e ".[dev]"
 
-# 1) Demo mínima reproducible
-python -m romeo_hydra
-python examples/umr_trl5_demo.py
-
-# 2) Nodo de auditoría offline (piloto)
+# Estabilidad + rastro
 python -m pilot.run_offline_audit --days 30 --entity "SOFIPO-DEMO"
 
-# 3) Tests de no-exposición
+# Scoring offline (el angulo comercial de la critica)
+python -m pilot.run_scoring_audit --entity "SOFIPO-DEMO" --n 50
+
 pytest tests/ -v
 ```
 
-Salida esperada en `pilot/output/`:
+---
 
-- `audit_ledger.jsonl` — rastro append-only
-- `pilot_summary.json` — resumen ejecutivo
-- `evidence_bundle.md` — paquete para revisión interna
+## Que resuelve para una SOFIPO (piloto)
+
+| Dolor | Que muestra el nodo |
+|-------|---------------------|
+| Necesitan rastro de decisiones | Ledger append-only con hash y folio sintetico |
+| No quieren exponer PII en el rastro | `pii_stored: false` |
+| Zonas sin internet / edge | Todo offline |
+| Preparar revision interna | Summary + bundle legible |
 
 ---
 
-## Qué NO promete este piloto
+## Que NO promete
 
-- No sustituye un dictamen legal de la CNBV
-- No es homologación ni autorización
-- No procesa datos reales de clientes sin acuerdo y control de la entidad
-- Homomorphic layer actual es bridge/conceptual; el valor inmediato es el
-  control de estabilidad + rastro + offline offline
-
----
-
-## Carta de intención (LOI)
-
-Plantilla lista: [`pilot/LOI_TEMPLATE.md`](./LOI_TEMPLATE.md)
-
-Una LOI firmada ("probamos 30 días offline") es el activo que convierte
-valor técnico en valor comercial para FIAB / BIND / fondos.
+- No es dictamen legal de la CNBV
+- No es folio oficial de la Comision
+- No sustituye compliance ni evita 100,000 UDIs por magia
+- No es un modelo de credit scoring de produccion
+- Homomorphic layer del paquete es puente, no FHE de produccion
 
 ---
 
-## Contacto piloto
+## LOI
 
-Luis Ángel Vázquez Martínez  
-emmororromeohydra@gmail.com · robinmac.v2@gmail.com
+Plantilla: [`LOI_TEMPLATE.md`](./LOI_TEMPLATE.md)
+
+Una firma de "probamos 30 dias offline" vale mas que 3,340 impresiones.
+
+---
+
+Luis Angel Vazquez Martinez  
+emmororromeohydra@gmail.com
