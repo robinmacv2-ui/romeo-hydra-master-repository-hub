@@ -1,60 +1,33 @@
-# Termux — instalacion y demos (sin ruff)
+# Termux aarch64 — sin Rust, sin mentir
 
 Autor: Luis Angel Vazquez Martinez
 
-## Que significan los errores de la captura
-
-| Error | Causa | Arreglo |
-|-------|--------|--------|
-| `Failed to build 'ruff'` / maturin | `ruff` se compila con Rust; en Termux ARM suele fallar | **No** instales `.[dev]` completo; instala pytest a mano |
-| `No module named 'pilot'` | `pilot/` no iba como paquete instalado / falta `__init__.py` | `PYTHONPATH=.` desde la raiz del repo |
-| `pytest: command not found` | pytest no instalado | `pip install pytest` |
-
-## Instalacion recomendada en Termux
-
-```bash
-cd ~/romeo-hydra-master-repository-hub   # o tu ruta
-
-pip install -U pip setuptools wheel
-pip install numpy cryptography pytest
-
-# Editable SIN el extra [dev] (evita ruff/maturin)
-pip install -e .
-
-# Comprobar nucleo
-python -c "from romeo_hydra import get_info; print(get_info()['version'], get_info()['crypto'])"
-```
-
-## Demos (siempre desde la raiz del repo)
+## Install
 
 ```bash
 cd ~/romeo-hydra-master-repository-hub
-export PYTHONPATH=.
+git fetch origin && git reset --hard origin/main
 
-python -m pilot
+pip install -U pip setuptools wheel
+pip install numpy          # unica dep dura
+# NO: pip install -e ".[dev]"   # ruff/maturin falla en ARM
+# OPCIONAL si hay wheel: pip install cryptography
+pip install -e .
+pip install pytest         # solo tests
+
+export PYTHONPATH=.
+```
+
+## Demos que DEBEN generar ledger
+
+```bash
+python -c "from romeo_hydra import get_info; print(get_info())"
+
 python -m pilot.run_scoring_audit --entity SOFIPO-DEMO --n 20
 python -m pilot.run_offline_audit --days 30 --entity SOFIPO-DEMO
-python -m pilot.run_market_integrity_audit --symbol DEMO --n 15
-
-python -c "from romeo_hydra.crypto import HERuntime; print(HERuntime().demo_stack())"
-
-pytest tests/test_crypto_real.py tests/test_market_risk_energy.py -v
+ls pilot/output/
 ```
 
-Si `run_offline_audit` no existe en tu clone, actualiza:
+## Frase honesta (FIAB / BIND)
 
-```bash
-git pull origin main
-```
-
-## Alternativa sin -m pilot
-
-```bash
-python pilot/run_scoring_audit.py --entity SOFIPO-DEMO --n 20
-```
-
-## No uses en Termux (por ahora)
-
-```bash
-pip install -e ".[dev]"   # tira de ruff → maturin → falla en muchos ARM
-```
+v0.1.2 es un build Python puro (~55K), DOI 10.5281/zenodo.21922106, que corre offline en Termux aarch64 sin depender de Rust. Implementa integridad SHA-256 y un puente conceptual a FHE (HElib/TFHE); **no** es una libreria TFHE compilada de produccion (eso pesaria multi-MB). El piloto genera un **ledger de evidencia con folio interno**, no un folio CNBV oficial.

@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "romeo-hydra"
 version = "0.1.2"
-description = "ROMEO-HYDRA: offline kernel + SHA256/RSA/Paillier HE + TFHE/HElib native-optional bridge"
+description = "ROMEO-HYDRA: offline kernel + SHA256 + optional RSA/Paillier + TFHE/HElib bridge"
 readme = "PACKAGE_README.md"
 license = {text = "AGPL-3.0-or-later"}
 authors = [
@@ -15,39 +15,36 @@ maintainers = [
     {name = "Luis Angel Vazquez Martinez", email = "emmororromeohydra@gmail.com"}
 ]
 keywords = [
-    "romeo-hydra", "offline", "audit", "sha256", "rsa", "paillier",
-    "homomorphic", "kernel-sigma", "fintech", "regtech", "edge"
+    "romeo-hydra", "offline", "audit", "sha256", "edge", "termux",
+    "kernel-sigma", "fintech", "regtech"
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Science/Research",
     "Intended Audience :: Developers",
-    "Intended Audience :: Financial and Insurance Industry",
     "License :: OSI Approved :: GNU Affero General Public License v3",
-    "License :: Other/Proprietary License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
     "Topic :: Security",
-    "Topic :: Security :: Cryptography",
     "Typing :: Typed",
 ]
 requires-python = ">=3.11"
-# Igual que numpy: se instalan solas con pip install / pip install -e .
+# Solo deps que instalen en Termux aarch64 sin Rust/maturin.
+# cryptography es OPCIONAL (extra [crypto]) — en Windows/Linux con wheels OK;
+# en Termux puede fallar al compilar.
 dependencies = [
     "numpy>=1.24",
-    "cryptography>=41",
 ]
 
 [project.optional-dependencies]
-full = [
-    "sympy>=1.12",
+crypto = [
+    "cryptography>=41",
 ]
 dev = [
     "pytest>=7.0",
-    "ruff>=0.4",
 ]
+# Nota: NO incluir ruff en dev — falla maturin en Termux ARM.
 
 [project.urls]
 Homepage = "https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub"
@@ -55,8 +52,7 @@ Repository = "https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub
 "DOI (Version)" = "https://doi.org/10.5281/zenodo.21922106"
 "DOI (Concept)" = "https://doi.org/10.5281/zenodo.21744014"
 "For Evaluators" = "https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub/blob/main/FOR_EVALUATORS.md"
-"FHE Status" = "https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub/blob/main/docs/FHE_STATUS.md"
-"Bug Tracker" = "https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub/issues"
+"Termux" = "https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub/blob/main/docs/TERMUX.md"
 
 [project.scripts]
 romeo-hydra = "romeo_hydra.__main__:main"
