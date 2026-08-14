@@ -2,15 +2,13 @@
 """
 ROMEO-HYDRA 0.1.2
 =================
-Paquete publico: Kernel Sigma + capa de abstraccion.
-Corre offline. Con tests. Con DOI en Zenodo.
+Paquete publico: Kernel Sigma + abstraccion + cripto ejecutable.
 
-Licencia dual:
-  - AGPL-3.0  → investigacion / evaluacion / concursos
-  - Comercial EMMOROR → produccion regulada (requiere contacto)
+Cripto real hoy: SHA-256, RSA, Paillier (HE aditivo).
+TFHE/HElib nativo: solo si la libreria C++ esta en el sistema.
 
 Autor: Luis Angel Vazquez Martinez
-DOI Version (citar): https://doi.org/10.5281/zenodo.21922106
+DOI Version: https://doi.org/10.5281/zenodo.21922106
 DOI Concept: https://doi.org/10.5281/zenodo.21744014
 """
 
@@ -18,7 +16,7 @@ from __future__ import annotations
 
 __version__ = "0.1.2"
 __trl__ = "6"
-__status__ = "paquete instalable + tests + DOI version; piloto offline disponible"
+__status__ = "paquete instalable + tests + DOI; cripto SHA256/RSA/Paillier real; TFHE/HElib nativo opcional"
 __author__ = "Luis Angel Vazquez Martinez"
 __license__ = "AGPL-3.0-or-later / Comercial EMMOROR"
 __doi_concept__ = "10.5281/zenodo.21744014"
@@ -43,6 +41,14 @@ from romeo_hydra.kernel import (
     PRIME_ANCHOR_19,
 )
 
+from romeo_hydra.crypto import (
+    sha256_hex,
+    RSAProtocol,
+    PaillierHE,
+    HERuntime,
+    he_status,
+)
+
 __all__ = [
     "__version__",
     "__trl__",
@@ -62,10 +68,16 @@ __all__ = [
     "ModulacionResonante7219",
     "ANGLE_PENTAGONS_72",
     "PRIME_ANCHOR_19",
+    "sha256_hex",
+    "RSAProtocol",
+    "PaillierHE",
+    "HERuntime",
+    "he_status",
 ]
 
 
 def get_info() -> dict:
+    st = he_status()
     return {
         "name": "romeo-hydra",
         "version": __version__,
@@ -76,6 +88,12 @@ def get_info() -> dict:
         "doi_concept": __doi_concept__,
         "doi_version": __doi_version__,
         "python_requires": ">=3.11",
-        "he_backends": ["TFHE (bridge)", "HElib (bridge)"],
-        "honest_note": "Homomorphic layer is bridge/conceptual; core value is offline stability + audit trail",
+        "crypto": {
+            "sha256": True,
+            "rsa": st["rsa"]["impl"],
+            "paillier_additive_he": True,
+            "tfhe_native": st["tfhe_native"]["available"],
+            "helib_native": st["helib_native"]["available"],
+        },
+        "honest_note": st["honest_summary"],
     }

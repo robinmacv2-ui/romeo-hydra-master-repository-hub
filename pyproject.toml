@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "romeo-hydra"
-version = "0.1.1"
-description = "ROMEO-HYDRA: offline stability kernel + audit pilot kit (Python package)"
+version = "0.1.2"
+description = "ROMEO-HYDRA: offline kernel + SHA256/RSA/Paillier HE + TFHE/HElib bridge"
 readme = "PACKAGE_README.md"
 license = {text = "AGPL-3.0-or-later"}
 authors = [
@@ -15,8 +15,8 @@ maintainers = [
     {name = "Luis Angel Vazquez Martinez", email = "emmororromeohydra@gmail.com"}
 ]
 keywords = [
-    "romeo-hydra", "offline", "audit", "kernel-sigma",
-    "governance", "fintech", "regtech", "edge", "latam"
+    "romeo-hydra", "offline", "audit", "sha256", "rsa", "paillier",
+    "homomorphic", "kernel-sigma", "fintech", "regtech", "edge"
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -30,6 +30,7 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Topic :: Security",
+    "Topic :: Security :: Cryptography",
     "Typing :: Typed",
 ]
 requires-python = ">=3.11"
@@ -38,20 +39,26 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+crypto = [
+    "cryptography>=41",
+]
 full = [
+    "cryptography>=41",
     "sympy>=1.12",
 ]
 dev = [
     "pytest>=7.0",
     "ruff>=0.4",
+    "cryptography>=41",
 ]
 
 [project.urls]
 Homepage = "https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub"
 Repository = "https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub"
-"DOI (Version)" = "https://doi.org/10.5281/zenodo.21918611"
+"DOI (Version)" = "https://doi.org/10.5281/zenodo.21922106"
 "DOI (Concept)" = "https://doi.org/10.5281/zenodo.21744014"
 "For Evaluators" = "https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub/blob/main/FOR_EVALUATORS.md"
+"FHE Status" = "https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub/blob/main/docs/FHE_STATUS.md"
 "Bug Tracker" = "https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub/issues"
 
 [project.scripts]
