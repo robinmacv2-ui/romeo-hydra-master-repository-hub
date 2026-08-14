@@ -1,10 +1,13 @@
 {
   "report": {
     "pilot": "scoring_audit",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "entity": "SOFIPO-DEMO",
     "n": 20,
-    "timestamp_utc": "2026-08-14T03:51:01.312735+00:00",
+    "seed": 42,
+    "arch": "x86_64",
+    "platform": "Linux-6.12.8+-x86_64-with-glibc2.39",
+    "timestamp_utc": "2026-08-14T15:33:39.060419+00:00",
     "ledger_tip_sha256": "3bed1133f49dd05b9102fe9984f1ea7630722937a618b68968b7fdfad04fd8c2",
     "folio_interno": "RH-SOFIPO-DEMO-3BED1133F49D",
     "folio_note": "Folio INTERNO de evidencia. NO es folio CNBV.",
@@ -18,7 +21,12 @@
       "is_homomorphic_scoring": false
     },
     "author": "Luis Angel Vazquez Martinez",
-    "ledger_events": 20
+    "ledger_events": 20,
+    "reproducibility": {
+      "deterministic_seed": true,
+      "cross_arch_rounded_scores": true,
+      "companion_sha256": true
+    }
   },
   "ledger": [
     {
