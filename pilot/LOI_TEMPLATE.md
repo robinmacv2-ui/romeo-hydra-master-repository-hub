@@ -13,7 +13,7 @@ CARTA DE INTENCIÓN DE PILOTO TÉCNICO
 Entre:
 [NOMBRE DE LA SOFIPO / ENTIDAD], en adelante "la Entidad"
 y
-Luis Ángel Vázquez Martínez / ROMEO-HYDRA, en adelante "el Proveedor".
+Luis Angel Vazquez Martinez / ROMEO-HYDRA, en adelante "el Proveedor".
 
 1. Objeto
 La Entidad acepta ejecutar un piloto técnico no remunerado de hasta 30 días
@@ -43,15 +43,9 @@ Fecha: _______________
 
 Por la Entidad: ____________________  Cargo: _______________
 
-Por el Proveedor: Luis Ángel Vázquez Martínez
+Por el Proveedor: Luis Angel Vazquez Martinez
 ```
 
 ---
 
-## Notas internas
 
-- Una LOI firmada es el activo que convierte valoración técnica ($15–40k)
-  en narrativa de "piloto en curso" para FIAB / BIND / pre-seed.
-- No pedir dinero en esta etapa. Pedir **validación y firma**.
-- Después de la LOI: mensaje a Claudia Revilla / Nicolás Bukschtein
-  con evidencia del piloto (no con pitch de precio).
