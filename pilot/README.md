@@ -65,9 +65,9 @@ pytest tests/ -v
 
 Plantilla: [`LOI_TEMPLATE.md`](./LOI_TEMPLATE.md)
 
-Una firma de "probamos 30 dias offline" vale mas que 3,340 impresiones.
+
 
 ---
 
 Luis Angel Vazquez Martinez  
-emmororromeohydra@gmail.com
+robinmac.v2@gmail.com
