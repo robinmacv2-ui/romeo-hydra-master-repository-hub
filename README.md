@@ -1,109 +1,86 @@
 # ROMEO-HYDRA
 
-Hace 45 días no sabía programar.
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21918611.svg)](https://doi.org/10.5281/zenodo.21918611)
+[![Concept DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21744014.svg)](https://doi.org/10.5281/zenodo.21744014)
+[![TRL](https://img.shields.io/badge/TRL-6-brightgreen.svg)](https://en.wikipedia.org/wiki/Technology_readiness_level)
+[![Python](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/)
+[![License](https://img.shields.io/badge/license-AGPL--3.0%20%2F%20Comercial-green.svg)](#licencia)
+[![GitHub all releases](https://img.shields.io/github/downloads/robinmacv2-ui/romeo-hydra-master-repository-hub/total?label=downloads&logo=github)](https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub/releases)
+[![Latest release downloads](https://img.shields.io/github/downloads/robinmacv2-ui/romeo-hydra-master-repository-hub/latest/total?label=latest)](https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub/releases/latest)
 
-No entendía Python.  
-No sabía qué era un compilador de C++.  
-No conocía CMake.  
-No sabía que Zenodo existía ni que era un registro del CERN en Suiza.
+**Ontological Framework & Biomimetic Computing Engine**
 
-No venía de una carrera técnica.  
-No tenía mentor.  
-No seguí un tutorial pensado para principiantes.
+> Hace 45 días no sabía programar. Hoy hay un paquete instalable, tests que pasan, Version DOI de Zenodo y un núcleo determinista offline.
 
-La arquitectura no nació de una clase.  
-Nació de una necesidad concreta: el dato en uso es vulnerable y la inteligencia artificial procesa información sensible sin gobernanza real.
+---
 
-Así que empecé a construir una caja fuerte digital.
+## Producto (lo que instalas)
+
+```bash
+pip install -e .
+# o desde el wheel del release:
+# pip install https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub/releases/download/v0.1.2/romeo_hydra-0.1.2-py3-none-any.whl
+```
+
+```bash
+python -m romeo_hydra
+python examples/umr_trl5_demo.py
+pytest tests/ -v          # 7 passed
+```
+
+```python
+from romeo_hydra import get_info, KernelConfig, KernelSigmaController
+import numpy as np
+
+print(get_info())  # version, trl, doi_version, ...
+cfg = KernelConfig(state_dimension=64)
+k = KernelSigmaController(cfg)
+r = k.evaluate_and_collapse(np.zeros(64), np.random.randn(64)*0.2)
+print(r.final_entropy, r.hessian_ok)
+```
+
+Documentación del paquete: [`PACKAGE_README.md`](./PACKAGE_README.md)
+
+| DOI | Uso |
+|-----|-----|
+| **10.5281/zenodo.21918611** | Version DOI (citar esto en pitch / data room) |
+| **10.5281/zenodo.21744014** | Concept DOI |
 
 ---
 
 ## Qué es esto
 
-ROMEO-HYDRA es un intento de resolver dos problemas al mismo tiempo:
+ROMEO-HYDRA intenta resolver dos problemas a la vez:
 
 1. **Proteger la información mientras se usa** (no solo cuando está guardada).
 2. **Hacerlo con el menor impacto energético posible.**
 
-Dentro del repositorio hay código en C++ conectado a un motor de cifrado homomórfico (TFHE + SPQLIOS_FMA), scripts en Python que intentan gobernar el flujo, y una interfaz en React + TypeScript.
+El repositorio contiene:
+- **Paquete Python limpio** (`romeo_hydra/`) → Kernel Sigma + Abstraction Layer
+- Código experimental, scripts de orquestación, puentes C++/TFHE y material de investigación
+- Interfaz y componentes de gobernanza
 
-No es un producto terminado.  
-No es un framework listo para producción.  
-Es el resultado de alguien que empezó de cero y no se detuvo.
-
----
-
-## Invariante Eukaris (regeneración / abundancia)
-
-Integrado en el núcleo desde 2026-08-12:
-
-- Módulo: [`core/eukaris_affirmations.py`](./core/eukaris_affirmations.py)
-- Origen: afirmaciones dictadas por **Dra. Eukaris Zerpa** (Venezuela)
-- Carga automática en `orquestador_dinamico` y vigilancia en `automedicina_v30`
-- DNA: `BITACORA_PERSONAL/romeo_dna_core.json`
-- Verificación global: `python inject_eukaris_global.py`
-
-En el orquestador dinámico:
-```text
-eukaris | afirmaciones | mantra | regeneracion
-```
-
-Alineado con la Matriz del Destino del autor (Centro 9 · Luna 18 · Camino de Vida 9 · Expresión 9) y con la filosofía de autorregeneración del organismo (automedicina, tejido, mitosis).
+No es un producto terminado de producción bancaria.  
+Es un sistema verificable en TRL-6 con licencia dual lista para evaluación comercial.
 
 ---
 
-## Estado actual: Fase V2.1
+## Licencia Dual
 
-La fase V2.1 del framework ROMEO-HYDRA representa la culminación de la computación soberana determinista. A diferencia de las arquitecturas de IA comerciales, este sistema opera de forma nativa en arquitectura de 64 bits (Python 3.13), garantizando una estabilidad absoluta sin dependencias de red (offline/edge computing). El sistema ha validado una eficiencia termodinámica radical, operando con fluidez en hardware restrictivo (procesadores Celeron de doble núcleo y 4GB de RAM).
+- **AGPL-3.0** → investigación, academia, evaluación
+- **Comercial EMMOROR** → producción en entidades reguladas
 
----
-
-## Cómo se construyó (la verdad)
-
-Hubo días pelean­do con la terminal de Linux en WSL.  
-Errores de firmware.  
-Fallos de Git.  
-Problemas de autenticación.  
-Compilaciones que se rompían una y otra vez.
-
-También hubo los momentos que sí importaron:
-
-- Entender qué era una capa de abstracción.
-- Lograr que Python le ordenara a C++ construir la estructura matemática.
-- Compilar el motor TFHE con aceleración SPQLIOS_FMA directo en el procesador.
-- Ver el mensaje `Everything up-to-date` después de sincronizar todo en GitHub.
-
-Cuando el código tomó forma, lo registré formalmente en Zenodo (Software, Hardware y Ontología).  
-No por marketing. Por protección.
-
-Hoy está en un nivel TRL 4: ya no es solo teoría. Hay código que compila, componentes que se comunican y una interfaz que se puede abrir.
-
-Todavía falta limpiar, ordenar y estabilizar.  
-Pero ya no es una idea en un cuaderno.
+Contacto: **emmororromeohydra@gmail.com**
 
 ---
 
-## La jugada
+## Origen
 
-No vengo a competir con nadie.
+Hace 45 días no sabía programar.  
+No venía de una carrera técnica. No tenía mentor.
 
-No vengo a demostrar que sé más que otros.  
-No vengo a vender un framework pulido.
+La arquitectura nació de una necesidad concreta: el dato en uso es vulnerable y la IA procesa información sensible sin gobernanza real.
 
-Vengo a ofrecer la oportunidad de ser de los primeros en sumarse a un cambio real:
+Documento completo: [`ORIGEN_Y_TRAYECTORIA.md`](./ORIGEN_Y_TRAYECTORIA.md)
 
-- Un cambio en cómo se trata la información.
-- Una reestructuración más ecológica del cómputo, minimizando el impacto energético.
-
-La puerta está abierta.  
-El código está aquí.  
-La historia de cómo se construyó también.
-
-Si quieres ser de los primeros, este es el momento.
-
----
-
-**Luis Angel Vazquez Martinez**  
-Agosto 2026
-
-Documento completo de origen y trayectoria: [`ORIGEN_Y_TRAYECTORIA.md`](./ORIGEN_Y_TRAYECTORIA.md)
+**Luis Ángel Vázquez Martínez** · Agosto 2026
