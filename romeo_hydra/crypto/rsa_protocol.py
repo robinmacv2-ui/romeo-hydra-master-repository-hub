@@ -1,12 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-Protocolo RSA ejecutable.
-
-- Si `cryptography` esta instalado → RSA-OAEP-SHA256 (ruta fuerte).
-- Si no (p.ej. Termux sin wheel) → RSA pure-Python demo (pow), documentado.
-
-SHA-256 del plaintext siempre via hashlib (stdlib).
-"""
+"""RSA: cryptography if present, else pure-demo. Never hard-require cryptography."""
 
 from __future__ import annotations
 
@@ -19,30 +12,28 @@ from romeo_hydra.crypto.sha256_integrity import sha256_hex
 
 _HAS_CRYPTOGRAPHY = False
 try:
-    from cryptography.hazmat.primitives.asymmetric import rsa, padding
-    from cryptography.hazmat.primitives import hashes, serialization
+    from cryptography.hazmat.primitives.asymmetric import rsa, padding  # type: ignore
+    from cryptography.hazmat.primitives import hashes, serialization  # type: ignore
 
     _HAS_CRYPTOGRAPHY = True
 except ImportError:
-    pass
+    rsa = padding = hashes = serialization = None  # type: ignore
 
 
 @dataclass
 class RSAKeyPair:
     public_pem: str
     private_pem: str
-    backend: str  # "cryptography" | "pure-demo"
+    backend: str
 
 
 class RSAProtocol:
     def __init__(self, key_size: int = 2048) -> None:
-        self.key_size = key_size if _HAS_CRYPTOGRAPHY else min(key_size, 512)
+        self.key_size = key_size if _HAS_CRYPTOGRAPHY else 512
 
     def generate_keypair(self) -> RSAKeyPair:
         if _HAS_CRYPTOGRAPHY:
-            private_key = rsa.generate_private_key(
-                public_exponent=65537, key_size=max(self.key_size, 2048)
-            )
+            private_key = rsa.generate_private_key(public_exponent=65537, key_size=max(2048, self.key_size))
             public_key = private_key.public_key()
             priv_pem = private_key.private_bytes(
                 encoding=serialization.Encoding.PEM,
@@ -75,29 +66,25 @@ class RSAProtocol:
                 "plaintext_sha256": digest,
                 "backend": "cryptography",
             }
-        n, e = self._parse_demo_pub(public_pem)
-        # pure-demo: solo payloads cortos
         if len(message) > 32:
             message = message[:32]
             digest = sha256_hex(message)
+        n, e = self._parse_demo_pub(public_pem)
         m = int.from_bytes(message, "big")
         if m >= n:
-            raise ValueError("mensaje demasiado largo para pure-demo RSA")
-        c = pow(m, e, n)
+            raise ValueError("message too long for pure-demo RSA")
         return {
             "alg": "RSA-raw-demo",
-            "ciphertext_int": str(c),
+            "ciphertext_int": str(pow(m, e, n)),
             "plaintext_sha256": digest,
             "backend": "pure-demo",
-            "warning": "Demo offline without cryptography; install cryptography for OAEP",
+            "warning": "pure-demo; install cryptography for OAEP when possible",
         }
 
     def decrypt(self, private_pem: str, package: dict[str, Any]) -> bytes:
         backend = package.get("backend", "cryptography")
         if backend == "cryptography" and _HAS_CRYPTOGRAPHY:
-            private_key = serialization.load_pem_private_key(
-                private_pem.encode("utf-8"), password=None
-            )
+            private_key = serialization.load_pem_private_key(private_pem.encode("utf-8"), password=None)
             plaintext = private_key.decrypt(
                 bytes.fromhex(package["ciphertext_hex"]),
                 padding.OAEP(
@@ -107,14 +94,14 @@ class RSAProtocol:
                 ),
             )
             if sha256_hex(plaintext) != package.get("plaintext_sha256"):
-                raise ValueError("Integridad SHA-256 fallida")
+                raise ValueError("SHA-256 integrity failed")
             return plaintext
         n, d = self._parse_demo_priv(private_pem)
         m = pow(int(package["ciphertext_int"]), d, n)
         length = max(1, (m.bit_length() + 7) // 8)
         plaintext = m.to_bytes(length, "big")
         if sha256_hex(plaintext) != package.get("plaintext_sha256"):
-            raise ValueError("Integridad SHA-256 fallida (pure-demo)")
+            raise ValueError("SHA-256 integrity failed (pure-demo)")
         return plaintext
 
     def _pure_demo_keypair(self) -> RSAKeyPair:
@@ -145,9 +132,11 @@ class RSAProtocol:
         phi = (p - 1) * (q - 1)
         e = 65537
         d = pow(e, -1, phi)
-        pub = json.dumps({"n": str(n), "e": e, "demo": True})
-        priv = json.dumps({"n": str(n), "d": str(d), "demo": True})
-        return RSAKeyPair(public_pem=pub, private_pem=priv, backend="pure-demo")
+        return RSAKeyPair(
+            public_pem=json.dumps({"n": str(n), "e": e, "demo": True}),
+            private_pem=json.dumps({"n": str(n), "d": str(d), "demo": True}),
+            backend="pure-demo",
+        )
 
     @staticmethod
     def _parse_demo_pub(blob: str) -> tuple[int, int]:

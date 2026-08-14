@@ -1,14 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Piloto scoring sintetico offline — genera ledger en pilot/output/.
+Piloto scoring sintetico — SOLO stdlib.
+No importa romeo_hydra (evita fallos por cryptography en Termux).
+No es folio CNBV. No es TFHE.
 
-Requisitos: solo stdlib + (opcional) romeo_hydra instalado.
-NO requiere cryptography ni ruff.
-NO es folio CNBV. NO es scoring bajo TFHE de produccion.
-
-Uso (desde la raiz del repo):
-  export PYTHONPATH=.
+  cd /data/data/com.termux/files/home/romeo-hydra-master-repository-hub
   python -m pilot.run_scoring_audit --entity SOFIPO-DEMO --n 20
 """
 
@@ -17,7 +14,6 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import os
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -58,8 +54,6 @@ def run(entity: str, n: int, out_dir: Path) -> dict:
         prev = h
 
     tip = prev
-    folio_interno = f"RH-{entity}-{tip[:12].upper()}"
-
     report = {
         "pilot": "scoring_audit",
         "version": "0.1.2",
@@ -67,15 +61,11 @@ def run(entity: str, n: int, out_dir: Path) -> dict:
         "n": n,
         "timestamp_utc": datetime.now(timezone.utc).isoformat(),
         "ledger_tip_sha256": tip,
-        "folio_interno": folio_interno,
-        "folio_note": (
-            "Folio INTERNO de evidencia del piloto. "
-            "NO es folio CNBV ni registro oficial de asesores."
-        ),
+        "folio_interno": f"RH-{entity}-{tip[:12].upper()}",
+        "folio_note": "Folio INTERNO de evidencia. NO es folio CNBV.",
         "encryption": {
             "tfhe_full": False,
-            "helib_full": False,
-            "what_is_used": "SHA-256 chain integrity on synthetic scores (no PII stored)",
+            "what_is_used": "SHA-256 chain on synthetic scores (no PII)",
         },
         "scope": {
             "is_production_sofipo_scoring": False,
@@ -83,13 +73,13 @@ def run(entity: str, n: int, out_dir: Path) -> dict:
             "is_homomorphic_scoring": False,
         },
         "author": "Luis Angel Vazquez Martinez",
+        "ledger_events": len(ledger),
     }
 
     out_dir.mkdir(parents=True, exist_ok=True)
     path = out_dir / f"scoring_{entity}_{n}.json"
     path.write_text(json.dumps({"report": report, "ledger": ledger}, indent=2), encoding="utf-8")
     report["output"] = str(path)
-    report["ledger_events"] = len(ledger)
     return report
 
 
