@@ -1,0 +1,3 @@
+# Solo para rama feat/fhe-next-level — NO mezclar como dep obligatoria de main.
+# Termux aarch64: pip install -r requirements-fhe.txt
+phe>=1.5.0
