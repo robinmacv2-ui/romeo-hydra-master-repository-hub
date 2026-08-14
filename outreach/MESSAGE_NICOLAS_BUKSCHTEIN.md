@@ -1,40 +1,30 @@
-# Mensaje para Nicolás Bukschtein (CNBV / ecosistema)
+# Mensaje para Nicolas Bukschtein
 
-**Objetivo:** validación de si el tipo de evidencia aguanta una conversación
-de inspección / supervisión. No pedir dictamen oficial.
+Objetivo: criterio tecnico sobre el tipo de evidencia. No pedir aval ni dictamen.
 
 ---
 
-## Versión correo / LinkedIn
+Asunto: Consulta tecnica — evidencia offline para auditoria
 
-Asunto: Consulta técnica — evidencia offline para auditoría de scoring
+Nicolas,
 
-Nicolás,
+Soy Luis Angel Vazquez. Construí un nucleo offline (ROMEO-HYDRA) orientado a
+rastro auditable, con DOI en Zenodo y tests de que no se filtren secretos en
+los rastros del paquete.
 
-Soy Luis Ángel Vázquez. Desarrollé un núcleo offline (ROMEO-HYDRA) orientado
-a rastro auditable y operación sin cloud, con DOI en Zenodo y tests de
-no-exposición de secretos.
+No busco un dictamen ni una opinion formal de la Comision.
 
-No busco un dictamen ni una opinión formal de la Comisión.
+Busco 20 minutos de lectura tecnica:
 
-Busco **20 minutos de tu lectura técnica**:
+Si una entidad supervisada mostrara un ledger generado offline, con hash por
+ciclo y sin plaintext en los rastros del nucleo, ¿que le faltaria para no
+descartarse de entrada en una revision interna seria?
 
-Si una entidad supervisada te mostrara un ledger append-only generado offline,
-con hash por ciclo y sin plaintext en los rastros del núcleo, ¿qué le faltaría
-para que no se descarte de entrada en una visita de inspección?
+Con esa respuesta ajusto el piloto. Sin ella, sigo a ciegas.
 
-Con eso ajusto el piloto. Sin eso, sigo construyendo a ciegas.
-
-Material (piloto reproducible):
+Material:
 https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub/blob/main/pilot/README.md
 
 Gracias,
-Luis Ángel Vázquez Martínez
+Luis Angel Vazquez Martinez
 emmororromeohydra@gmail.com
-
----
-
-## Regla de oro
-
-Pedís **criterio**, no **aval**.
-Cualquier mención a "CNBV valida" o "dictamen listo" destruye credibilidad.

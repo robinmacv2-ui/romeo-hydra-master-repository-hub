@@ -1,37 +1,39 @@
 # STATUS — lectura honesta (13 ago 2026)
 
-## Qué hay
+## Que hay
 
 | Activo | Estado |
 |--------|--------|
-| Paquete instalable offline | Sí (`romeo_hydra` 0.1.1) |
-| Tests no-plaintext + estabilidad | 7+ passed |
+| Paquete instalable offline | Si (`romeo_hydra` 0.1.1) |
+| Tests (estabilidad + no filtrar secretos) | Pasan |
 | Version DOI Zenodo | 10.5281/zenodo.21918611 |
-| Kit piloto 30 días offline | Sí (`pilot/`) |
-| Red de decisores (Klar, Stori, CNBV, ProDesarrollo, Nu…) | Sí |
-| Tickets FIAB / 500 LATAM / BIND | Activos |
+| Kit piloto 30 dias offline | Si (`pilot/`) |
+| Contactos en red (fintech / supervision / ProDesarrollo) | Si |
+| Postulaciones FIAB / 500 LATAM / BIND | Activas |
 
-## Qué no hay
+## Que no hay
 
 | Hueco | Estado |
 |-------|--------|
 | MRR | **$0** |
 | Clientes de pago | **0** |
-| LOI firmada | **0** (plantilla lista) |
+| Carta de intencion (LOI) firmada | **0** (plantilla en `pilot/LOI_TEMPLATE.md`) |
 | Patente | No |
 | Empresa constituida | No |
-| Dictamen / opinión formal CNBV | No |
-| Certificación de producto | No |
+| Dictamen o certificacion CNBV | No |
 
-## Valoración realista hoy
+## Valoracion realista hoy
 
-- Técnico / pre-seed: **$15k – $40k USD** (timestamp + red + código runnable)
+- Tecnico / pre-seed: en el orden de decenas de miles USD (codigo + timestamp + red)
 - Comercial: **$0** hasta facturar o al menos 1 LOI de piloto
 
-## Próximo salto de valor
+## Que falta para que valga mas
 
-1 LOI de piloto offline (30 días) con una SOFIPO → narrativa pasa de
-"inventor con DOI" a "piloto en curso". Eso es lo que FIAB/BIND/fondos
-necesitan ver.
+Una sola LOI de piloto offline (30 dias) con una SOFIPO o entidad regulada.
+Eso cambia la frase de "tengo un DOI y codigo" a "hay un piloto en curso".
 
-Plan operativo: [`outreach/30_DAY_PLAN.md`](./outreach/30_DAY_PLAN.md)
+Plan: [`outreach/30_DAY_PLAN.md`](./outreach/30_DAY_PLAN.md)
+
+---
+
+Luis Angel Vazquez Martinez

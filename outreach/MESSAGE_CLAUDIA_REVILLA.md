@@ -1,50 +1,32 @@
 # Mensaje para Claudia Revilla (ProDesarrollo)
 
-**Objetivo:** 20 minutos de validación, no venta.
-**Tono:** técnico, humilde, específico.
+Objetivo: 20 minutos de criterio, no venta.
 
 ---
 
-## Versión LinkedIn / correo (copiar/pegar)
-
-Asunto: 20 min de validación técnica — nodo offline para SOFIPO
+Asunto: 20 min de validacion tecnica — nodo offline para SOFIPO
 
 Claudia,
 
-Soy Luis Ángel Vázquez. Construí un nodo de auditoría offline (ROMEO-HYDRA)
-que corre sin cloud, genera rastro auditable y está pensado para el contexto
-de SOFIPOs y supervisión.
+Soy Luis Angel Vazquez. Arme un nodo de auditoria que corre sin cloud
+(ROMEO-HYDRA), genera un rastro con hash y esta pensado para prueba tecnica
+con SOFIPOs.
 
-No te escribo a vender.
+No te escribo a vender ni a pedir introducciones masivas.
 
-Te escribo a pedir **20 minutos de tu criterio**:
+Te pido 20 minutos de tu criterio:
 
-¿Este tipo de evidencia técnica (ledger + folio sintético + operación offline)
-sería útil para que una SOFIPO afiliada a ProDesarrollo evalúe un piloto de
-30 días antes de hablar de producto o precio?
+Si una SOFIPO afiliada a ProDesarrollo quisiera probar 30 dias offline un
+nodo que deja ledger de evidencia (sin pretender ser dictamen CNBV),
+¿tiene sentido esa prueba antes de hablar de producto o precio?
 
-Si la respuesta es sí, el siguiente paso es una carta de intención de piloto
-(no pagado) con una sola entidad. Si es no, también me sirve: cierro el
-ángulo y no pierdo tiempo de nadie.
+Si la respuesta es si, el siguiente paso es una carta de intencion de piloto
+no pagado con una sola entidad. Si es no, tambien me sirve para no perder
+tiempo de nadie.
 
-Repo + kit de piloto (3 min de verificación):
+Kit de piloto (se puede verificar en minutos):
 https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub/blob/main/pilot/README.md
 
-Gracias por el tiempo que ya das al ecosistema.
-
-Luis Ángel Vázquez Martínez
+Gracias,
+Luis Angel Vazquez Martinez
 emmororromeohydra@gmail.com
-
----
-
-## Qué NO decir
-
-- No menciones $80k / $120k
-- No digas "dictamen CNBV listo"
-- No digas "ya tenemos clientes"
-- No pidas introducción masiva a 50 SOFIPOs
-
-## Qué SÍ pedir
-
-- 20 min de feedback honesto
-- Si aplica: una SOFIPO dispuesta a LOI de 30 días offline

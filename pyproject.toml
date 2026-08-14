@@ -5,19 +5,18 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "romeo-hydra"
 version = "0.1.1"
-description = "ROMEO-HYDRA: Ontological Framework & Biomimetic Computing Engine — Kernel Sigma + Abstraction Layer (TRL-6)"
+description = "ROMEO-HYDRA: offline stability kernel + audit pilot kit (Python package)"
 readme = "PACKAGE_README.md"
 license = {text = "AGPL-3.0-or-later"}
 authors = [
-    {name = "Luis Ángel Vázquez Martínez", email = "robinmac.v2@gmail.com"}
+    {name = "Luis Angel Vazquez Martinez", email = "robinmac.v2@gmail.com"}
 ]
 maintainers = [
-    {name = "Luis Ángel Vázquez Martínez", email = "emmororromeohydra@gmail.com"}
+    {name = "Luis Angel Vazquez Martinez", email = "emmororromeohydra@gmail.com"}
 ]
 keywords = [
-    "romeo-hydra", "ontological", "biomimetic", "tfhe", "helib",
-    "governance", "kernel-sigma", "homomorphic", "trl-6",
-    "fintech", "regtech", "data-in-use", "edge", "latam"
+    "romeo-hydra", "offline", "audit", "kernel-sigma",
+    "governance", "fintech", "regtech", "edge", "latam"
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -30,8 +29,7 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
-    "Topic :: Scientific/Engineering",
-    "Topic :: Security :: Cryptography",
+    "Topic :: Security",
     "Typing :: Typed",
 ]
 requires-python = ">=3.11"
@@ -42,8 +40,6 @@ dependencies = [
 [project.optional-dependencies]
 full = [
     "sympy>=1.12",
-    "biopython>=1.81",
-    "astropy>=5.3",
 ]
 dev = [
     "pytest>=7.0",
@@ -52,12 +48,11 @@ dev = [
 
 [project.urls]
 Homepage = "https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub"
-Documentation = "https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub#readme"
 Repository = "https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub"
 "DOI (Version)" = "https://doi.org/10.5281/zenodo.21918611"
 "DOI (Concept)" = "https://doi.org/10.5281/zenodo.21744014"
-"Bug Tracker" = "https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub/issues"
 "For Evaluators" = "https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub/blob/main/FOR_EVALUATORS.md"
+"Bug Tracker" = "https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub/issues"
 
 [project.scripts]
 romeo-hydra = "romeo_hydra.__main__:main"
@@ -65,7 +60,7 @@ romeo-hydra = "romeo_hydra.__main__:main"
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["romeo_hydra*"]
-exclude = ["tests*", "examples*", "*.egg-info*"]
+exclude = ["tests*", "examples*", "pilot*", "*.egg-info*"]
 
 [tool.setuptools.package-data]
 romeo_hydra = ["py.typed"]

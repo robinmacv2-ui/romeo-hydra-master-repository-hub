@@ -1,12 +1,30 @@
 cff-version: 1.2.0
-title: "Romeo Hydra Master Repository Hub"
+title: "ROMEO-HYDRA"
+message: "If you use this software, please cite it using the metadata from this file."
+type: software
 version: 0.1.1
 doi: 10.5281/zenodo.21918611
-message: "If you use this software, please cite it as below."
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.21918611
+    description: Version DOI for v0.1.1
+  - type: doi
+    value: 10.5281/zenodo.21744014
+    description: Concept DOI
 authors:
-    - family-names: Macias
-    given-names: Robin
-    orcid: https://orcid.org/0009-0000-0000-0000
-license: MIT
+  - family-names: "Vazquez Martinez"
+    given-names: "Luis Angel"
+    email: "robinmac.v2@gmail.com"
+license: "AGPL-3.0-or-later"
 repository-code: "https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub"
-keywords: [FHE, HElib, TFHE, TRL-6, Edge, aarch64, Termux, Zenodo, DOI]
+url: "https://doi.org/10.5281/zenodo.21918611"
+keywords:
+  - romeo-hydra
+  - offline
+  - audit
+  - kernel-sigma
+  - zenodo
+abstract: >-
+  Installable offline Python package with a stability kernel, abstraction
+  layer, tests, and a 30-day pilot kit. Dual-licensed. Homomorphic parts
+  are bridge-level, not a full production FHE library.

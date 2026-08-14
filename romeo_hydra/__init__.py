@@ -1,28 +1,29 @@
 # -*- coding: utf-8 -*-
 """
-ROMEO-HYDRA 0.1.1 (TRL-5)
-=========================
-Ontological Framework & Biomimetic Computing Engine.
+ROMEO-HYDRA 0.1.1
+=================
+Paquete publico: Kernel Sigma + capa de abstraccion.
+Corre offline. Con tests. Con DOI en Zenodo.
 
-Núcleo público estable para investigación y evaluación comercial.
+Licencia dual:
+  - AGPL-3.0  → investigacion / evaluacion / concursos
+  - Comercial EMMOROR → produccion regulada (requiere contacto)
 
-Licencia Dual:
-  - AGPL-3.0  → uso académico / investigación / evaluación
-  - Comercial EMMOROR → producción en entidades reguladas (requiere licencia)
-
-Autor: Luis Ángel Vázquez Martínez
+Autor: Luis Angel Vazquez Martinez
 DOI Concept: https://doi.org/10.5281/zenodo.21744014
+DOI Version: https://doi.org/10.5281/zenodo.21918611
 """
 
 from __future__ import annotations
 
 __version__ = "0.1.1"
-__trl__ = "5"
-__status__ = "TRL-5: Component validation in relevant environment"
-__author__ = "Luis Ángel Vázquez Martínez"
+__trl__ = "6"
+__status__ = "paquete instalable + tests + DOI version; piloto offline disponible"
+__author__ = "Luis Angel Vazquez Martinez"
 __license__ = "AGPL-3.0-or-later / Comercial EMMOROR"
+__doi_concept__ = "10.5281/zenodo.21744014"
+__doi_version__ = "10.5281/zenodo.21918611"
 
-# ── Core (Abstracción + TFHE + HElib BGV/CKKS) ───────────────────────────────
 from romeo_hydra.core import (
     RomeoAbstractionLayer,
     TFHECore,
@@ -30,7 +31,6 @@ from romeo_hydra.core import (
     RomeoTFHEBridge,
 )
 
-# ── Kernel Sigma (Controlador de estabilidad + adaptador mimético) ────────────
 from romeo_hydra.kernel import (
     KernelConfig,
     KernelSigmaController,
@@ -44,16 +44,15 @@ from romeo_hydra.kernel import (
 )
 
 __all__ = [
-    # Meta
     "__version__",
     "__trl__",
     "__status__",
-    # Core
+    "__doi_concept__",
+    "__doi_version__",
     "RomeoAbstractionLayer",
     "TFHECore",
     "HElibCore",
     "RomeoTFHEBridge",
-    # Kernel
     "KernelConfig",
     "KernelSigmaController",
     "CoreState",
@@ -67,7 +66,7 @@ __all__ = [
 
 
 def get_info() -> dict:
-    """Información rápida del paquete (útil para auditoría y demos)."""
+    """Metadatos del paquete (auditoria y demos)."""
     return {
         "name": "romeo-hydra",
         "version": __version__,
@@ -75,7 +74,9 @@ def get_info() -> dict:
         "status": __status__,
         "author": __author__,
         "license": __license__,
-        "doi_concept": "10.5281/zenodo.21744014",
+        "doi_concept": __doi_concept__,
+        "doi_version": __doi_version__,
         "python_requires": ">=3.11",
-        "he_backends": ["TFHE", "HElib (BGV/CKKS)"],
+        "he_backends": ["TFHE (bridge)", "HElib (bridge)"],
+        "honest_note": "Homomorphic layer is bridge/conceptual; core value is offline stability + audit trail",
     }

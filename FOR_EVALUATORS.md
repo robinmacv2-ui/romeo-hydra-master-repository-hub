@@ -1,23 +1,25 @@
-# FOR EVALUATORS — FIAB / BIND / Data Room
+# FOR EVALUATORS — FIAB / BIND / revision tecnica
 
-**ROMEO-HYDRA v0.1.1+ · TRL-6**
+**ROMEO-HYDRA · paquete 0.1.1**
 
-This document is the 60-second briefing for contest judges, technical reviewers and investment committees.
-
----
-
-## 1. What it is (one paragraph)
-
-ROMEO-HYDRA is an **ontological + biomimetic computing engine** focused on protecting data **while it is being used** (not only at rest), with emphasis on low-energy / edge operation. The public core is a clean, installable Python package that exposes:
-
-- **Kernel Sigma** — stability controller with projection, 6k sieve, Hessian metrics and multi-spectrum mimetic adapter
-- **Romeo Abstraction Layer** — conceptual fold → low-level verification skeletons (TFHE/HElib style)
-
-It is dual-licensed (AGPL-3.0 for research/evaluation · Comercial EMMOROR for regulated production).
+Texto corto para jueces y revisores. Sin marketing.
 
 ---
 
-## 2. How to verify in < 3 minutes
+## 1. Que es
+
+Un paquete Python instalable que corre **offline**. Incluye:
+
+- un controlador de estabilidad (Kernel Sigma)
+- una capa de abstraccion orientada a esqueletos de verificacion
+- tests de que no se filtren secretos en los rastros
+- un kit de piloto de 30 dias que genera un ledger de evidencia
+
+Autor: Luis Angel Vazquez Martinez. Empezo sin formacion formal en programacion. El codigo y el DOI existen y se pueden verificar.
+
+---
+
+## 2. Como verificarlo (< 3 min)
 
 ```bash
 git clone https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub.git
@@ -26,74 +28,60 @@ pip install -e ".[dev]"
 python -m romeo_hydra
 python examples/umr_trl5_demo.py
 pytest tests/ -v
+python -m pilot.run_offline_audit --days 7 --entity "EVAL"
 ```
 
-Expected: **7 tests passed**, deterministic demo, offline execution.
+Se espera: tests en verde, demo determinista, ledger en `pilot/output/`.
 
 ---
 
-## 3. Persistent identifiers (cite these)
+## 3. DOIs (Zenodo / CERN)
 
-| Type | DOI |
+| Tipo | DOI |
 |------|-----|
-| **Version DOI (recommended for citation)** | https://doi.org/10.5281/zenodo.21918611 |
-| Concept DOI | https://doi.org/10.5281/zenodo.21744014 |
-
-Registered via Zenodo (CERN).
+| Version | https://doi.org/10.5281/zenodo.21918611 |
+| Concept | https://doi.org/10.5281/zenodo.21744014 |
 
 ---
 
-## 4. Technology Readiness
+## 4. Licencia
 
-- **TRL-6**: Component demonstrated in relevant environment
-  - Installable package
-  - Deterministic UMR
-  - Passing no-plaintext-leak + stability tests
-  - Version DOI published
-- Path to TRL-7: regulated PoC / synthetic CNBV-style flows (roadmap)
+| Uso | Licencia |
+|-----|----------|
+| Investigacion, concurso, PoC | AGPL-3.0 |
+| Produccion regulada | Comercial EMMOROR (contacto) |
 
----
-
-## 5. Dual License (clear for commercial evaluation)
-
-| Use case | License |
-|----------|---------|
-| Research, academia, contest evaluation, internal PoC | **AGPL-3.0** |
-| Production in regulated entities (banking, fintech, CNBV-like) | **Comercial EMMOROR** (contact required) |
-
-Commercial contact: **emmororromeohydra@gmail.com**
+emmororromeohydra@gmail.com
 
 ---
 
-## 6. What is *not* claimed
+## 5. Que no se reclama
 
-- Not a finished production banking system
-- Not audited by a third-party for certification yet
-- Homomorphic components are currently conceptual / bridge-level (not full production TFHE library)
-
-Honesty about scope is intentional and auditable.
-
----
-
-## 7. Repository structure (for reviewers)
-
-| Path | Purpose |
-|------|---------|
-| `romeo_hydra/` | **Product core** (installable package) |
-| `tests/` | TRL-6 test suite (no-plaintext-leak + stability) |
-| `examples/` | Minimal reproducible demo |
-| `PACKAGE_README.md` | Package documentation |
-| `FOR_EVALUATORS.md` | This file |
-| Everything else | Research lab, experiments, orchestration scripts |
+- No es sistema bancario en produccion
+- No esta auditado por tercero ni certificado por CNBV
+- La parte homomorfica es puente / conceptual, no libreria FHE de produccion
+- No hay clientes de pago ni MRR al dia de hoy
 
 ---
 
-## 8. One-line value proposition for FIAB / BIND
+## 6. Estructura util
 
-> Offline-capable, DOI-backed, dual-licensed kernel for data-in-use protection and ontological governance — ready for regulated evaluation in LATAM fintech/banking contexts.
+| Ruta | Para que |
+|------|----------|
+| `romeo_hydra/` | Producto instalable |
+| `tests/` | Suite de pruebas |
+| `pilot/` | Kit de piloto offline 30 dias |
+| `STATUS.md` | Estado comercial honesto |
+| Resto | Laboratorio / experimentos |
 
 ---
 
-**Author:** Luis Ángel Vázquez Martínez  
-**Email:** robinmac.v2@gmail.com · emmororromeohydra@gmail.com  
-**Repo:** https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub
+## 7. Una linea
+
+Codigo offline verificable, con DOI, listo para un piloto tecnico de 30 dias — no un producto terminado de banca.
+
+---
+
+Luis Angel Vazquez Martinez  
+robinmac.v2@gmail.com · emmororromeohydra@gmail.com  
+https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub
