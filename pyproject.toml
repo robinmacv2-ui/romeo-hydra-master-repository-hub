@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "romeo-hydra"
 version = "0.1.2"
-description = "ROMEO-HYDRA: offline kernel + SHA256/RSA/Paillier HE + TFHE/HElib bridge"
+description = "ROMEO-HYDRA: offline kernel + SHA256/RSA/Paillier HE + TFHE/HElib native-optional bridge"
 readme = "PACKAGE_README.md"
 license = {text = "AGPL-3.0-or-later"}
 authors = [
@@ -34,22 +34,19 @@ classifiers = [
     "Typing :: Typed",
 ]
 requires-python = ">=3.11"
+# Igual que numpy: se instalan solas con pip install / pip install -e .
 dependencies = [
     "numpy>=1.24",
+    "cryptography>=41",
 ]
 
 [project.optional-dependencies]
-crypto = [
-    "cryptography>=41",
-]
 full = [
-    "cryptography>=41",
     "sympy>=1.12",
 ]
 dev = [
     "pytest>=7.0",
     "ruff>=0.4",
-    "cryptography>=41",
 ]
 
 [project.urls]
@@ -67,7 +64,7 @@ romeo-hydra = "romeo_hydra.__main__:main"
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["romeo_hydra*"]
-exclude = ["tests*", "examples*", "pilot*", "*.egg-info*"]
+exclude = ["tests*", "examples*", "pilot*", "native*", "*.egg-info*"]
 
 [tool.setuptools.package-data]
 romeo_hydra = ["py.typed"]

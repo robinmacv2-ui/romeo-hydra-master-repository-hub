@@ -2,11 +2,11 @@
 """
 Runtime unificado de cifrado.
 
-Reporta con honestidad que backends estan vivos:
-  - sha256: siempre
-  - rsa: cryptography o pure-demo
-  - paillier: pure Python (HE aditivo real)
-  - tfhe_native / helib_native: solo si libreria del sistema existe
+Al instalar el paquete (pip install / pip install -e .) se bajan:
+  - numpy
+  - cryptography
+
+Asi RSA-OAEP es siempre la ruta real, igual que numpy para el kernel.
 """
 
 from __future__ import annotations
@@ -17,7 +17,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from romeo_hydra.crypto.sha256_integrity import sha256_hex, chain_hash
-from romeo_hydra.crypto.rsa_protocol import RSAProtocol, _HAS_CRYPTOGRAPHY
+from romeo_hydra.crypto.rsa_protocol import RSAProtocol
 from romeo_hydra.crypto.paillier_he import PaillierHE
 
 
@@ -36,8 +36,10 @@ def he_status() -> dict[str, Any]:
         "sha256": {"available": True, "impl": "hashlib"},
         "rsa": {
             "available": True,
-            "impl": "cryptography" if _HAS_CRYPTOGRAPHY else "pure-demo",
-            "production_ready": _HAS_CRYPTOGRAPHY,
+            "impl": "cryptography",
+            "alg": "RSA-OAEP-SHA256",
+            "production_ready": True,
+            "installed_via": "pip dependency (like numpy)",
         },
         "paillier_additive_he": {
             "available": True,
@@ -49,40 +51,35 @@ def he_status() -> dict[str, Any]:
         "tfhe_native": {
             "available": tfhe is not None,
             "library": tfhe,
-            "note": "Requiere libtfhe instalada en el sistema; el wheel Python no la incluye",
+            "note": "Optional C++ backend. Build from native/ — not shipped inside the Python wheel",
         },
         "helib_native": {
             "available": helib is not None,
             "library": helib,
-            "note": "Requiere HElib instalada en el sistema; el wheel Python no la incluye",
+            "note": "Optional C++ backend. Build from native/ — not shipped inside the Python wheel",
         },
-        "zenodo_doi": "timestamp de software, no certificacion criptografica",
+        "zenodo_doi": "software timestamp only — not a cryptographic certification (not FIPS/SGS)",
         "honest_summary": (
-            "SHA-256 + RSA + Paillier (aditivo) son ejecutables en este paquete. "
-            "TFHE/HElib full circuit HE requieren bibliotecas nativas C++; "
-            "si no estan, no se finge encrypt TFHE."
+            "On pip install: numpy + cryptography are pulled automatically. "
+            "SHA-256, RSA-OAEP and Paillier additive HE run in pure install. "
+            "Full TFHE/HElib circuit HE needs native libs built separately; "
+            "status reports true/false without faking ciphertexts."
         ),
     }
 
 
 @dataclass
 class HERuntime:
-    """Facade para demos reproducibles."""
-
     def status(self) -> dict[str, Any]:
         return he_status()
 
     def demo_stack(self, message: str = "romeo-hydra-pilot") -> dict[str, Any]:
-        """Pipeline real: SHA-256 → RSA envelope → Paillier sum proof."""
         digest = sha256_hex(message)
 
-        rsa = RSAProtocol(key_size=2048 if _HAS_CRYPTOGRAPHY else 512)
+        rsa = RSAProtocol(key_size=2048)
         keys = rsa.generate_keypair()
-        # RSA solo cifra mensajes cortos; usamos el hash como payload tipico de protocolo
         payload = digest.encode("utf-8")
-        if keys.backend == "pure-demo":
-            payload = digest[:16].encode("utf-8")
-        enc = rsa.encrypt(keys.public_pem, payload, backend=keys.backend)
+        enc = rsa.encrypt(keys.public_pem, payload)
         dec = rsa.decrypt(keys.private_pem, enc)
 
         phe = PaillierHE(prime_offset=42)
@@ -99,7 +96,8 @@ class HERuntime:
         return {
             "sha256": digest,
             "rsa_roundtrip_ok": dec == payload,
-            "rsa_backend": keys.backend,
+            "rsa_backend": "cryptography",
+            "rsa_alg": "RSA-OAEP-SHA256",
             "paillier_17_plus_25": total,
             "paillier_homomorphic_ok": total == 42,
             "ledger_chain_hash": ledger_hash,

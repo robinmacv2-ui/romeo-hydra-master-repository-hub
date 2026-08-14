@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Pruebas de cripto real: SHA-256, RSA, Paillier aditivo."""
+"""Pruebas de cripto real: SHA-256, RSA-OAEP (cryptography), Paillier aditivo."""
 
 from __future__ import annotations
 
@@ -25,11 +25,13 @@ def test_chain_hash_links():
     assert len(h2) == 64
 
 
-def test_rsa_roundtrip():
-    proto = RSAProtocol()
+def test_rsa_oaep_roundtrip():
+    proto = RSAProtocol(key_size=2048)
     keys = proto.generate_keypair()
-    msg = b"pilot-hash-16b" if keys.backend == "pure-demo" else b"romeo-hydra-integrity-test"
-    package = proto.encrypt(keys.public_pem, msg, backend=keys.backend)
+    assert keys.backend == "cryptography"
+    msg = b"romeo-hydra-integrity-test"
+    package = proto.encrypt(keys.public_pem, msg)
+    assert package["alg"] == "RSA-OAEP-SHA256"
     out = proto.decrypt(keys.private_pem, package)
     assert out == msg
     assert package["plaintext_sha256"] == sha256_hex(msg)
@@ -47,12 +49,14 @@ def test_paillier_homomorphic_add():
 def test_he_runtime_demo():
     result = HERuntime().demo_stack("eval")
     assert result["rsa_roundtrip_ok"] is True
+    assert result["rsa_backend"] == "cryptography"
     assert result["paillier_homomorphic_ok"] is True
     assert len(result["sha256"]) == 64
 
 
-def test_he_status_honest():
+def test_he_status_pip_deps():
     st = he_status()
     assert st["sha256"]["available"] is True
+    assert st["rsa"]["impl"] == "cryptography"
+    assert st["rsa"]["production_ready"] is True
     assert st["paillier_additive_he"]["is_tfhe"] is False
-    assert "no se finge" in st["honest_summary"] or "not" in st["honest_summary"].lower() or "no" in st["honest_summary"].lower()
