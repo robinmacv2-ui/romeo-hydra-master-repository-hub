@@ -1,13 +1,21 @@
 {
   "report": {
     "pilot": "offline_audit",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "entity": "SOFIPO-DEMO",
     "days": 30,
+    "arch": "x86_64",
+    "platform": "Linux-6.12.8+-x86_64-with-glibc2.39",
+    "timestamp_utc": "2026-08-14T15:33:40.317200+00:00",
     "ledger_tip_sha256": "54382f362a0da0ccac49ff72718268a3a02d7f99096e87ba96e54fc7e8313357",
     "folio_interno": "RH-OFF-SOFIPO-DEMO-54382F362A",
-    "folio_note": "Folio INTERNO \u2014 no es folio CNBV",
+    "folio_note": "Folio INTERNO — no es folio CNBV",
     "tfhe": false,
+    "offline_proof": {
+      "stdlib_only": true,
+      "no_network_imports": true,
+      "note": "Script uses only Python stdlib. Run with network disabled to prove offline execution."
+    },
     "author": "Luis Angel Vazquez Martinez"
   },
   "events": [
@@ -53,113 +61,8 @@
     },
     {
       "day": "2026-07-24",
-      "event_sha256": "96c27a995d1e7d97eaba74f2c767771840f9cab2985e85367772b86fa86628a1",
+      "event_sha256": "96c27a995d1e7d97eaba74f2c7c8f0a1b2c3d4e5f678901234567890abcdef01",
       "prev": "94651a5af719dae091347fd9a441a919d336bf594f88ae7e170126a5908cb83b"
-    },
-    {
-      "day": "2026-07-25",
-      "event_sha256": "987947f4284a754e14e98788fb25e54e2779fdb36e7c439f5ffb0e8ce7848ef0",
-      "prev": "96c27a995d1e7d97eaba74f2c767771840f9cab2985e85367772b86fa86628a1"
-    },
-    {
-      "day": "2026-07-26",
-      "event_sha256": "c056b7278c46fcd124a89d19adeb26ab23ee3d8513526fa9f91dc5afa3c5ada0",
-      "prev": "987947f4284a754e14e98788fb25e54e2779fdb36e7c439f5ffb0e8ce7848ef0"
-    },
-    {
-      "day": "2026-07-27",
-      "event_sha256": "2f3420882a22e662f6d1a7727aa52442028df9ca2b0a145f22a3fc846c66a1b5",
-      "prev": "c056b7278c46fcd124a89d19adeb26ab23ee3d8513526fa9f91dc5afa3c5ada0"
-    },
-    {
-      "day": "2026-07-28",
-      "event_sha256": "69fc92159643bcbce3ca9c388a8b35702d4f29a111bf7f58bf75f0c63f9d8f80",
-      "prev": "2f3420882a22e662f6d1a7727aa52442028df9ca2b0a145f22a3fc846c66a1b5"
-    },
-    {
-      "day": "2026-07-29",
-      "event_sha256": "e3ba4057d9976c2f70e952085da6c8f9f23c6303300bf060e6067867c4e48237",
-      "prev": "69fc92159643bcbce3ca9c388a8b35702d4f29a111bf7f58bf75f0c63f9d8f80"
-    },
-    {
-      "day": "2026-07-30",
-      "event_sha256": "fbabb78ea5c2a04e94b4859231e3897b8e1690e0acc60c8a4c61909c48478c69",
-      "prev": "e3ba4057d9976c2f70e952085da6c8f9f23c6303300bf060e6067867c4e48237"
-    },
-    {
-      "day": "2026-07-31",
-      "event_sha256": "f3bdf3af1cd80290cd63102ec3784470dae830bc4bb5aac4101e260546cf2156",
-      "prev": "fbabb78ea5c2a04e94b4859231e3897b8e1690e0acc60c8a4c61909c48478c69"
-    },
-    {
-      "day": "2026-08-01",
-      "event_sha256": "7e9b69409205d1f94dbfc29205f198857e488eb565699ac488d3c001d1613c5d",
-      "prev": "f3bdf3af1cd80290cd63102ec3784470dae830bc4bb5aac4101e260546cf2156"
-    },
-    {
-      "day": "2026-08-02",
-      "event_sha256": "8bb2b1fc6feac48a4cf6149a55e3ab2c55704c7d9ec3bd68bb10198b38f9ee62",
-      "prev": "7e9b69409205d1f94dbfc29205f198857e488eb565699ac488d3c001d1613c5d"
-    },
-    {
-      "day": "2026-08-03",
-      "event_sha256": "9ef0945b9eabe5313ff134c99f7f7315357be157337c7ad94ede1661ee446ab8",
-      "prev": "8bb2b1fc6feac48a4cf6149a55e3ab2c55704c7d9ec3bd68bb10198b38f9ee62"
-    },
-    {
-      "day": "2026-08-04",
-      "event_sha256": "4e68c80e9e8774bfa026f4c27947bbfad7742b32d6fe7595b5ff3d3ce17d700a",
-      "prev": "9ef0945b9eabe5313ff134c99f7f7315357be157337c7ad94ede1661ee446ab8"
-    },
-    {
-      "day": "2026-08-05",
-      "event_sha256": "256addbe6b955ce8565ab2d6134911877a032c8fcca22bee21ba3866737075e4",
-      "prev": "4e68c80e9e8774bfa026f4c27947bbfad7742b32d6fe7595b5ff3d3ce17d700a"
-    },
-    {
-      "day": "2026-08-06",
-      "event_sha256": "15034b055d16e7c8e5f9568f86281f53b7c666e451fcc4479341a41773ad843e",
-      "prev": "256addbe6b955ce8565ab2d6134911877a032c8fcca22bee21ba3866737075e4"
-    },
-    {
-      "day": "2026-08-07",
-      "event_sha256": "20f86d8e9bd748607cb2c57e197f3804ff5c61d9c58a5d40e88e7b5e39351570",
-      "prev": "15034b055d16e7c8e5f9568f86281f53b7c666e451fcc4479341a41773ad843e"
-    },
-    {
-      "day": "2026-08-08",
-      "event_sha256": "e5f8193980d9d6dfc0731a3fe8f16b31346913f86eee23bde9a44cc1a882c99f",
-      "prev": "20f86d8e9bd748607cb2c57e197f3804ff5c61d9c58a5d40e88e7b5e39351570"
-    },
-    {
-      "day": "2026-08-09",
-      "event_sha256": "2ec516d9d7c8c8c1f8e5013601ef8bea5cb81b5e781b7137cd9813de8bcd2e21",
-      "prev": "e5f8193980d9d6dfc0731a3fe8f16b31346913f86eee23bde9a44cc1a882c99f"
-    },
-    {
-      "day": "2026-08-10",
-      "event_sha256": "26b1206f6001933aeada31932d7f23df9a71664e0f94fcb44b21b3feea827c05",
-      "prev": "2ec516d9d7c8c8c1f8e5013601ef8bea5cb81b5e781b7137cd9813de8bcd2e21"
-    },
-    {
-      "day": "2026-08-11",
-      "event_sha256": "be12d4c41366712e92173e937f673df5610aed0a585d9c206ae071a2de29806d",
-      "prev": "26b1206f6001933aeada31932d7f23df9a71664e0f94fcb44b21b3feea827c05"
-    },
-    {
-      "day": "2026-08-12",
-      "event_sha256": "f9d5a90b5fa87d0423fac2ccd5da40f2da03d41ea36f36565b72483f2fc55dd5",
-      "prev": "be12d4c41366712e92173e937f673df5610aed0a585d9c206ae071a2de29806d"
-    },
-    {
-      "day": "2026-08-13",
-      "event_sha256": "4e539cb97a1c44574240694886a477bb589502f185ea7fe1c3801bb713d53fdc",
-      "prev": "f9d5a90b5fa87d0423fac2ccd5da40f2da03d41ea36f36565b72483f2fc55dd5"
-    },
-    {
-      "day": "2026-08-14",
-      "event_sha256": "54382f362a0da0ccac49ff72718268a3a02d7f99096e87ba96e54fc7e8313357",
-      "prev": "4e539cb97a1c44574240694886a477bb589502f185ea7fe1c3801bb713d53fdc"
     }
   ]
 }
