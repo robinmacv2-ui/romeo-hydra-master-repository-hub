@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "romeo-hydra"
-version = "0.1.0"
-description = "ROMEO-HYDRA: Ontological Framework & Biomimetic Computing Engine — Kernel Sigma + Abstraction Layer (TRL-5)"
+version = "0.1.1"
+description = "ROMEO-HYDRA: Ontological Framework & Biomimetic Computing Engine — Kernel Sigma + Abstraction Layer (TRL-6)"
 readme = "PACKAGE_README.md"
 license = {text = "AGPL-3.0-or-later"}
 authors = [
@@ -14,11 +14,16 @@ authors = [
 maintainers = [
     {name = "Luis Ángel Vázquez Martínez", email = "emmororromeohydra@gmail.com"}
 ]
-keywords = ["romeo-hydra", "ontological", "biomimetic", "tfhe", "governance", "kernel-sigma", "homomorphic"]
+keywords = [
+    "romeo-hydra", "ontological", "biomimetic", "tfhe", "helib",
+    "governance", "kernel-sigma", "homomorphic", "trl-6",
+    "fintech", "regtech", "data-in-use", "edge", "latam"
+]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Science/Research",
     "Intended Audience :: Developers",
+    "Intended Audience :: Financial and Insurance Industry",
     "License :: OSI Approved :: GNU Affero General Public License v3",
     "License :: Other/Proprietary License",
     "Programming Language :: Python :: 3",
@@ -49,8 +54,10 @@ dev = [
 Homepage = "https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub"
 Documentation = "https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub#readme"
 Repository = "https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub"
+"DOI (Version)" = "https://doi.org/10.5281/zenodo.21918611"
 "DOI (Concept)" = "https://doi.org/10.5281/zenodo.21744014"
 "Bug Tracker" = "https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub/issues"
+"For Evaluators" = "https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub/blob/main/FOR_EVALUATORS.md"
 
 [project.scripts]
 romeo-hydra = "romeo_hydra.__main__:main"
@@ -62,3 +69,8 @@ exclude = ["tests*", "examples*", "*.egg-info*"]
 
 [tool.setuptools.package-data]
 romeo_hydra = ["py.typed"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-v --tb=short"
