@@ -7,7 +7,7 @@ Para evaluadores solo hay **2 DOIs maestros** (ver [`FOR_EVALUATORS.md`](./FOR_E
 | Rol | DOI |
 |-----|-----|
 | Concept (nucleo / todas las versiones del hub) | [10.5281/zenodo.21744014](https://doi.org/10.5281/zenodo.21744014) |
-| **Version actual a citar (v0.1.2)** | [10.5281/zenodo.21922106](https://doi.org/10.5281/zenodo.21922106) |
+| **Version a citar** | [10.5281/zenodo.21922106](https://doi.org/10.5281/zenodo.21922106) (v0.1.2) — **v0.2.0 DOI pending Zenodo mint** |
 
 Lo demas es bitacora de como se construyo el ecosistema. Sirve cuando pregunten "como llegaste aqui", no cuando pidan "cual es el aporte oficial".
 
@@ -17,11 +17,14 @@ Lo demas es bitacora de como se construyo el ecosistema. Sirve cuando pregunten 
 
 | Version / nota | DOI |
 |----------------|-----|
-| Concept / ecosistema V.3 | [10.5281/zenodo.21744014](https://doi.org/10.5281/zenodo.21744014) |
+| Concept / ecosistema | [10.5281/zenodo.21744014](https://doi.org/10.5281/zenodo.21744014) |
 | v0.1.1 | [10.5281/zenodo.21918611](https://doi.org/10.5281/zenodo.21918611) |
-| **v0.1.2 (actual)** | [10.5281/zenodo.21922106](https://doi.org/10.5281/zenodo.21922106) |
+| v0.1.2 | [10.5281/zenodo.21922106](https://doi.org/10.5281/zenodo.21922106) |
+| **v0.2.0 topology-fold** (branch `release/topology-fold-v0.2.0`, tag `v0.2.0`) | **PENDING** — minted when GitHub Release is published with Zenodo integration ON |
 
 Build forense v0.1.2: wheel 27,913 bytes + tar.gz 27,362 bytes ≈ 55.3K.
+
+v0.2.0 adds `romeo.topology` (information folding) + links media compress as the same principle (DNA packing metaphor: ~2 m sequence into <0.5 mm nucleus).
 
 ---
 
@@ -43,13 +46,10 @@ Build forense v0.1.2: wheel 27,913 bytes + tar.gz 27,362 bytes ≈ 55.3K.
 
 | Documento | Que DOI poner |
 |-----------|----------------|
-| FOR_EVALUATORS, FIAB, BIND, 500 LATAM, pitch | **Solo** Concept + Version actual |
+| FOR_EVALUATORS, FIAB, BIND, 500 LATAM, pitch | **Solo** Concept + Version actual mintada |
 | README (badge) | Version actual |
 | Pregunta "como llegaste aqui" | Link a este archivo |
-| LinkedIn / video | Actualizar a **21922106**; retirar DOIs sueltos como si fueran el producto |
-
-11 DOIs = bitacora.  
-1 Concept + 1 Version = municion.
+| LinkedIn / video | Actualizar al DOI de version mas reciente |
 
 ---
 
