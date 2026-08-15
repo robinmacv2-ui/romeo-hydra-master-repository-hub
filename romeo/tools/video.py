@@ -1,11 +1,21 @@
 """
 ROMEO video tools — offline compression with FFmpeg.
 
+This is one *application* of the topology principle in romeo.topology:
+  fold information by keeping structural invariants and discarding scaffold.
+
+In media terms:
+  - Invariants ≈ face, voice intelligibility, motion continuity
+  - Scaffold  ≈ perceptual redundancy (high bitrate noise, excess resolution)
+  - Fold     ≈ CRF + scale under a rate budget (e.g. YC <100 MB)
+
 Primary use today: compress a ~1 min YC application video to <100 MB
 while keeping face and voice clear (libx265 CRF 28 / fallback libx264).
 
 Requires: ffmpeg and ffprobe on PATH (Termux: pkg install ffmpeg).
 No cloud. No external APIs.
+
+See also: romeo.topology.fold (same principle for text/bytes/any file).
 """
 
 from __future__ import annotations
@@ -88,6 +98,9 @@ def compress(
 
     CRF 28 is a good default for a 1-min face video aimed at <100 MB.
     Lower CRF = larger file / better quality. Higher = smaller / more artifacts.
+
+    Topologically: raises the persistence threshold of visual detail —
+    low-persistence (scaffold) energy is discarded under the rate bound.
     """
     inp = Path(input_path)
     if not inp.is_file():
@@ -103,14 +116,12 @@ def compress(
     if codec == "auto":
         codec = "libx265" if _has_encoder("libx265") else "libx264"
 
-    # Temp file then rename (no-overwrite safety)
     tmp = out.with_suffix(f".tmp{out.suffix}")
     if tmp.exists():
         tmp.unlink()
 
     vf: list[str] = []
     if max_height:
-        # Scale down only if taller than max_height; keep aspect
         vf.append(f"scale=-2:'min({max_height},ih)'")
 
     cmd = [
@@ -136,13 +147,12 @@ def compress(
     if vf:
         cmd.extend(["-vf", ",".join(vf)])
     if codec == "libx265":
-        cmd.extend(["-tag:v", "hvc1"])  # better Apple / browser compatibility
+        cmd.extend(["-tag:v", "hvc1"])
     cmd.append(str(tmp))
 
     print(f"[romeo.tools.video] {inp.name} → {tmp.name}  codec={codec} crf={crf}")
     subprocess.check_call(cmd)
 
-    # Verify
     subprocess.check_call(
         [_which_ffprobe(), "-v", "error", str(tmp)],
         stdout=subprocess.DEVNULL,
@@ -166,6 +176,8 @@ def compress_for_yc(
     - Prefer libx265 CRF 28, 720p max height, AAC 96k
     - If still over target_mb, retry CRF 30 then 32
     - Fallback to libx264 if x265 missing
+
+    Same topology principle: meet rate budget while keeping face/voice invariants.
     """
     inp = Path(input_path)
     if output_path is None:
@@ -181,14 +193,13 @@ def compress_for_yc(
             preset="medium",
             audio_bitrate="96k",
             max_height=720,
-            overwrite=True,  # we own the target path in this helper
+            overwrite=True,
         )
         mb = size_mb(result)
         print(f"[romeo.tools.video] YC pass crf={crf} → {mb:.1f} MB (target ≤ {target_mb})")
         if mb <= target_mb:
             return result
 
-    # Last resort: two-pass-ish scale harder
     print("[romeo.tools.video] still over target — forcing 540p + CRF 32")
     return compress(
         inp,
