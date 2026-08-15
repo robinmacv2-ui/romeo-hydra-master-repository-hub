@@ -12,7 +12,8 @@ Build ~55K (wheel + sdist). Corre en laptop, Git Bash y Termux aarch64.
 > **Evaluadores:** [`FOR_EVALUATORS.md`](./FOR_EVALUATORS.md) — 2 DOIs, que no se reclama, como verificar  
 > **Auditoria limpia:** `bash scripts/audit_judge.sh`  
 > **Reglas de equipo:** [`OPS_RULES.md`](./OPS_RULES.md)  
-> **Cripto (honesto):** [`docs/FHE_STATUS.md`](./docs/FHE_STATUS.md)
+> **Cripto (honesto):** [`docs/FHE_STATUS.md`](./docs/FHE_STATUS.md)  
+> **Protocolo IA (mínimo privilegio):** [`docs/AI_PROTOCOL.md`](./docs/AI_PROTOCOL.md)
 
 **DOI a citar:** [10.5281/zenodo.21922106](https://doi.org/10.5281/zenodo.21922106)  
 **Concept:** [10.5281/zenodo.21744014](https://doi.org/10.5281/zenodo.21744014)
@@ -67,6 +68,7 @@ bash scripts/audit_judge.sh
 | `pilot/` | Evidencia offline **solo stdlib** (scoring / audit) |
 | `native/` | Backend C++ CMake opcional (stub TFHE/HElib) |
 | `tests/` | Tests (requiere `pip install pytest`) |
+| `docs/AI_PROTOCOL.md` | Protocolo de interacción con IA (ojos vendados, auditor, chaos) |
 | `FOR_EVALUATORS.md` | Texto corto para jurado |
 | `OPS_RULES.md` | No romper Termux / DOIs / main |
 | `feat/fhe-next-level` | Rama separada: PHE Paillier (`phe`), no mezclar en main a la ligera |
