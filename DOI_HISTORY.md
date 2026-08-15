@@ -7,7 +7,7 @@ Para evaluadores solo hay **2 DOIs maestros** (ver [`FOR_EVALUATORS.md`](./FOR_E
 | Rol | DOI |
 |-----|-----|
 | Concept (nucleo / todas las versiones del hub) | [10.5281/zenodo.21744014](https://doi.org/10.5281/zenodo.21744014) |
-| **Version a citar** | [10.5281/zenodo.21922106](https://doi.org/10.5281/zenodo.21922106) (v0.1.2) — **v0.2.0 DOI pending Zenodo mint** |
+| **Version a citar (v0.2.0)** | [10.5281/zenodo.21941689](https://doi.org/10.5281/zenodo.21941689) |
 
 Lo demas es bitacora de como se construyo el ecosistema. Sirve cuando pregunten "como llegaste aqui", no cuando pidan "cual es el aporte oficial".
 
@@ -20,7 +20,7 @@ Lo demas es bitacora de como se construyo el ecosistema. Sirve cuando pregunten 
 | Concept / ecosistema | [10.5281/zenodo.21744014](https://doi.org/10.5281/zenodo.21744014) |
 | v0.1.1 | [10.5281/zenodo.21918611](https://doi.org/10.5281/zenodo.21918611) |
 | v0.1.2 | [10.5281/zenodo.21922106](https://doi.org/10.5281/zenodo.21922106) |
-| **v0.2.0 topology-fold** (branch `release/topology-fold-v0.2.0`, tag `v0.2.0`) | **PENDING** — minted when GitHub Release is published with Zenodo integration ON |
+| **v0.2.0 topology-fold (Information Folding / DNA packing)** | [10.5281/zenodo.21941689](https://doi.org/10.5281/zenodo.21941689) |
 
 Build forense v0.1.2: wheel 27,913 bytes + tar.gz 27,362 bytes ≈ 55.3K.
 
