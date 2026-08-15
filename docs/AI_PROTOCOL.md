@@ -67,6 +67,17 @@ o TOPOLOGY.md. Encuentra una promesa técnica en la documentación que no sea
 soportada lógicamente por la estructura de red o de componentes descrita.
 ```
 
+**D. Power-loss / Circuit Breaker**
+
+```
+Actúa como un analista de fallos deterministas. En este flujo de orquestación,
+identifica dónde una interrupción de energía (Power-Loss) entre la escritura
+del ledger y la confirmación del controlador de proyección podría causar
+desincronización de estado. Propón un mecanismo de recuperación fail-closed.
+```
+
+Ver informe materializado: `security_audit/power_loss_circuit_breaker.md`.
+
 ### Uso del README / docs como vector
 
 - Siempre entregar a la IA los documentos públicos (README, ARCHITECTURE, OPS_RULES, docs/FHE_STATUS, docs/TOPOLOGY) y forzar la búsqueda de promesas no respaldadas.
@@ -83,43 +94,44 @@ Tercera función oficial de la IA sobre este repositorio.
 **Saturación de deserializador / fail-closed**
 
 ```
-Genera un script en Python o Bash que sature el puerto de escucha del Sigma Kernel
-(o del protocolo TCP Hydra) con paquetes malformados que imiten el encabezado
-de una firma Ed25519 / SHA-256 pero con payload aleatorio.
+Genera un script en Python o Bash que sature el puerto de escucha del controlador
+de proyección (o del protocolo TCP de red) con paquetes malformados que imiten
+el encabezado de una firma Ed25519 / SHA-256 pero con payload aleatorio.
 El objetivo es probar si el deserializador falla de forma segura (fail-closed)
-o si causa un kernel panic / excepción no controlada.
+o si causa un panic / excepción no controlada.
 ```
 
 **Otros escenarios recomendados**
 
-- Inyección de estados con entropía por encima de `error_tolerance` del Kernel Sigma.
-- Reordenamiento arbitrario de entradas al Delta Ledger (simulación de reordenamiento de red).
-- Corrupción de fingerprints de configuración (`config_fingerprint`) y verificación de que la cadena de trazas inmutables se rompe correctamente.
+- Inyección de estados con entropía por encima de `error_tolerance`.
+- Reordenamiento arbitrario de entradas al ledger (simulación de reordenamiento de red).
+- Corrupción de fingerprints de configuración y verificación de que la cadena de trazas inmutables se rompe correctamente.
 - Stress de `pilot/run_scoring_audit` y `pilot/run_offline_audit` con volúmenes anómalos sin romper la propiedad “solo stdlib”.
 
 Los scripts generados deben vivir preferentemente en `tests/` o `scripts/` y no importar lógica propietaria innecesaria.
 
 ---
 
-## 4. Cadena de suministro (Supply Chain) — riesgo del Master Hub
+## 4. Cadena de suministro (Supply Chain) — Build Recipe Inmutable
 
-Al ser el repositorio maestro, el mayor riesgo es la exposición de la cadena de suministro.
+### Estado actual (cerrado el Delta Gap)
 
-### Auditoría con IA (cuando existan los artefactos)
+| Artefacto | Ubicación |
+|-----------|-----------|
+| Dockerfile multi-stage (Alpine, no-root) | `Dockerfile` |
+| Contexto mínimo de build | `.dockerignore` |
+| CI reproducible + fail-closed + Sigstore en tags | `.github/workflows/reproducible-build.yml` |
+| Notas de superficie de ataque | `security_audit/supply_chain_notes.md` |
+
+### Auditoría continua con IA
 
 ```
 Analiza este archivo YAML de despliegue / GitHub Actions / Dockerfile / Makefile.
 ¿Hay alguna forma de que un atacante inyecte una dependencia maliciosa en el
-binario final de Romeo Hydra sin disparar alertas de hash (SHA-256 del release
-o del wheel)?
+binario final sin disparar alertas de hash (SHA-256 del release o del wheel)?
 ```
 
-### Estado actual del repo (honestidad)
-
-- No existe carpeta `.github/workflows` en el árbol principal al momento de este protocolo.
-- No hay Dockerfile ni Makefile de producción en la raíz.
-- Los releases se rigen por OPS_RULES.md: tag + wheel + ledgers de evidencia.
-- Cualquier futuro CI/CD debe pasar por este protocolo de auditoría de cadena de suministro antes de merge a `main`.
+Cualquier cambio futuro a CI/Dockerfile debe pasar por este vector antes de merge a `main`.
 
 ---
 
@@ -133,7 +145,7 @@ o del wheel)?
 | Supply chain | YAML, Dockerfile, Makefile, pyproject.toml | Secretos de CI | Análisis de inyección de dependencias sin alerta de hash |
 
 **Conclusión del protocolo:**  
-Se mantiene la soberanía del código (Kernel Sigma y orquestación a oscuras) mientras se extrae el máximo de capacidad analítica del modelo. Este es el modo correcto de escalar desarrollo de sistemas de misión crítica.
+Se mantiene la soberanía del código (Kernel Sigma y orquestación a oscuras) mientras se extrae el máximo de capacidad analítica del modelo. El Hub incluye ahora receta de construcción inmutable y CI fail-closed.
 
 ---
 

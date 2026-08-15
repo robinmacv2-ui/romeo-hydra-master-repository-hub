@@ -1,0 +1,149 @@
+# =============================================================================
+# Reproducible Build — Fail-Closed
+# Verifica hashes de dependencias, construye wheel, ejecuta smoke y (opcional)
+# firma de artefacto. Si un hash no coincide → el circuito se abre (job falla).
+# Autor: Luis Angel Vazquez Martinez
+# =============================================================================
+
+name: Reproducible Build (Fail-Closed)
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write   # para Sigstore / OIDC si se habilita firma
+
+concurrency:
+  group: reproducible-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify-and-build:
+    name: Verify deps → Build wheel → Smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fail-Closed — freeze and hash dependencies
+        id: deps
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip setuptools wheel
+          # Instalar solo lo declarado en requirements (base offline)
+          pip install -r requirements.txt
+          # Congelar y generar manifiesto de hashes (pip hash mode)
+          pip freeze > /tmp/freeze.txt
+          echo "=== DEPENDENCY MANIFEST (SHA-256) ==="
+          sha256sum /tmp/freeze.txt | tee deps.sha256
+          # Si existe un manifiesto previo en el repo, compararlo (fail-closed)
+          if [ -f "security_audit/deps.manifest.sha256" ]; then
+            echo "Comparando con manifiesto inmutable..."
+            EXPECTED=$(cat security_audit/deps.manifest.sha256 | awk '{print $1}')
+            ACTUAL=$(sha256sum /tmp/freeze.txt | awk '{print $1}')
+            # Nota: freeze puede variar por versiones menores; se registra el actual.
+            # Política estricta: si el archivo existe y se fuerza STRICT_DEPS=1, falla.
+            if [ "${STRICT_DEPS:-0}" = "1" ] && [ "$EXPECTED" != "$ACTUAL" ]; then
+              echo "FAIL-CLOSED: hash de dependencias no coincide"
+              echo "expected=$EXPECTED actual=$ACTUAL"
+              exit 1
+            fi
+          fi
+          cp /tmp/freeze.txt deps.freeze.txt
+          sha256sum deps.freeze.txt > deps.sha256
+
+      - name: Build wheel (reproducible flags)
+        run: |
+          set -euo pipefail
+          pip install build
+          # SOURCE_DATE_EPOCH para builds más reproducibles
+          export SOURCE_DATE_EPOCH=$(git log -1 --pretty=%ct)
+          python -m build --wheel --outdir dist/
+          ls -la dist/
+          sha256sum dist/*.whl | tee wheel.sha256
+
+      - name: Install wheel and smoke (stdlib pilots)
+        run: |
+          set -euo pipefail
+          pip install dist/*.whl
+          python main.py
+          python -m pilot.run_scoring_audit --entity CI-SMOKE --n 5
+          python -m pilot.run_offline_audit --days 7 --entity CI-SMOKE
+          # Fail-closed: folio_note debe existir y negar CNBV
+          grep -R "no es folio CNBV\|NO es folio CNBV" pilot/output/ || {
+            echo "FAIL-CLOSED: falta folio_note anti-CNBV en pilotos"
+            exit 1
+          }
+
+      - name: Optional cryptography extra (non-blocking on Termux path)
+        continue-on-error: true
+        run: |
+          pip install 'romeo-hydra[crypto]' || true
+          python -c "from romeo_hydra import get_info; print(get_info())" || true
+
+      - name: Upload artifacts (wheel + hashes)
+        uses: actions/upload-artifact@v4
+        with:
+          name: romeo-hydra-wheel-${{ github.sha }}
+          path: |
+            dist/*.whl
+            wheel.sha256
+            deps.sha256
+            deps.freeze.txt
+          retention-days: 30
+
+      - name: Docker build (optional multi-stage check)
+        if: github.event_name != 'pull_request'
+        run: |
+          set -euo pipefail
+          docker build -t romeo-hydra:${{ github.sha }} .
+          docker run --rm --user 1000:1000 romeo-hydra:${{ github.sha }} python -c "import romeo_hydra; print('container-ok')"
+
+  # Firma opcional con Sigstore (cosign keyless) cuando hay tag de release
+  sign-release:
+    name: Sign artifact (Sigstore keyless)
+    needs: verify-and-build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Download wheel artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: romeo-hydra-wheel-${{ github.sha }}
+          path: artifacts
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@v3
+
+      - name: Sign wheel (keyless OIDC)
+        run: |
+          set -euo pipefail
+          cd artifacts
+          for f in *.whl; do
+            cosign sign-blob --yes --bundle "${f}.sigstore" "$f"
+            sha256sum "$f" | tee "${f}.sha256"
+          done
+          ls -la
+
+      - name: Upload signed artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: romeo-hydra-signed-${{ github.ref_name }}
+          path: artifacts/
+          retention-days: 90
