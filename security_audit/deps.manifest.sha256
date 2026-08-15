@@ -1,7 +1,1 @@
-# Manifiesto de huella del archivo requirements.txt (base offline).
-# Política STRICT_DEPS=1 en CI: si el hash de requirements.txt no coincide, fail-closed.
-# Regenerar tras cualquier cambio deliberado a requirements.txt:
-#   sha256sum requirements.txt | tee security_audit/deps.manifest.sha256
-#
-# Formato: <sha256>  requirements.txt
-PLACEHOLDER_UPDATE_ON_NEXT_CI
+b2dbc83e631930a201fb6cbb1d0e5dfaa0b99cc668e46078d83c978e8abaf716  requirements.txt
