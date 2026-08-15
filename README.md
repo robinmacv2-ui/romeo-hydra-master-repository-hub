@@ -13,7 +13,9 @@ Build ~55K (wheel + sdist). Corre en laptop, Git Bash y Termux aarch64.
 > **Auditoria limpia:** `bash scripts/audit_judge.sh`  
 > **Reglas de equipo:** [`OPS_RULES.md`](./OPS_RULES.md)  
 > **Cripto (honesto):** [`docs/FHE_STATUS.md`](./docs/FHE_STATUS.md)  
-> **Protocolo IA (mínimo privilegio):** [`docs/AI_PROTOCOL.md`](./docs/AI_PROTOCOL.md)
+> **Protocolo IA (mínimo privilegio):** [`docs/AI_PROTOCOL.md`](./docs/AI_PROTOCOL.md)  
+> **Build inmutable:** [`Dockerfile`](./Dockerfile) + [`.github/workflows/reproducible-build.yml`](./.github/workflows/reproducible-build.yml)  
+> **Security audit:** [`security_audit/`](./security_audit/)
 
 **DOI a citar:** [10.5281/zenodo.21922106](https://doi.org/10.5281/zenodo.21922106)  
 **Concept:** [10.5281/zenodo.21744014](https://doi.org/10.5281/zenodo.21744014)
@@ -58,6 +60,13 @@ Prueba automatica en directorio aislado:
 bash scripts/audit_judge.sh
 ```
 
+Contenedor (receta inmutable, no-root):
+
+```bash
+docker build -t romeo-hydra:local .
+docker run --rm romeo-hydra:local
+```
+
 ---
 
 ## Estructura (auditoria de un vistazo)
@@ -68,6 +77,9 @@ bash scripts/audit_judge.sh
 | `pilot/` | Evidencia offline **solo stdlib** (scoring / audit) |
 | `native/` | Backend C++ CMake opcional (stub TFHE/HElib) |
 | `tests/` | Tests (requiere `pip install pytest`) |
+| `Dockerfile` | Multi-stage Alpine, user no-root, superficie mínima |
+| `.github/workflows/reproducible-build.yml` | CI fail-closed: hashes, wheel, smoke, Sigstore en tags |
+| `security_audit/` | Abogado del Diablo (power-loss, supply chain) |
 | `docs/AI_PROTOCOL.md` | Protocolo de interacción con IA (ojos vendados, auditor, chaos) |
 | `FOR_EVALUATORS.md` | Texto corto para jurado |
 | `OPS_RULES.md` | No romper Termux / DOIs / main |
