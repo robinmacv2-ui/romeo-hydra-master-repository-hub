@@ -1,8 +1,18 @@
-# FOR EVALUATORS — FIAB / BIND / 500 LATAM
+# FOR EVALUATORS — FIAB / BIND / 500 LATAM / YC
 
 **ROMEO-HYDRA · 0.1.2**
 
 Autor: **Luis Angel Vazquez Martinez**
+
+---
+
+## 0. YC Application Kit (Fall 2026 / Winter 2027)
+
+Ready-to-paste answers + video script + asset checklist:
+
+**[`outreach/YC_APPLICATION.md`](./outreach/YC_APPLICATION.md)**
+
+Built from public patterns of accepted solo / edge / LATAM founders (clarity, recent momentum, technical execution, honest limits).
 
 ---
 
