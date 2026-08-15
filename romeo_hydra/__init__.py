@@ -3,6 +3,7 @@
 ROMEO-HYDRA 0.1.2
 =================
 Offline package. SHA-256 always. Crypto extras optional for Termux.
+Genesis block frozen (Satoshi model).
 
 Author: Luis Angel Vazquez Martinez
 DOI Version: 10.5281/zenodo.21922106
@@ -18,11 +19,21 @@ __license__ = "AGPL-3.0-or-later / Comercial EMMOROR"
 __doi_concept__ = "10.5281/zenodo.21744014"
 __doi_version__ = "10.5281/zenodo.21922106"
 
+from romeo_hydra.genesis import (
+    GENESIS_HASH,
+    GENESIS_PAYLOAD,
+    GenesisMismatchError,
+    assert_genesis_or_die,
+    genesis_block,
+    verify_genesis,
+)
+
 from romeo_hydra.core import (
     RomeoAbstractionLayer,
     TFHECore,
     HElibCore,
     RomeoTFHEBridge,
+    AtomicLedgerWriter,
 )
 
 from romeo_hydra.kernel import (
@@ -68,10 +79,17 @@ __all__ = [
     "__trl__",
     "__doi_concept__",
     "__doi_version__",
+    "GENESIS_HASH",
+    "GENESIS_PAYLOAD",
+    "GenesisMismatchError",
+    "assert_genesis_or_die",
+    "verify_genesis",
+    "genesis_block",
     "RomeoAbstractionLayer",
     "TFHECore",
     "HElibCore",
     "RomeoTFHEBridge",
+    "AtomicLedgerWriter",
     "KernelConfig",
     "KernelSigmaController",
     "CoreState",
@@ -90,6 +108,7 @@ if _CRYPTO_OK:
 
 
 def get_info() -> dict:
+    genesis_ok = verify_genesis()
     info = {
         "name": "romeo-hydra",
         "version": __version__,
@@ -98,11 +117,15 @@ def get_info() -> dict:
         "author": __author__,
         "doi_version": __doi_version__,
         "doi_concept": __doi_concept__,
+        "genesis_hash": GENESIS_HASH,
+        "genesis_ok": genesis_ok,
+        "genesis_timestamp_utc": GENESIS_PAYLOAD["timestamp_utc"],
         "wheel_is_compiled_tfhe": False,
         "honest_note": (
             "Pure-Python package (~55K sdist/wheel class). "
             "Not a multi-MB compiled TFHE library. "
-            "Pilot ledgers are internal evidence, not CNBV folios."
+            "Pilot ledgers are internal evidence, not CNBV folios. "
+            "Genesis hash is the frozen root of trust (Satoshi model)."
         ),
     }
     if _CRYPTO_OK:
