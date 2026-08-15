@@ -8,6 +8,9 @@ Lifecycle per entry:
 On startup, sanitize_startup() truncates any trailing PENDING block
 (fail-closed recovery after power-loss / kill -9).
 
+Root of trust: GENESIS_HASH (Satoshi model). Writer refuses to open if
+genesis verification fails.
+
 Author: Luis Angel Vazquez Martinez
 """
 
@@ -18,11 +21,14 @@ import json
 import os
 import tempfile
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
+
+from romeo_hydra.genesis import GENESIS_HASH, assert_genesis_or_die
 
 SEPARATOR = "\n---\n"
 STATUS_PENDING = "STATUS: PENDING"
 STATUS_COMMITTED = "STATUS: COMMITTED"
+STATUS_GENESIS = "STATUS: GENESIS"
 
 
 def _sha256_payload(payload: dict) -> str:
@@ -43,29 +49,43 @@ class AtomicLedgerWriter:
     Native-file two-phase append for a JSONL-like ledger.
 
     No databases. No third-party deps. Only os / pathlib / hashlib / json.
+    Requires valid GENESIS_HASH before any operation.
     """
 
-    def __init__(self, ledger_path: str | Path):
+    def __init__(self, ledger_path: str | Path, *, require_genesis: bool = True):
+        if require_genesis:
+            assert_genesis_or_die()
         self.ledger_path = Path(ledger_path)
+        self.genesis_hash = GENESIS_HASH
         self._ensure_ledger_exists()
 
     def _ensure_ledger_exists(self) -> None:
         self.ledger_path.parent.mkdir(parents=True, exist_ok=True)
         if not self.ledger_path.exists():
-            self.ledger_path.write_text("", encoding="utf-8")
+            # Seal empty ledger with genesis marker (root of chain)
+            marker = (
+                f"{STATUS_GENESIS}\n"
+                f"HASH: {GENESIS_HASH}\n"
+                f"PAYLOAD: {{\"role\":\"genesis\",\"hash\":\"{GENESIS_HASH}\"}}\n"
+                f"{SEPARATOR}"
+            )
+            self._atomic_write_bytes(marker.encode("utf-8"))
 
     def sanitize_startup(self) -> int:
         """
         Scan ledger at boot. Drop any trailing PENDING block (incomplete
-        transaction after power-loss). Keep only COMMITTED blocks.
+        transaction after power-loss). Keep GENESIS + COMMITTED blocks.
 
-        Returns number of COMMITTED blocks retained.
+        Returns number of COMMITTED blocks retained (excludes genesis marker).
         """
+        assert_genesis_or_die()
         if not self.ledger_path.exists():
+            self._ensure_ledger_exists()
             return 0
 
         content = self.ledger_path.read_text(encoding="utf-8")
         if not content.strip():
+            self._ensure_ledger_exists()
             return 0
 
         blocks = [b for b in content.strip().split(SEPARATOR) if b.strip()]
@@ -73,13 +93,19 @@ class AtomicLedgerWriter:
 
         for block in blocks:
             if STATUS_PENDING in block:
-                # Incomplete cycle — stop here (fail-closed). Do not keep this block.
                 break
-            if STATUS_COMMITTED in block:
+            if STATUS_GENESIS in block or STATUS_COMMITTED in block:
                 keep.append(block.strip())
 
+        # Fail-closed: genesis marker must remain first if present
+        if keep and STATUS_GENESIS not in keep[0] and STATUS_GENESIS in content:
+            # Reconstruct with genesis first
+            genesis_blocks = [b for b in keep if STATUS_GENESIS in b]
+            committed = [b for b in keep if STATUS_COMMITTED in b]
+            keep = genesis_blocks[:1] + committed
+
         self._atomic_rewrite(keep)
-        return len(keep)
+        return sum(1 for b in keep if STATUS_COMMITTED in b)
 
     def append_entry(self, payload: Dict[str, Any]) -> bool:
         """
@@ -89,25 +115,21 @@ class AtomicLedgerWriter:
 
         On any I/O failure → sanitize_startup() and return False.
         """
+        assert_genesis_or_die()
         payload_str = json.dumps(payload, sort_keys=True, separators=(",", ":"))
         payload_hash = _sha256_payload(payload)
 
         pending_body = _format_block(STATUS_PENDING, payload_hash, payload_str)
-        committed_body = _format_block(STATUS_COMMITTED, payload_hash, payload_str)
 
         try:
-            # Phase 1: durable PENDING marker
             with open(self.ledger_path, "a", encoding="utf-8") as f:
                 f.write(pending_body)
                 f.write(SEPARATOR)
                 f.flush()
                 os.fsync(f.fileno())
 
-            # Phase 2: promote PENDING → COMMITTED (rewrite file safely)
             content = self.ledger_path.read_text(encoding="utf-8")
-            # Replace only the last PENDING occurrence for this hash
             marker = f"{STATUS_PENDING}\nHASH: {payload_hash}\n"
-            committed_marker = f"{STATUS_COMMITTED}\nHASH: {payload_hash}\n"
             idx = content.rfind(marker)
             if idx < 0:
                 self.sanitize_startup()
@@ -124,7 +146,7 @@ class AtomicLedgerWriter:
             return False
 
     def list_committed(self) -> List[Dict[str, Any]]:
-        """Return parsed COMMITTED payloads in order (read-only)."""
+        """Return parsed COMMITTED payloads in order (read-only; skips genesis)."""
         if not self.ledger_path.exists():
             return []
         content = self.ledger_path.read_text(encoding="utf-8")
@@ -143,15 +165,24 @@ class AtomicLedgerWriter:
         return out
 
     def chain_ok(self) -> bool:
-        """True if no PENDING blocks remain and every COMMITTED hash matches payload."""
+        """True if genesis matches, no PENDING, and every COMMITTED hash matches payload."""
+        if not verify_soft():
+            return False
         if not self.ledger_path.exists():
             return True
         content = self.ledger_path.read_text(encoding="utf-8")
         if STATUS_PENDING in content:
             return False
+        if GENESIS_HASH not in content and content.strip():
+            # Non-empty ledger without genesis hash is illegitimate
+            return False
         for block in content.strip().split(SEPARATOR):
             block = block.strip()
             if not block:
+                continue
+            if STATUS_GENESIS in block:
+                if GENESIS_HASH not in block:
+                    return False
                 continue
             if STATUS_COMMITTED not in block:
                 return False
@@ -172,10 +203,6 @@ class AtomicLedgerWriter:
                 return False
         return True
 
-    # ------------------------------------------------------------------
-    # Internal durable rewrite helpers
-    # ------------------------------------------------------------------
-
     def _atomic_rewrite(self, blocks: List[str]) -> None:
         if blocks:
             text = SEPARATOR.join(blocks) + SEPARATOR
@@ -195,7 +222,6 @@ class AtomicLedgerWriter:
                 tmp.flush()
                 os.fsync(tmp.fileno())
             os.replace(tmp_name, self.ledger_path)
-            # fsync directory entry where supported
             try:
                 dir_fd = os.open(str(directory), os.O_RDONLY)
                 try:
@@ -210,3 +236,9 @@ class AtomicLedgerWriter:
             except OSError:
                 pass
             raise
+
+
+def verify_soft() -> bool:
+    from romeo_hydra.genesis import verify_genesis
+
+    return verify_genesis()
