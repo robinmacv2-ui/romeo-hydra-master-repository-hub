@@ -39,6 +39,21 @@ grep -R "NO es folio CNBV" pilot/output/ || grep -R "no es folio CNBV" pilot/out
 
 **Si no se generan los 2 JSON con `folio_note` dejando claro que NO es folio CNBV → no hagas push.**
 
+### 4. Interacción con IA (Mínimo Privilegio)
+
+Toda generación de código, auditoría o chaos engineering con LLMs debe seguir el protocolo formal:
+
+→ **[`docs/AI_PROTOCOL.md`](./docs/AI_PROTOCOL.md)**
+
+Resumen obligatorio:
+
+- **Inferencia ciega:** prompts por contratos de interfaz, no por nombres de dominio (Romeo / Sigma / Delta Ledger).
+- **Auditor de seguridad:** atacar orquestación, race conditions, forks y promesas de documentación no respaldadas.
+- **Chaos Engineering:** scripts de saturación / paquetes malformados que prueben fail-closed.
+- **Supply chain:** cualquier futuro Dockerfile, Makefile o GitHub Actions se audita con el prompt de inyección de dependencias sin alerta de hash antes de merge a `main`.
+
+El núcleo (Kernel Sigma + orquestación del Delta Ledger) permanece a oscuras. El código generado vive en capas agnósticas (`utils`, `romeo_hydra/crypto/`, `native/`, `tests/`, `scripts/`).
+
 ---
 
 ## Para el admin de GitHub (DOIs / releases)
@@ -81,11 +96,15 @@ Cuando salga **v0.1.3** (o siguiente):
 
 FIAB debe poder bajar **binario + evidencia** del mismo release, no solo buscar en `pilot/output/` del clone.
 
+### 4. Cadena de suministro
+
+Antes de introducir CI/CD, Dockerfiles o Makefiles de producción, pasar el artefacto por el vector de auditoría de supply chain definido en `docs/AI_PROTOCOL.md` (sección 4).
+
 ---
 
 ## Resumen en una linea
 
-1 producto, 2 DOIs maestros, pilotos stdlib en Termux, release con wheel + ledger, `main` protegido.
+1 producto, 2 DOIs maestros, pilotos stdlib en Termux, release con wheel + ledger, `main` protegido, IA con ojos vendados.
 
 ---
 
