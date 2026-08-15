@@ -3,10 +3,11 @@ title: "ROMEO-HYDRA — Information Folding Topology"
 message: "If you use this software, please cite it using the metadata from this file."
 type: software
 version: 0.2.0
-# Version DOI will be filled after Zenodo mints it from the GitHub release tag v0.2.0
-# Concept DOI remains the ecosystem anchor:
-doi: 10.5281/zenodo.21744014
+doi: 10.5281/zenodo.21941689
 identifiers:
+  - type: doi
+    value: 10.5281/zenodo.21941689
+    description: Version DOI for v0.2.0 (Information Folding Topology)
   - type: doi
     value: 10.5281/zenodo.21744014
     description: Concept DOI (all versions of the hub)
@@ -19,7 +20,7 @@ authors:
     email: "robinmac.v2@gmail.com"
 license: "AGPL-3.0-or-later"
 repository-code: "https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub"
-url: "https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub/tree/release/topology-fold-v0.2.0"
+url: "https://doi.org/10.5281/zenodo.21941689"
 keywords:
   - romeo-hydra
   - information-topology
