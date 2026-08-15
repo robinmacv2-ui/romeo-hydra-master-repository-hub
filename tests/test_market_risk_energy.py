@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+
+from pathlib import Path
+
+import pytest
+
 from romeo_hydra.metrics.energy import estimate_run, compare_edge_vs_cloud_proxy
 from romeo_hydra.risk.aggregate import aggregate_exposures_private
-from pilot.run_market_integrity_audit import run
-from pathlib import Path
-import tempfile
 
 
 def test_energy_positive():
@@ -23,10 +26,12 @@ def test_risk_aggregate_sum():
     assert res.plaintext_sum_for_owner == 10
 
 
-def test_market_integrity_pilot():
-    with tempfile.TemporaryDirectory() as d:
-        report = run("TEST", 10, Path(d))
-        assert report["rsa_seal_ok"] is True
-        assert report["n_orders"] == 10
-        assert len(report["ledger_tip_sha256"]) == 64
-        assert report["scope"]["is_real_exchange"] is False
+def test_market_integrity_pilot(tmp_path: Path):
+    pytest.importorskip("cryptography")
+    from pilot.run_market_integrity_audit import run
+
+    report = run("TEST", 10, tmp_path)
+    assert report["rsa_seal_ok"] is True
+    assert report["n_orders"] == 10
+    assert len(report["ledger_tip_sha256"]) == 64
+    assert report["scope"]["is_real_exchange"] is False

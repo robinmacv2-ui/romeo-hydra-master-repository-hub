@@ -1,7 +1,5 @@
 # =============================================================================
 # Reproducible Build — Fail-Closed
-# Verifica hashes de dependencias, construye wheel, ejecuta smoke y (opcional)
-# firma de artefacto. Si un hash no coincide → el circuito se abre (job falla).
 # Autor: Luis Angel Vazquez Martinez
 # =============================================================================
 
@@ -31,7 +29,7 @@ jobs:
   verify-and-build:
     name: Verify deps → Build wheel → Smoke → Atomic writer
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
 
     steps:
       - name: Checkout
@@ -59,18 +57,19 @@ jobs:
           fi
           echo "STRICT_DEPS: requirements.txt chain_ok"
 
-      - name: Install base deps and package
+      - name: Install base deps, package, crypto (Ubuntu wheels OK)
         run: |
           set -euo pipefail
           python -m pip install --upgrade pip setuptools wheel
           pip install -r requirements.txt
-          pip install -e ".[dev]"
+          pip install -e ".[dev,crypto]"
 
-      - name: Unit tests (atomic writer + suite)
+      - name: Unit tests (full suite)
         run: |
           set -euo pipefail
           export PYTHONPATH="${GITHUB_WORKSPACE}:${PYTHONPATH:-}"
           python -c "import pilot; print('pilot ok', pilot.__version__)"
+          python -c "from romeo_hydra.core.storage import AtomicLedgerWriter; print('atomic ok')"
           pytest tests/ -q --tb=short
 
       - name: Build wheel (reproducible flags)
@@ -86,20 +85,14 @@ jobs:
         run: |
           set -euo pipefail
           export PYTHONPATH="${GITHUB_WORKSPACE}:${PYTHONPATH:-}"
-          pip install dist/*.whl
+          pip install --force-reinstall dist/*.whl
           python main.py
           python -m pilot.run_scoring_audit --entity CI-SMOKE --n 5
           python -m pilot.run_offline_audit --days 7 --entity CI-SMOKE
-          grep -R "no es folio CNBV\|NO es folio CNBV" pilot/output/ || {
+          grep -R "no es folio CNBV\|NO es folio CNBV\|no es folio cnbv" pilot/output/ || {
             echo "FAIL-CLOSED: falta folio_note anti-CNBV en pilotos"
             exit 1
           }
-
-      - name: Optional cryptography extra (non-blocking)
-        continue-on-error: true
-        run: |
-          pip install 'romeo-hydra[crypto]' || true
-          python -c "from romeo_hydra import get_info; print(get_info())" || true
 
       - name: Upload artifacts (wheel + hashes)
         uses: actions/upload-artifact@v4
@@ -143,7 +136,6 @@ jobs:
             cosign sign-blob --yes --bundle "${f}.sigstore" "$f"
             sha256sum "$f" | tee "${f}.sha256"
           done
-          ls -la
 
       - name: Upload signed artifacts
         uses: actions/upload-artifact@v4
