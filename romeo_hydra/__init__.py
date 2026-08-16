@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*
 """
-ROMEO-HYDRA 0.1.2
+ROMEO-HYDRA 0.1.3
 =================
 Offline package. SHA-256 always. Crypto extras optional for Termux.
 Genesis block frozen (Satoshi model).
 Control Plane / Gateway: governance middleware for any external LLM.
-Kernel muscle: P_LAM + ε-Invarianza + Bifurcación 1→4 (Anexo Q).
+Kernel muscle: P_LAM + ε-Invarianza + Bifurcación 1→4 (Anexo Q)
+             + Dossier Matemático Supremo (HPR / PPRH / Σ).
 
 REGLA CERO: ROMEO-HYDRA NO ES UN LLM.
 Es el cerebro de gobernanza (Protocolo PPRH) por el que debe pasar
@@ -17,9 +18,12 @@ DOI Version: 10.5281/zenodo.21922106
 
 from __future__ import annotations
 
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 __trl__ = "6"
-__status__ = "offline installable; Control Plane + Genesis + SHA256+ledger + PLAM quantum containment; not an LLM"
+__status__ = (
+    "offline installable; Control Plane + Genesis + SHA256+ledger "
+    "+ PLAM quantum containment + Dossier Math (HPR/PPRH); not an LLM"
+)
 __author__ = "Luis Angel Vazquez Martinez"
 __license__ = "AGPL-3.0-or-later / Comercial EMMOROR"
 __doi_concept__ = "10.5281/zenodo.21744014"
@@ -52,18 +56,38 @@ from romeo_hydra.kernel import (
     ModulacionResonante7219,
     ANGLE_PENTAGONS_72,
     PRIME_ANCHOR_19,
-    # Anexo Q · Contención cuántica / Partícula de Luis Ángel
     PLAMConfig,
     PLAMResult,
     PLAMQuantumWrapper,
     BifurcationMode,
     ContainmentStatus,
     plam_quantum_wrapper,
+    # Dossier Matemático Supremo
+    AXIOM_I,
+    AXIOM_II,
+    AXIOM_III,
+    SigmaThresholds,
+    DEFAULT_THRESHOLDS,
+    double_well_potential,
+    double_well_hessian_analytical,
+    structural_potential_sigma,
+    structural_hessian_sigma,
+    balance_functional,
+    HPRResult,
+    HPREngine,
+    numerical_jacobian,
+    hessian_vector_product,
+    kronecker_inverse_blocks,
+    PPRHPhase,
+    PPRHState,
+    PPRHProtocol,
+    validate_block_chain,
+    make_block,
+    DossierMathCore,
 )
 
 from romeo_hydra.gateway import RomeoGateway, create_gateway, ValidationResult
 
-# Crypto is soft-imported so missing optional pieces never break import
 try:
     from romeo_hydra.crypto import (
         sha256_hex,
@@ -120,6 +144,27 @@ __all__ = [
     "BifurcationMode",
     "ContainmentStatus",
     "plam_quantum_wrapper",
+    "AXIOM_I",
+    "AXIOM_II",
+    "AXIOM_III",
+    "SigmaThresholds",
+    "DEFAULT_THRESHOLDS",
+    "double_well_potential",
+    "double_well_hessian_analytical",
+    "structural_potential_sigma",
+    "structural_hessian_sigma",
+    "balance_functional",
+    "HPRResult",
+    "HPREngine",
+    "numerical_jacobian",
+    "hessian_vector_product",
+    "kronecker_inverse_blocks",
+    "PPRHPhase",
+    "PPRHState",
+    "PPRHProtocol",
+    "validate_block_chain",
+    "make_block",
+    "DossierMathCore",
     "RomeoGateway",
     "create_gateway",
     "ValidationResult",
@@ -146,15 +191,17 @@ def get_info() -> dict:
         "genesis_timestamp_utc": GENESIS_PAYLOAD["timestamp_utc"],
         "wheel_is_compiled_tfhe": False,
         "plam_quantum_containment": True,
-        "role": "Governance Control Plane (PPRH Protocol) + PLAM/ε-Invarianza — not an LLM",
+        "dossier_math": True,
+        "axioms": {"I": AXIOM_I, "II": AXIOM_II, "III": AXIOM_III},
+        "role": (
+            "Governance Control Plane (PPRH Protocol) + PLAM/ε-Invarianza "
+            "+ Dossier Math (HPR) — not an LLM"
+        ),
         "honest_note": (
-            "Pure-Python package (~55K sdist/wheel class). "
-            "Not a multi-MB compiled TFHE library. "
-            "Not a language model. "
-            "Pilot ledgers are internal evidence, not CNBV folios. "
-            "Genesis hash is the frozen root of trust (Satoshi model). "
-            "Any external LLM must pass through RomeoGateway before action. "
-            "PLAMQuantumWrapper implements Anexo Q (bifurcation 1→4, 0 escapes)."
+            "Pure-Python package. Not a multi-MB compiled TFHE library. "
+            "Not a language model. Pilot ledgers are internal evidence, not CNBV folios. "
+            "Genesis hash is the frozen root of trust. "
+            "DossierMathCore implements HPR, Σ, PPRH 1→4, Sigma thresholds."
         ),
     }
     if _CRYPTO_OK:
