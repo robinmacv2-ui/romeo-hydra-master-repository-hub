@@ -1,9 +1,14 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*
 """
 ROMEO-HYDRA 0.1.2
 =================
 Offline package. SHA-256 always. Crypto extras optional for Termux.
 Genesis block frozen (Satoshi model).
+Control Plane / Gateway: governance middleware for any external LLM.
+
+REGLA CERO: ROMEO-HYDRA NO ES UN LLM.
+Es el cerebro de gobernanza (Protocolo PPRH) por el que debe pasar
+cualquier IA antes de ejecutar una acción en entorno regulado.
 
 Author: Luis Angel Vazquez Martinez
 DOI Version: 10.5281/zenodo.21922106
@@ -13,7 +18,7 @@ from __future__ import annotations
 
 __version__ = "0.1.2"
 __trl__ = "6"
-__status__ = "offline installable; SHA256+ledger; FHE bridge not compiled TFHE in wheel"
+__status__ = "offline installable; Control Plane + Genesis + SHA256+ledger; not an LLM"
 __author__ = "Luis Angel Vazquez Martinez"
 __license__ = "AGPL-3.0-or-later / Comercial EMMOROR"
 __doi_concept__ = "10.5281/zenodo.21744014"
@@ -47,6 +52,8 @@ from romeo_hydra.kernel import (
     ANGLE_PENTAGONS_72,
     PRIME_ANCHOR_19,
 )
+
+from romeo_hydra.gateway import RomeoGateway, create_gateway, ValidationResult
 
 # Crypto is soft-imported so missing optional pieces never break import
 try:
@@ -99,6 +106,9 @@ __all__ = [
     "ModulacionResonante7219",
     "ANGLE_PENTAGONS_72",
     "PRIME_ANCHOR_19",
+    "RomeoGateway",
+    "create_gateway",
+    "ValidationResult",
     "sha256_hex",
     "get_info",
 ]
@@ -121,11 +131,14 @@ def get_info() -> dict:
         "genesis_ok": genesis_ok,
         "genesis_timestamp_utc": GENESIS_PAYLOAD["timestamp_utc"],
         "wheel_is_compiled_tfhe": False,
+        "role": "Governance Control Plane (PPRH Protocol) — not an LLM",
         "honest_note": (
             "Pure-Python package (~55K sdist/wheel class). "
             "Not a multi-MB compiled TFHE library. "
+            "Not a language model. "
             "Pilot ledgers are internal evidence, not CNBV folios. "
-            "Genesis hash is the frozen root of trust (Satoshi model)."
+            "Genesis hash is the frozen root of trust (Satoshi model). "
+            "Any external LLM must pass through RomeoGateway before action."
         ),
     }
     if _CRYPTO_OK:
