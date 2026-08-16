@@ -5,6 +5,7 @@ ROMEO-HYDRA 0.1.2
 Offline package. SHA-256 always. Crypto extras optional for Termux.
 Genesis block frozen (Satoshi model).
 Control Plane / Gateway: governance middleware for any external LLM.
+Kernel muscle: P_LAM + ε-Invarianza + Bifurcación 1→4 (Anexo Q).
 
 REGLA CERO: ROMEO-HYDRA NO ES UN LLM.
 Es el cerebro de gobernanza (Protocolo PPRH) por el que debe pasar
@@ -18,7 +19,7 @@ from __future__ import annotations
 
 __version__ = "0.1.2"
 __trl__ = "6"
-__status__ = "offline installable; Control Plane + Genesis + SHA256+ledger; not an LLM"
+__status__ = "offline installable; Control Plane + Genesis + SHA256+ledger + PLAM quantum containment; not an LLM"
 __author__ = "Luis Angel Vazquez Martinez"
 __license__ = "AGPL-3.0-or-later / Comercial EMMOROR"
 __doi_concept__ = "10.5281/zenodo.21744014"
@@ -51,6 +52,13 @@ from romeo_hydra.kernel import (
     ModulacionResonante7219,
     ANGLE_PENTAGONS_72,
     PRIME_ANCHOR_19,
+    # Anexo Q · Contención cuántica / Partícula de Luis Ángel
+    PLAMConfig,
+    PLAMResult,
+    PLAMQuantumWrapper,
+    BifurcationMode,
+    ContainmentStatus,
+    plam_quantum_wrapper,
 )
 
 from romeo_hydra.gateway import RomeoGateway, create_gateway, ValidationResult
@@ -106,6 +114,12 @@ __all__ = [
     "ModulacionResonante7219",
     "ANGLE_PENTAGONS_72",
     "PRIME_ANCHOR_19",
+    "PLAMConfig",
+    "PLAMResult",
+    "PLAMQuantumWrapper",
+    "BifurcationMode",
+    "ContainmentStatus",
+    "plam_quantum_wrapper",
     "RomeoGateway",
     "create_gateway",
     "ValidationResult",
@@ -131,14 +145,16 @@ def get_info() -> dict:
         "genesis_ok": genesis_ok,
         "genesis_timestamp_utc": GENESIS_PAYLOAD["timestamp_utc"],
         "wheel_is_compiled_tfhe": False,
-        "role": "Governance Control Plane (PPRH Protocol) — not an LLM",
+        "plam_quantum_containment": True,
+        "role": "Governance Control Plane (PPRH Protocol) + PLAM/ε-Invarianza — not an LLM",
         "honest_note": (
             "Pure-Python package (~55K sdist/wheel class). "
             "Not a multi-MB compiled TFHE library. "
             "Not a language model. "
             "Pilot ledgers are internal evidence, not CNBV folios. "
             "Genesis hash is the frozen root of trust (Satoshi model). "
-            "Any external LLM must pass through RomeoGateway before action."
+            "Any external LLM must pass through RomeoGateway before action. "
+            "PLAMQuantumWrapper implements Anexo Q (bifurcation 1→4, 0 escapes)."
         ),
     }
     if _CRYPTO_OK:
