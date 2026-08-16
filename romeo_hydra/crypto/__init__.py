@@ -16,6 +16,11 @@ except Exception:  # noqa: BLE001
     PaillierKeyPair = None  # type: ignore
 
 try:
+    from romeo_hydra.crypto.hydra_vault import HydraVault
+except Exception:  # noqa: BLE001
+    HydraVault = None  # type: ignore
+
+try:
     from romeo_hydra.crypto.he_runtime import HERuntime, he_status
 except Exception:  # noqa: BLE001
     HERuntime = None  # type: ignore
@@ -38,6 +43,7 @@ __all__ = [
     "RSAKeyPair",
     "PaillierHE",
     "PaillierKeyPair",
+    "HydraVault",
     "HERuntime",
     "he_status",
     "load_native",
