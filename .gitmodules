@@ -19,3 +19,18 @@
 [submodule "Part-cula-de-Luis-ngel-"]
 	path = Part-cula-de-Luis-ngel-
 	url = https://github.com/robinmacv2-ui/Part-cula-de-Luis-ngel-
+[submodule "Romeo-BANKING"]
+	path = Romeo-BANKING
+	url = https://github.com/robinmacv2-ui/Romeo-BANKING
+[submodule "ROMEO-HYDRA-BANKING"]
+	path = ROMEO-HYDRA-BANKING
+	url = https://github.com/robinmacv2-ui/ROMEO-HYDRA-BANKING
+[submodule "Romeo_Hydra_Framework"]
+	path = Romeo_Hydra_Framework
+	url = https://github.com/robinmacv2-ui/Romeo_Hydra_Framework
+[submodule "hydra.master"]
+	path = hydra.master
+	url = https://github.com/robinmacv2-ui/hydra.master
+[submodule "LOOPER-STATION"]
+	path = LOOPER-STATION
+	url = https://github.com/robinmacv2-ui/LOOPER-STATION

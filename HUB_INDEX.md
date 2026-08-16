@@ -16,108 +16,90 @@ Cualquier nodo (Postulado, Partícula, Banking, Tarjeta Lógica, etc.) se conect
 
 | Repositorio | Rol | URL |
 |-------------|-----|-----|
-| **romeo-hydra-master-repository-hub** | Núcleo consolidado, kernel, pilotos, ledger, Docker, CI, seguridad | [Link](https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub) |
+| **romeo-hydra-master-repository-hub** | Núcleo consolidado, kernel, pilotos, ledger, Docker, CI, seguridad + **P_LAM / Anexo Q** | [Link](https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub) |
 
 DOI Concept: https://doi.org/10.5281/zenodo.21744014  
 DOI versión: https://doi.org/10.5281/zenodo.21922106
+
+**Kernel muscle (contención cuántica):** `romeo_hydra/kernel/plam_quantum.py`  
+**White paper:** [`docs/WHITEPAPER_CONTENCION_CUANTICA.md`](./docs/WHITEPAPER_CONTENCION_CUANTICA.md)
 
 ---
 
 ## 2. Formalismos matemáticos y ontológicos (CLC / ε-Invarianza)
 
-| Repositorio | Descripción | URL |
-|-------------|-------------|-----|
-| **Postulado-invarianza-homeostatica** | Postulado de Invarianza Homeostática + **Anexo Q (Contención Cuántica)** | [Link](https://github.com/robinmacv2-ui/Postulado-invarianza-homeostatica) |
-| **Part-cula-de-Luis-ngel-** | Partícula de Luis Ángel — comportamiento de singularidades en entorno controlado | [Link](https://github.com/robinmacv2-ui/Part-cula-de-Luis-ngel-) |
-| **TARJETA-L-GICA-CUANTICA** | Introducción teórico-práctica a la Coherencia Lógico-Convexa | [Link](https://github.com/robinmacv2-ui/TARJETA-L-GICA-CUANTICA) |
-| **MANIFIESTO-ONTOLOGICO** | Marco filosófico teórico-práctico | [Link](https://github.com/robinmacv2-ui/MANIFIESTO-ONTOLOGICO) |
-| **Geomitria-en-agujeros-negros** | Comportamiento de singularidades sin colapsar | [Link](https://github.com/robinmacv2-ui/Geomitria-en-agujeros-negros) |
-
-### Anexo Q — Capa de Contención Cuántica (resumen)
-
-Integrado en el Postulado. Tres mecanismos:
-
-1. **Bifurcación 1→4 como escudo antioráculo** — ante `λ_min(H_Σ)=0` se fuerza colapso topológico del estado de gobernanza.
-2. **Envolvente convexa C** — restringe superposiciones y desbordamiento dimensional.
-3. **Gradiente activo de decoherencia lógica** — la información se vuelve holonomía dependiente del trayecto; propiedad de **0 escapes**.
-
-Documento completo:  
-https://github.com/robinmacv2-ui/Postulado-invarianza-homeostatica/blob/main/ANEXO_Q_Contencion_Cuantica.md
+| Repositorio | Descripción | Submódulo |
+|-------------|-------------|-----------|
+| **Postulado-invarianza-homeostatica** | Postulado + Anexo Q (contención cuántica) | sí |
+| **Part-cula-de-Luis-ngel-** | Partícula de Luis Ángel | sí |
+| **TARJETA-L-GICA-CUANTICA** | Coherencia Lógico-Convexa | sí |
+| **MANIFIESTO-ONTOLOGICO** | Marco filosófico | sí |
+| **Geomitria-en-agujeros-negros** | Singularidades sin colapsar | sí |
 
 ---
 
 ## 3. Frameworks y núcleos de código
 
-| Repositorio | Descripción | URL |
-|-------------|-------------|-----|
-| **romeo-hydra** | Núcleo original / submodule | [Link](https://github.com/robinmacv2-ui/romeo-hydra) |
-| **Romeo_Framework** | Reproducible Open Methodology for Experimental and Objective Research | [Link](https://github.com/robinmacv2-ui/Romeo_Framework) |
-| **Romeo_Hydra_Framework** | Núcleo consolidado (TypeScript) | [Link](https://github.com/robinmacv2-ui/Romeo_Hydra_Framework) |
-| **Romeo-Hydra-Geometric** | Código fuente geométrico (privado) | [Link](https://github.com/robinmacv2-ui/Romeo-Hydra-Geometric) |
-| **hydra.master** | Variante TypeScript del master | [Link](https://github.com/robinmacv2-ui/hydra.master) |
-| **romeo-hydra-clean** | Versión limpia (privado) | [Link](https://github.com/robinmacv2-ui/romeo-hydra-clean) |
-| **-clean** | Repo auxiliar limpio | [Link](https://github.com/robinmacv2-ui/-clean) |
+| Repositorio | Descripción | Submódulo |
+|-------------|-------------|-----------|
+| **romeo-hydra** | Núcleo original | sí |
+| **Romeo_Framework** | Metodología reproducible | sí |
+| **Romeo_Hydra_Framework** | Núcleo consolidado TS | sí |
+| **hydra.master** | Variante TypeScript | sí |
+| **Romeo-Hydra-Geometric** | Geométrico (privado) | — |
+| **romeo-hydra-clean** / **-clean** | Auxiliares | — |
 
 ---
 
 ## 4. Dominio bancario / gobernanza legal (CLC v2)
 
-| Repositorio | Descripción | URL |
-|-------------|-------------|-----|
-| **Romeo-BANKING** | Gobernanza auditable | [Link](https://github.com/robinmacv2-ui/Romeo-BANKING) |
-| **ROMEO-HYDRA-BANKING** | Extensión bancaria del núcleo | [Link](https://github.com/robinmacv2-ui/ROMEO-HYDRA-BANKING) |
-
-Compatible con el **Dosier Técnico — Gobernanza Legal de IA Bancaria | CLC v2** (capa normativa multicapas + formalismo CLC).
+| Repositorio | Descripción | Submódulo |
+|-------------|-------------|-----------|
+| **Romeo-BANKING** | Gobernanza auditable | sí |
+| **ROMEO-HYDRA-BANKING** | Extensión bancaria | sí |
 
 ---
 
-## 5. Otros / experimental
+## 5. Otros
 
-| Repositorio | Descripción | URL |
-|-------------|-------------|-----|
-| **LOOPER-STATION** | Música / looper (Kotlin) | [Link](https://github.com/robinmacv2-ui/LOOPER-STATION) |
+| Repositorio | Descripción | Submódulo |
+|-------------|-------------|-----------|
+| **LOOPER-STATION** | Música / looper | sí |
 
 ---
 
-## 6. Submódulos ya registrados en este Hub
-
-```
-romeo-hydra
-TARJETA-L-GICA-CUANTICA
-MANIFIESTO-ONTOLOGICO
-Romeo_Framework
-Geomitria-en-agujeros-negros
-Postulado-invarianza-homeostatica
-Part-cula-de-Luis-ngel-
-```
-
-Para clonar con submódulos:
+## 6. Cómo inicializar todos los submódulos
 
 ```bash
 git clone --recurse-submodules https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub.git
+# o, si ya clonaste:
+bash scripts/init_all_submodules.sh
 ```
 
 ---
 
 ## 7. Principio de unificación
 
-- **Capa matemática (CLC + ε-Invarianza + Partícula de Luis Ángel)** → Postulado + Anexo Q + Partícula.
-- **Capa ontológica** → Manifiesto Ontológico + Geometría de singularidades.
-- **Capa ejecutable** → Master Hub (kernel, ledger Δ, pilotos, Docker).
-- **Capa de gobernanza legal / bancaria** → Romeo-BANKING + ROMEO-HYDRA-BANKING + Dosier CLC v2.
-- **Capa de defensa cuántica** → Anexo Q (wrapper `𝒜_ε ∘ P_LAM` + bifurcación 1→4).
+- **Capa matemática** → Postulado + Anexo Q + Partícula  
+- **Capa ontológica** → Manifiesto + Geometría  
+- **Capa ejecutable (muscle)** → Master Hub + `PLAMQuantumWrapper`  
+- **Capa gobernanza legal** → Banking + Dosier CLC v2  
+- **Capa defensa cuántica** → bifurcación 1→4 + 𝒜_ε + 0 escapes  
 
-Toda decisión automatizada debe satisfacer `Φ(x) = 1`.  
-El formalismo CLC no sustituye la norma: la representa, la proyecta y la protege mediante contención geométrica determinista (propiedad de 0 escapes).
+Toda decisión automatizada debe satisfacer Φ(x) = 1.
 
 ---
 
-## 8. Próximos pasos recomendados
+## 8. API rápida de contención (kernel)
 
-1. Mantener este `HUB_INDEX.md` como fuente de verdad de la federación de repositorios.
-2. Actualizar submódulos cuando el Postulado o el Anexo Q evolucionen.
-3. Implementar el wrapper `plam_quantum_wrapper` (ver `Postulado-invarianza-homeostatica/INTEGRATION_ROMEO_HYDRA.md`) dentro del kernel del Master Hub.
-4. Añadir como submódulos los repos bancarios y de framework que aún no estén registrados, si se desea una federación completa.
+```python
+from romeo_hydra import PLAMQuantumWrapper, PLAMConfig, plam_quantum_wrapper
+import numpy as np
+
+plam = PLAMQuantumWrapper(PLAMConfig(eps=1e-3, state_dimension=128))
+r = plam.contain(np.random.randn(128))
+print(r.status, r.blocked, r.mode)
+```
 
 ---
 
