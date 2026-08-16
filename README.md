@@ -9,6 +9,8 @@
 Paquete Python **offline**, instalable, con DOI en Zenodo.  
 Build ~55K (wheel + sdist). Corre en laptop, Git Bash y Termux aarch64.
 
+> **Índice de todo el ecosistema:** [`HUB_INDEX.md`](./HUB_INDEX.md) — une **todos** los repositorios (Postulado, Partícula, CLC, Banking, Tarjeta Lógica, Manifiesto, etc.)  
+> **Anexo Q (Contención Cuántica):** [`docs/ANEXO_Q_Contencion_Cuantica.md`](./docs/ANEXO_Q_Contencion_Cuantica.md)  
 > **Evaluadores:** [`FOR_EVALUATORS.md`](./FOR_EVALUATORS.md) — 2 DOIs, que no se reclama, como verificar  
 > **Auditoria limpia:** `bash scripts/audit_judge.sh`  
 > **Reglas de equipo:** [`OPS_RULES.md`](./OPS_RULES.md)  
@@ -29,6 +31,8 @@ Autor: **Luis Angel Vazquez Martinez**
 Codigo para evidencia offline (ledgers SHA-256), kernel de estabilidad y un puente **conceptual** hacia cifrado homomorfico.  
 **No** es TFHE compilado dentro del wheel. **No** es folio CNBV. **No** hay clientes de pago todavia.
 
+Incluye la capa formal de **ε-Invarianza + Partícula de Luis Ángel** y el **Anexo Q** de contención frente a interfaces cuánticas (propiedad de 0 escapes).
+
 ---
 
 ## Requisitos
@@ -42,7 +46,7 @@ Codigo para evidencia offline (ledgers SHA-256), kernel de estabilidad y un puen
 ## Guia rapida para evaluadores (< 3 min)
 
 ```bash
-git clone https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub.git
+git clone --recurse-submodules https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub.git
 cd romeo-hydra-master-repository-hub
 python3 -m venv .venv
 source .venv/bin/activate          # Windows: .venv\Scripts\activate
@@ -69,6 +73,24 @@ docker run --rm romeo-hydra:local
 
 ---
 
+## Ecosistema completo (HUB_INDEX)
+
+Todos los repositorios del autor están indexados y conectados en:
+
+**→ [`HUB_INDEX.md`](./HUB_INDEX.md)**
+
+Incluye:
+- Postulado de Invarianza Homeostática + Anexo Q (contención cuántica)
+- Partícula de Luis Ángel
+- TARJETA LÓGICA CUÁNTICA
+- MANIFIESTO ONTOLÓGICO
+- Geometría en agujeros negros
+- Romeo Framework / Romeo Hydra Framework
+- Romeo-BANKING / ROMEO-HYDRA-BANKING
+- y el resto de nodos del ecosistema
+
+---
+
 ## Estructura (auditoria de un vistazo)
 
 | Ruta | Rol |
@@ -81,6 +103,8 @@ docker run --rm romeo-hydra:local
 | `.github/workflows/reproducible-build.yml` | CI fail-closed: hashes, wheel, smoke, Sigstore en tags |
 | `security_audit/` | Abogado del Diablo (power-loss, supply chain) |
 | `docs/AI_PROTOCOL.md` | Protocolo de interacción con IA (ojos vendados, auditor, chaos) |
+| `docs/ANEXO_Q_Contencion_Cuantica.md` | Capa de defensa cuántica (ε-Invarianza) |
+| `HUB_INDEX.md` | **Índice de todos los repositorios del ecosistema** |
 | `FOR_EVALUATORS.md` | Texto corto para jurado |
 | `OPS_RULES.md` | No romper Termux / DOIs / main |
 | `feat/fhe-next-level` | Rama separada: PHE Paillier (`phe`), no mezclar en main a la ligera |
