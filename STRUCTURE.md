@@ -18,9 +18,9 @@ Repo: romeo-hydra-master-repository-hub (~300 archivos; no se borra historia)
 ## PRODUCTO (mirar solo esto en evaluación)
 
 ```text
-romeo_hydra/           # paquete pip (kernel, core, crypto, metrics, risk)
+romeo_hydra/           # paquete pip (kernel, core, crypto, metrics, risk, evidence)
 pilot/                 # ledgers offline stdlib
-tests/                 # pytest (34 tests)
+tests/                 # pytest
 native/                # CMake opcional (stub; TFHE no shippeado)
 scripts/               # smoke, audit_judge, bench_parallel_cpu
 docs/                  # FHE_STATUS, TERMUX, GENESIS, PRODUCT_VOICE, …
@@ -42,6 +42,13 @@ security_audit/        # STRICT_DEPS, power-loss notes
 ```
 
 Instalación evaluador: ver README → “Guía rápida”.
+
+### evidence (producto)
+
+- `romeo_hydra.evidence.automation` — sella eventos externos (n8n/SOAR) en el ledger.
+- No es detección de amenazas ni firewall; solo evidencia con `decision_by_romeo_hydra: false`.
+- `schema_version` actual: `"1"`.
+- Import de `romeo_hydra`: únicamente `AtomicLedgerWriter` (no gateway / kernel).
 
 ### Nomenclatura interna (no son estándares de industria)
 
@@ -65,24 +72,23 @@ En pitch y docs de jurado, preferir las columnas de la derecha o frases genéric
 |------------------|------------------|
 | `BITACORA_PERSONAL/` | Notas personales |
 | `algorithms/`, `core/`, `src/`, `romeo/`, `romeo_hydra_core/` | Prototipos y capas legacy |
-| `outreach/` | Mensajes y kit YC (sí es útil; no es runtime) |
+| `lab/automation_evidence/` | Shim → `romeo_hydra.evidence` (no añadir lógica nueva) |
+| `outreach/` | Mensajes y kit YC |
 | `activar_*.sh`, `automedicina*.py`, `banking_*.py`, … | Scripts de experimento en raíz |
 | `02_Codigo/` | Histórico |
 
 **Política a medio plazo (sin rewrite agresivo):**
 
-1. Nuevos experimentos → `lab/<tema>/` (no más scripts sueltos en raíz).
+1. Nuevos experimentos → `lab/<tema>/`.
 2. Cuando madure → promover a `romeo_hydra/` o `pilot/` con test.
-3. No `git filter-repo` masivo hasta tag de backup; el índice basta para el jurado.
-
-Índice vivo del lab: [`lab/README.md`](./lab/README.md).
+3. No `git filter-repo` masivo hasta tag de backup.
 
 ---
 
 ## SATÉLITES
 
 Listados en [`ECOSYSTEM.md`](./ECOSYSTEM.md).  
-DOIs satélite solo en [`DOI_HISTORY.md`](./DOI_HISTORY.md) — no citarlos como el producto.
+DOIs satélite solo en [`DOI_HISTORY.md`](./DOI_HISTORY.md).
 
 ---
 
@@ -99,9 +105,6 @@ DOIs satélite solo en [`DOI_HISTORY.md`](./DOI_HISTORY.md) — no citarlos como
 
 ```bash
 bash scripts/smoke_termux.sh
-# o
-python -m pilot.run_scoring_audit --entity SOFIPO-DEMO --n 20
-python -m pilot.run_offline_audit --days 30 --entity SOFIPO-DEMO
 pytest tests/ -q
 ```
 
