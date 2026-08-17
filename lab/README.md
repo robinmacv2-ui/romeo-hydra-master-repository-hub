@@ -40,3 +40,5 @@ Ejemplos de temas: `homeostasis/`, `banking-stress/`, `tfhe-bridge/`, `hardware/
 ---
 
 Luis Angel Vazquez Martinez
+
+Product-facing voice for evaluators: see [docs/PRODUCT_VOICE.md](../docs/PRODUCT_VOICE.md) and [STRUCTURE.md](../STRUCTURE.md).
