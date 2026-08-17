@@ -1,108 +1,53 @@
-# HUB INDEX — Ecosistema ROMEO-HYDRA / CLC / EMMOROR
+# HUB INDEX — Ecosistema ROMEO-HYDRA
 
-**Master Repository Hub**  
-https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub
+**Master:** https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub  
+**Indice completo de repos:** [`ECOSYSTEM.md`](./ECOSYSTEM.md)  
+**Producto vs lab:** [`STRUCTURE.md`](./STRUCTURE.md)
 
-Autor: **Luis Angel Vázquez Martínez**  
-Última actualización: Agosto 2026  
-Licencia base del hub: AGPL-3.0 / Comercial EMMOROR
-
-Este documento es el **índice central** que une todos los repositorios del ecosistema.  
-Cualquier nodo (Postulado, Partícula, Banking, Tarjeta Lógica, etc.) se conecta aquí.
+Autor: **Luis Angel Vazquez Martinez**  
+Licencia hub: AGPL-3.0 / Comercial EMMOROR
 
 ---
 
-## 1. Núcleo ejecutable (Master Hub)
+## Nucleo ejecutable (producto)
 
-| Repositorio | Rol | URL |
-|-------------|-----|-----|
-| **romeo-hydra-master-repository-hub** | Núcleo consolidado, kernel, pilotos, ledger, Docker, CI, seguridad + **P_LAM / Anexo Q** | [Link](https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub) |
+| Item | Valor |
+|------|--------|
+| Repo | romeo-hydra-master-repository-hub |
+| Paquete | `romeo_hydra` 0.1.2 |
+| DOI Version | **10.5281/zenodo.21922106** |
+| DOI Concept | **10.5281/zenodo.21744014** |
+| Evaluadores | [`FOR_EVALUATORS.md`](./FOR_EVALUATORS.md) |
 
-DOI Concept: https://doi.org/10.5281/zenodo.21744014  
-DOI versión: https://doi.org/10.5281/zenodo.21922106
-
-**Kernel muscle (contención cuántica):** `romeo_hydra/kernel/plam_quantum.py`  
-**White paper:** [`docs/WHITEPAPER_CONTENCION_CUANTICA.md`](./docs/WHITEPAPER_CONTENCION_CUANTICA.md)
-
----
-
-## 2. Formalismos matemáticos y ontológicos (CLC / ε-Invarianza)
-
-| Repositorio | Descripción | Submódulo |
-|-------------|-------------|-----------|
-| **Postulado-invarianza-homeostatica** | Postulado + Anexo Q (contención cuántica) | sí |
-| **Part-cula-de-Luis-ngel-** | Partícula de Luis Ángel | sí |
-| **TARJETA-L-GICA-CUANTICA** | Coherencia Lógico-Convexa | sí |
-| **MANIFIESTO-ONTOLOGICO** | Marco filosófico | sí |
-| **Geomitria-en-agujeros-negros** | Singularidades sin colapsar | sí |
+```bash
+pip install -r requirements.txt && pip install -e .
+python main.py
+python -m pilot.run_scoring_audit --entity EVAL --n 20
+```
 
 ---
 
-## 3. Frameworks y núcleos de código
+## Mapa rapido de capas
 
-| Repositorio | Descripción | Submódulo |
-|-------------|-------------|-----------|
-| **romeo-hydra** | Núcleo original | sí |
-| **Romeo_Framework** | Metodología reproducible | sí |
-| **Romeo_Hydra_Framework** | Núcleo consolidado TS | sí |
-| **hydra.master** | Variante TypeScript | sí |
-| **Romeo-Hydra-Geometric** | Geométrico (privado) | — |
-| **romeo-hydra-clean** / **-clean** | Auxiliares | — |
+1. **Producto** — este hub (`romeo_hydra/`, `pilot/`, `tests/`)
+2. **Linaje codigo** — romeo-hydra, Romeo_Framework, Romeo_Hydra_Framework, hydra.master
+3. **Linaje DOI teoria** — Postulado, Particula, Tarjeta, Manifiesto, Geomitria
+4. **Banking exploratorio** — Romeo-BANKING, ROMEO-HYDRA-BANKING
+5. **Otros** — LOOPER-STATION, -clean
 
----
-
-## 4. Dominio bancario / gobernanza legal (CLC v2)
-
-| Repositorio | Descripción | Submódulo |
-|-------------|-------------|-----------|
-| **Romeo-BANKING** | Gobernanza auditable | sí |
-| **ROMEO-HYDRA-BANKING** | Extensión bancaria | sí |
+Detalle y URLs: [`ECOSYSTEM.md`](./ECOSYSTEM.md)  
+DOIs satelite: [`DOI_HISTORY.md`](./DOI_HISTORY.md)
 
 ---
 
-## 5. Otros
-
-| Repositorio | Descripción | Submódulo |
-|-------------|-------------|-----------|
-| **LOOPER-STATION** | Música / looper | sí |
-
----
-
-## 6. Cómo inicializar todos los submódulos
+## Submodulos
 
 ```bash
 git clone --recurse-submodules https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub.git
-# o, si ya clonaste:
-bash scripts/init_all_submodules.sh
 ```
 
----
-
-## 7. Principio de unificación
-
-- **Capa matemática** → Postulado + Anexo Q + Partícula  
-- **Capa ontológica** → Manifiesto + Geometría  
-- **Capa ejecutable (muscle)** → Master Hub + `PLAMQuantumWrapper`  
-- **Capa gobernanza legal** → Banking + Dosier CLC v2  
-- **Capa defensa cuántica** → bifurcación 1→4 + 𝒜_ε + 0 escapes  
-
-Toda decisión automatizada debe satisfacer Φ(x) = 1.
+No requerido para la prueba de humo del producto.
 
 ---
 
-## 8. API rápida de contención (kernel)
-
-```python
-from romeo_hydra import PLAMQuantumWrapper, PLAMConfig, plam_quantum_wrapper
-import numpy as np
-
-plam = PLAMQuantumWrapper(PLAMConfig(eps=1e-3, state_dimension=128))
-r = plam.contain(np.random.randn(128))
-print(r.status, r.blocked, r.mode)
-```
-
----
-
-**Contacto**  
-robinmac.v2@gmail.com · emmororromeohydra@gmail.com  
-Luis Angel Vázquez Martínez · 2026
+Luis Angel Vazquez Martinez

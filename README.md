@@ -4,96 +4,61 @@
 [![Concept DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21744014.svg)](https://doi.org/10.5281/zenodo.21744014)
 [![Python](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-AGPL--3.0%20%2F%20Comercial-green.svg)](#licencia)
+[![Downloads](https://img.shields.io/github/downloads/robinmacv2-ui/romeo-hydra-master-repository-hub/total?label=downloads&logo=github)](https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub/releases)
 
-Paquete Python **offline**, instalable, con DOI en Zenodo.  
-Kernel de gobernanza + **contención cuántica (Anexo Q / P_LAM / ε-Invarianza)** en el músculo.
+Paquete Python **offline**, instalable, con DOI. Build ~55K. Laptop · Git Bash · Termux aarch64.
 
-> **Índice de todo el ecosistema:** [`HUB_INDEX.md`](./HUB_INDEX.md)  
-> **White paper contención cuántica:** [`docs/WHITEPAPER_CONTENCION_CUANTICA.md`](./docs/WHITEPAPER_CONTENCION_CUANTICA.md)  
-> **Anexo Q (resumen):** [`docs/ANEXO_Q_Contencion_Cuantica.md`](./docs/ANEXO_Q_Contencion_Cuantica.md)  
-> **Evaluadores:** [`FOR_EVALUATORS.md`](./FOR_EVALUATORS.md)  
-> **Submódulos (todos los repos):** `bash scripts/init_all_submodules.sh`  
-> **Auditoria limpia:** `bash scripts/audit_judge.sh`  
-> **Ops:** [`OPS_RULES.md`](./OPS_RULES.md)
+**Autor:** Luis Angel Vazquez Martinez  
+**DOI a citar:** [10.5281/zenodo.21922106](https://doi.org/10.5281/zenodo.21922106)
 
-**DOI a citar:** [10.5281/zenodo.21922106](https://doi.org/10.5281/zenodo.21922106)  
-**Concept:** [10.5281/zenodo.21744014](https://doi.org/10.5281/zenodo.21744014)
-
-Autor: **Luis Angel Vazquez Martinez**
+| Doc | Para que |
+|-----|----------|
+| [`FOR_EVALUATORS.md`](./FOR_EVALUATORS.md) | Jurado FIAB / BIND |
+| [`STRUCTURE.md`](./STRUCTURE.md) | Producto vs laboratorio en este repo |
+| [`ECOSYSTEM.md`](./ECOSYSTEM.md) | **Todos** los repos de github.com/robinmacv2-ui |
+| [`OPS_RULES.md`](./OPS_RULES.md) | Reglas Termux / DOI / push |
+| [`docs/FHE_STATUS.md`](./docs/FHE_STATUS.md) | Cripto sin humo |
 
 ---
 
-## Qué es (sin humo)
+## Que es (sin humo)
 
-Código para evidencia offline (ledgers SHA-256), kernel de estabilidad y contención determinista derivada del Postulado de Invarianza Homeostática.  
-**No** es TFHE compilado dentro del wheel. **No** es folio CNBV. **No** hay clientes de pago todavía. **No** es un LLM.
+Evidencia offline (ledgers SHA-256), kernel de estabilidad, paralelo CPU (sin GPU), puente conceptual a HE.  
+**No** es TFHE en el wheel. **No** es folio CNBV. **No** hay MRR todavia.
 
-Incluye en el **kernel muscle**:
-
-- `KernelSigmaController` — estabilización / proyección
-- `PLAMQuantumWrapper` — operador P_LAM + bifurcación 1→4 + 0 escapes (Anexo Q)
+Este repo tiene ~300 archivos: muchos son **lab**. El producto es la tabla de [`STRUCTURE.md`](./STRUCTURE.md).
 
 ---
 
-## Contención cuántica (API)
-
-```python
-import numpy as np
-from romeo_hydra import PLAMQuantumWrapper, PLAMConfig, plam_quantum_wrapper
-
-plam = PLAMQuantumWrapper(PLAMConfig(eps=1e-3, state_dimension=128))
-r = plam.contain(np.random.randn(128))
-print(r.status, r.blocked, r.mode)  # safe | containment | blocked
-```
-
-Implementación: `romeo_hydra/kernel/plam_quantum.py`  
-White paper: `docs/WHITEPAPER_CONTENCION_CUANTICA.md`
-
----
-
-## Guía rápida
+## Guia rapida evaluadores (< 3 min)
 
 ```bash
-git clone --recurse-submodules https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub.git
+git clone https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub.git
 cd romeo-hydra-master-repository-hub
 python3 -m venv .venv && source .venv/bin/activate
 pip install -U pip setuptools wheel
 pip install -r requirements.txt && pip install -e .
 python main.py
+python -m pilot.run_scoring_audit --entity EVAL --n 20
+python -m pilot.run_offline_audit --days 30 --entity EVAL
 ```
 
-Inicializar / actualizar **todos** los submódulos del ecosistema:
-
-```bash
-bash scripts/init_all_submodules.sh
-```
+Auditoria aislada: `bash scripts/audit_judge.sh`
 
 ---
 
-## Ecosistema (federación)
+## Estructura (senal / ruido)
 
-Todos los repositorios están indexados y declarados como submódulos en `.gitmodules`:
+**Senal (producto):** `romeo_hydra/` · `pilot/` · `tests/` · `native/` · `scripts/` · `docs/` · `main.py`  
+**Ruido (lab, no borrar):** scripts en raiz, `BITACORA_PERSONAL/`, prototipos — ver [`lab/README.md`](./lab/README.md)
 
-- Postulado-invarianza-homeostatica (Anexo Q canónico)
-- Partícula de Luis Ángel
-- TARJETA LÓGICA CUÁNTICA
-- MANIFIESTO ONTOLÓGICO
-- Geometría en agujeros negros
-- Romeo Framework / Romeo Hydra Framework / hydra.master
-- Romeo-BANKING / ROMEO-HYDRA-BANKING
-- LOOPER-STATION
-- romeo-hydra (núcleo original)
-
-Mapa completo → [`HUB_INDEX.md`](./HUB_INDEX.md)
+**Otros repos del perfil:** [`ECOSYSTEM.md`](./ECOSYSTEM.md)
 
 ---
 
 ## Licencia
 
-- **AGPL-3.0** — investigación, evaluación, concursos, PoC
-- **Comercial EMMOROR** — producción regulada (contactar)
-
-emmororromeohydra@gmail.com
+AGPL-3.0 (evaluacion/PoC) · Comercial EMMOROR (produccion) · emmororromeohydra@gmail.com
 
 ---
 
