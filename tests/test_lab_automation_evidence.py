@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import pytest
@@ -116,3 +117,22 @@ def test_import_surface_is_ledger_only() -> None:
     assert "from romeo_hydra.core.storage.atomic_writer import AtomicLedgerWriter" in src
     assert "from romeo_hydra import" not in src
     assert "import romeo_hydra.gateway" not in src
+
+
+def test_seal_real_n8n_webhook_fixture(tmp_path: Path) -> None:
+    """Seal a realistic n8n-mapped webhook body (not a toy dict)."""
+    fixture = Path(__file__).resolve().parent / "fixtures" / "n8n_webhook_ip_blocked.json"
+    event = json.loads(fixture.read_text(encoding="utf-8"))
+
+    assert event["source_system"] == "n8n"
+    assert "execution_id" in event["details"]
+
+    sealer = AutomationEvidenceSealer(tmp_path / "n8n_evidence.jsonl")
+    result = sealer.seal(event)
+
+    assert result.ok and result.chain_ok
+    assert result.payload["schema_version"] == "1"
+    assert result.payload["decision_by_romeo_hydra"] is False
+    assert result.payload["external_id"] == "n8n-exec-7f3a9c2e-1182"
+    assert result.payload["details"]["ip"] == "203.0.113.44"
+    assert EVIDENCE_DISCLAIMER == result.evidence_note
