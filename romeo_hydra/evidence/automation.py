@@ -37,6 +37,19 @@ EVIDENCE_KIND = "external_automation_event"
 SCHEMA_VERSION = "1"
 RECORDER = "romeo_hydra.evidence.automation"
 
+# Contract history (bump SCHEMA_VERSION when payload shape changes incompatibly).
+# "1" — initial product schema:
+#       required: source_system, event_type, summary
+#       always set by sealer: kind, schema_version, recorder, recorded_at,
+#                             decision_by_romeo_hydra=False, evidence_note
+#       optional pass-through: occurred_at, actor, external_id, details
+SCHEMA_VERSION_NOTES = {
+    "1": (
+        "Initial product schema. External action record only; "
+        "ROMEO-HYDRA never claims decision authority."
+    ),
+}
+
 
 def _utc_now_iso() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
