@@ -1,33 +1,27 @@
 # -*- coding: utf-8 -*-
 """
-Compatibility shim — implementation lives in romeo_hydra.evidence.automation.
+Evidence helpers — record external facts into the atomic ledger.
 
-Prefer:
-    from romeo_hydra.evidence import AutomationEvidenceSealer
+Product surface: automation event sealing (n8n / SOAR / similar).
+Does not detect threats, block IPs, or take security decisions.
 """
 
 from __future__ import annotations
 
-from romeo_hydra.evidence.automation import (  # noqa: F401
+from romeo_hydra.evidence.automation import (
     EVIDENCE_DISCLAIMER,
-    EVIDENCE_KIND,
-    RECORDER,
     SCHEMA_VERSION,
     AutomationEvidenceSealer,
     SealResult,
     build_evidence_payload,
-    payload_sha256,
     validate_external_event,
 )
 
 __all__ = [
     "EVIDENCE_DISCLAIMER",
-    "EVIDENCE_KIND",
-    "RECORDER",
     "SCHEMA_VERSION",
     "AutomationEvidenceSealer",
     "SealResult",
     "build_evidence_payload",
-    "payload_sha256",
     "validate_external_event",
 ]

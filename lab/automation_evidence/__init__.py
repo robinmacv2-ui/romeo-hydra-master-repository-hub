@@ -1,17 +1,11 @@
 # -*- coding: utf-8 -*-
-"""
-LAB: automation event sealing (evidence only).
-
-Records external automation/SOAR/n8n decisions into the existing
-AtomicLedgerWriter. Does not detect threats, block IPs, or execute actions.
-
-Not part of the product surface until promoted with review.
-"""
+"""Deprecated import path — use romeo_hydra.evidence instead."""
 
 from __future__ import annotations
 
-from lab.automation_evidence.sealer import (
+from romeo_hydra.evidence import (
     EVIDENCE_DISCLAIMER,
+    SCHEMA_VERSION,
     AutomationEvidenceSealer,
     SealResult,
     build_evidence_payload,
@@ -20,6 +14,7 @@ from lab.automation_evidence.sealer import (
 
 __all__ = [
     "EVIDENCE_DISCLAIMER",
+    "SCHEMA_VERSION",
     "AutomationEvidenceSealer",
     "SealResult",
     "build_evidence_payload",
