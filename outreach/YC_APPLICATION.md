@@ -17,11 +17,11 @@ From public YC partner signals, batch analyses and accepted solo/edge founders (
 |-------------------|----------------------|
 | Solo founders ~10–18% of recent batches; bar is higher on **execution proof** | 1 person, 0 $, Termux ARM64 validation + DOI + INDAUTOR |
 | Momentum > absolute size; recent 30-day numbers preferred | 0 → 4,135 impressions in 38 days, organic |
-| Specificity beats “AI platform” language | “56K structural AI @ 42 ns on ARM64, no servers” |
-| Technical solos preferred; frame solo as **speed**, not apology | “Validated trifecta alone in my room” |
-| Edge / on-device / offline AI is active (Cactus S25, RunAnywhere W26, Exla, General Instinct) | Core claim is offline + ARM64 + no cloud |
+| Specificity beats “AI platform” language | Offline evidence package + ARM64, no servers |
+| Technical solos preferred; frame solo as **speed**, not apology | Validated install + tests + CI alone |
+| Edge / on-device / offline AI is active | Core claim is offline + ARM64 + no cloud |
 | LATAM founders succeed with authentic local insight + clear English + proof they can ship | CDMX base + LATAM organic audience + reproducible package |
-| Clarity of thought + honesty about limits | Matches existing FOR_EVALUATORS.md / “what we don’t claim” |
+| Clarity of thought + honesty about limits | Matches FOR_EVALUATORS.md / “what we don’t claim” |
 
 Do **not** invent revenue or users. Do **not** soften the offline/sovereign angle.
 
@@ -30,24 +30,26 @@ Do **not** invent revenue or users. Do **not** soften the offline/sovereign angl
 ## 1. Describe what your company does (≤ 50 characters)
 
 ```
-IA estructural 56K a 42ns en ARM64 sin servidores
+Offline evidence + governance package, ~55K, ARM64
 ```
 
-(Alternative English if the form forces EN: `56K structural AI @ 42ns on ARM64, no servers`)
+(Alternative EN: `Offline SHA-256 ledgers + governance kernel on ARM64`)
+
+(Longer optional EN if the form allows ~60 chars: `Offline auditable AI tooling for LATAM ops, no cloud`)
 
 ---
 
 ## 2. What is your company going to make?
 
 ```
-Not a chatbot. A governable ontological synapse framework.
+Not a chatbot. An offline, auditable evidence + governance package for regulated environments.
 
-HYDRA is a ~56K (28K wheel + 27K sdist) structural AI package that runs offline on Termux ARM64 at ~42 ns on commodity hardware (Celeron-class). Built alone in my room in CDMX from 8 Jul 2025 with 600+ documents. Validated trifecta: reproducible install, SHA-256 evidence ledgers, conceptual FHE bridge.
+HYDRA (romeo-hydra) is a ~55K pure-Python package that runs offline on Termux ARM64 and laptops: SHA-256 evidence ledgers (internal folio, not CNBV), a stability/governance kernel, frozen genesis root, and a conceptual HE bridge (not a compiled TFHE library). Built alone in CDMX. Validated: reproducible install, 34 unit tests, CI fail-closed, Zenodo DOI.
 
-INDAUTOR filed 11/08/2026 (under review). Concept DOI 10.5281/zenodo.21744014. Zero cloud dependency. Goal: sovereign, auditable AI that Latin American operators can run and govern without renting US servers.
+INDAUTOR filed 11/08/2026 (under review). Version DOI 10.5281/zenodo.21922106 · Concept 10.5281/zenodo.21744014. Zero cloud dependency. 0 paying customers / $0 MRR today. Goal: first offline pilot LOI with a LATAM operator, then sovereign tooling that does not require renting foreign servers.
+
+Internal names (PPRH, Kernel Sigma, etc.) are project-specific module names, not industry standards.
 ```
-
-*(Why this shape: leads with the concrete artifact, then the “why it matters”, ends with market intent. Avoids abstract “platform” language.)*
 
 ---
 
@@ -73,8 +75,6 @@ Everything organic. $0 marketing. Built and shipped by one person.
 Also: public GitHub repo, dual Zenodo DOIs, INDAUTOR filing, reproducible Termux aarch64 path documented.
 ```
 
-*(Why: recent window + growth ratio + “1 person / $0” frames the solo advantage that YC partners look for.)*
-
 ---
 
 ## 5. Founders
@@ -82,14 +82,12 @@ Also: public GitHub repo, dual Zenodo DOIs, INDAUTOR filing, reproducible Termux
 ```
 Solo founder: Luis Angel Vazquez Martinez.
 
-People told me I needed a lab and 10 engineers. I validated the trifecta alone on Termux ARM64 in my room. Technical full-stack (Python package, native stubs, evidence pilots, docs, Zenodo, INDAUTOR).
+People told me I needed a lab and 10 engineers. I validated install, tests, and CI alone on Termux ARM64. Technical full-stack (Python package, native stubs, evidence pilots, docs, Zenodo, INDAUTOR).
 
-Motivation: build governable AI from Mexico that does not depend on foreign cloud. Solo is a feature here — no consensus lag, full ownership of the ontology and the runtime.
+Motivation: build governable offline tooling from Mexico that does not depend on foreign cloud. Solo is a feature here — no consensus lag, full ownership of the runtime.
 
 Open to a complementary co-founder later; right now the bottleneck is distribution and capital, not code.
 ```
-
-*(Why: owns the solo status as advantage, signals technical competence, leaves door open without sounding incomplete.)*
 
 ---
 
@@ -98,11 +96,11 @@ Open to a complementary co-founder later; right now the bottleneck is distributi
 ```
 Hola, soy Luis de CDMX.
 
-Construí HYDRA: una IA estructural de ~56K que corre a ~42 nanosegundos en un celular con Termux ARM64. Sin servidores, sin cloud.
+Construí HYDRA: un paquete Python offline de ~55K con ledgers SHA-256, kernel de gobernanza y evidencia reproducible en Termux ARM64. Sin servidores, sin cloud. No es un chatbot ni un folio CNBV.
 
-Lo hice solo en mi cuarto, con más de 600 documentos desde julio 2025. Tengo DOI en Zenodo, solicitud de INDAUTOR, y 4,135 impresiones orgánicas en LinkedIn en 38 días con cero inversión.
+Lo hice solo. Tengo DOI en Zenodo, CI verde, tests pasando, solicitud de INDAUTOR, y tracción orgánica en LinkedIn con cero inversión. Hoy: cero clientes de pago; busco la primera LOI de piloto.
 
-Quiero llevar esto a YC para escalarlo a operadores en LATAM que necesitan IA gobernable y offline.
+Quiero YC para llevar esto a operadores en LATAM que necesitan tooling auditable y offline.
 
 Gracias.
 ```
@@ -120,7 +118,7 @@ Tips from accepted apps: clear audio, face visible, one concrete number, no slid
 | LinkedIn profile + 4,135 impressions screenshot | Your profile analytics |
 | DOI | https://doi.org/10.5281/zenodo.21744014 |
 | 365-day / 38-day impressions graph | LinkedIn analytics capture |
-| Termux running at ~42 ns | Screenshot from device |
+| Termux smoke / tests green | Screenshot from device |
 | INDAUTOR number / receipt | Filing of 11/08/2026 |
 | Repo | https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub |
 | FOR_EVALUATORS.md | Already in repo — honest limits |
@@ -142,6 +140,7 @@ Tips from accepted apps: clear audio, face visible, one concrete number, no slid
 - Wheel ≠ compiled production TFHE.
 - Pilot folios are internal, not CNBV.
 - DOI = software provenance, not cryptographic certification.
+- Internal module names (PPRH, Kernel Sigma, PLAM, HPR, …) are project-specific, not industry standards.
 
 These limits are already public in `FOR_EVALUATORS.md` and the README. Keep them.
 
@@ -149,4 +148,4 @@ These limits are already public in `FOR_EVALUATORS.md` and the README. Keep them
 
 Luis Angel Vazquez Martinez  
 robinmac.v2@gmail.com · emmororromeohydra@gmail.com  
-Generated for immediate use — 14 Aug 2026
+Updated for product-voice alignment — Aug 2026
