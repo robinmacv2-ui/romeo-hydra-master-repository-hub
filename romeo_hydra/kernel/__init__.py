@@ -42,6 +42,10 @@ from romeo_hydra.kernel.dossier_math import (
     make_block,
     DossierMathCore,
 )
+from romeo_hydra.kernel.parallel_cpu import (
+    CPUParallelEngine,
+    ParallelResult,
+)
 
 __all__ = [
     "KernelConfig",
@@ -53,14 +57,12 @@ __all__ = [
     "ModulacionResonante7219",
     "ANGLE_PENTAGONS_72",
     "PRIME_ANCHOR_19",
-    # Anexo Q · Contención cuántica / P_LAM
     "PLAMConfig",
     "PLAMResult",
     "PLAMQuantumWrapper",
     "BifurcationMode",
     "ContainmentStatus",
     "plam_quantum_wrapper",
-    # Dossier Matemático Supremo (RAEK-1.0-MX)
     "AXIOM_I",
     "AXIOM_II",
     "AXIOM_III",
@@ -82,4 +84,6 @@ __all__ = [
     "validate_block_chain",
     "make_block",
     "DossierMathCore",
+    "CPUParallelEngine",
+    "ParallelResult",
 ]
