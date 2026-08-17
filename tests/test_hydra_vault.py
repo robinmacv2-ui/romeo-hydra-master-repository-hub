@@ -54,8 +54,11 @@ def test_sum_many_at_once(vault):
 
 
 def test_big_number_still_works(vault):
-    """Overflow resistance: a large number survives the lock/unlock."""
-    big = 10**12
+    """Large number (within demo key modulus) survives lock/unlock."""
+    # Demo keys (prime_offset=17) give n ~ 1e10; stay strictly below n.
+    n = int(vault.keys.public["n"])
+    big = min(10**9, n - 1)
+    assert big > 10**6  # still "big" relative to the other tests
     locked = vault.lock_number(big)
     assert vault.unlock_total(locked) == big
 

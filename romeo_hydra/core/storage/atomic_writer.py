@@ -62,11 +62,12 @@ class AtomicLedgerWriter:
     def _ensure_ledger_exists(self) -> None:
         self.ledger_path.parent.mkdir(parents=True, exist_ok=True)
         if not self.ledger_path.exists():
-            # Seal empty ledger with genesis marker (root of chain)
+            # Seal empty ledger with genesis marker (root of chain).
+            # One clean block + single SEPARATOR (no blank line before ---).
             marker = (
                 f"{STATUS_GENESIS}\n"
                 f"HASH: {GENESIS_HASH}\n"
-                f"PAYLOAD: {{\"role\":\"genesis\",\"hash\":\"{GENESIS_HASH}\"}}\n"
+                f"PAYLOAD: {{\"role\":\"genesis\",\"hash\":\"{GENESIS_HASH}\"}}"
                 f"{SEPARATOR}"
             )
             self._atomic_write_bytes(marker.encode("utf-8"))
@@ -88,14 +89,18 @@ class AtomicLedgerWriter:
             self._ensure_ledger_exists()
             return 0
 
-        blocks = [b for b in content.strip().split(SEPARATOR) if b.strip()]
+        blocks = [
+            b.strip()
+            for b in content.strip().split(SEPARATOR)
+            if b.strip() and b.strip() != "---"
+        ]
         keep: List[str] = []
 
         for block in blocks:
             if STATUS_PENDING in block:
                 break
             if STATUS_GENESIS in block or STATUS_COMMITTED in block:
-                keep.append(block.strip())
+                keep.append(block)
 
         # Fail-closed: genesis marker must remain first if present
         if keep and STATUS_GENESIS not in keep[0] and STATUS_GENESIS in content:
@@ -178,7 +183,8 @@ class AtomicLedgerWriter:
             return False
         for block in content.strip().split(SEPARATOR):
             block = block.strip()
-            if not block:
+            if not block or block == "---":
+                # Tolerate leftover separator noise from older writes / rewrites
                 continue
             if STATUS_GENESIS in block:
                 if GENESIS_HASH not in block:
@@ -204,8 +210,10 @@ class AtomicLedgerWriter:
         return True
 
     def _atomic_rewrite(self, blocks: List[str]) -> None:
-        if blocks:
-            text = SEPARATOR.join(blocks) + SEPARATOR
+        # Normalize: strip each block, drop empties / pure separators
+        clean = [b.strip() for b in blocks if b and b.strip() and b.strip() != "---"]
+        if clean:
+            text = SEPARATOR.join(clean) + SEPARATOR
         else:
             text = ""
         self._atomic_write_bytes(text.encode("utf-8"))
