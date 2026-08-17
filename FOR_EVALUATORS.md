@@ -25,10 +25,31 @@ Entrega verificable:
 - Genesis hash congelado (fail-closed)
 - DOI Zenodo + CI reproducible
 - Documentación explícita de límites
+- Sellado de eventos de automatización externa (`romeo_hydra.evidence`, schema v1)
 
 Nombres de módulos internos (*PPRH*, *Kernel Sigma*, *PLAM*, *HPR*, etc.) son **nomenclatura propia del proyecto**, no estándares de la industria.
 
----
+## 1b. Caso de uso de producto: evidencia de automatización externa
+
+`romeo_hydra.evidence` permite **registrar** (no decidir) un evento JSON producido por un sistema externo — por ejemplo la salida de un workflow n8n o un playbook SOAR que bloqueó una IP.
+
+- Obliga `source_system` (quién actuó).
+- Fuerza `decision_by_romeo_hydra: false` y un `evidence_note` explícito.
+- Escribe en el ledger atómico existente (`schema_version: "1"`).
+- **No** es detección de amenazas, firewall ni folio CNBV.
+
+Demostración mínima:
+
+```bash
+python -c "
+from pathlib import Path
+import json
+from romeo_hydra.evidence import AutomationEvidenceSealer
+event = json.loads(Path('tests/fixtures/n8n_webhook_ip_blocked.json').read_text())
+r = AutomationEvidenceSealer(Path('pilot/output/automation_evidence.jsonl')).seal(event)
+print(r.ok, r.chain_ok, r.evidence_note)
+"
+```
 
 ## 2. DOIs maestros (solo estos dos)
 
@@ -75,6 +96,7 @@ Build Python puro ~55K, DOI 21922106, offline (incl. Termux aarch64) sin depende
 - 0 clientes de pago / 0 MRR
 - Homomórfico “full” = investigación / rama nativa, no el runtime por defecto de `main`
 - No es un LLM ni un chatbot
+- `romeo_hydra.evidence` no decide ni ejecuta acciones de seguridad; solo registra eventos externos
 
 ---
 
@@ -84,6 +106,7 @@ Build Python puro ~55K, DOI 21922106, offline (incl. Termux aarch64) sin depende
 |-------|------------------------|
 | `romeo_hydra/`, `pilot/`, `tests/`, `scripts/`, `docs/FHE_STATUS.md` | Scripts sueltos en raíz, `BITACORA_PERSONAL/`, prototipos, repos satélite de teoría |
 | [`STRUCTURE.md`](./STRUCTURE.md) | Nombres grandilocuentes en carpetas de lab |
+| `romeo_hydra/evidence/` | `lab/automation_evidence/` (shim con fecha de caducidad) |
 
 ---
 
