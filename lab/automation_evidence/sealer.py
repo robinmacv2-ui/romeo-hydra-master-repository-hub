@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-"""
-Compatibility shim — implementation lives in romeo_hydra.evidence.automation.
+"""Compatibility shim — implementation: romeo_hydra.evidence.automation.
 
-Prefer:
-    from romeo_hydra.evidence import AutomationEvidenceSealer
+REMOVE_AFTER: 2027-02-17 — delete with lab/automation_evidence/.
+Prefer: from romeo_hydra.evidence import AutomationEvidenceSealer
 """
 
 from __future__ import annotations

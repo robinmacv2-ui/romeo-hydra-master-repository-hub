@@ -1,0 +1,22 @@
+{
+  "source_system": "n8n",
+  "event_type": "ip_blocked",
+  "summary": "n8n workflow block_brute_force blocked 203.0.113.44 on edge-fw-01",
+  "occurred_at": "2026-08-16T18:42:11+00:00",
+  "actor": "workflow:block_brute_force",
+  "external_id": "n8n-exec-7f3a9c2e-1182",
+  "details": {
+    "ip": "203.0.113.44",
+    "reason": "repeated_auth_failures",
+    "threshold": 12,
+    "window_seconds": 300,
+    "workflow_id": "WF-block_brute_force",
+    "workflow_name": "block_brute_force",
+    "execution_id": "7f3a9c2e-1182",
+    "node": "Apply Firewall Drop",
+    "destination": "edge-fw-01",
+    "ticket": "INC-44102",
+    "n8n_instance": "https://n8n.example.local",
+    "note": "Mapped from n8n execution payload; action was taken by n8n/firewall, not by ROMEO-HYDRA."
+  }
+}

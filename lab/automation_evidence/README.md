@@ -1,12 +1,10 @@
-# automation_evidence (promovido)
+# automation_evidence (shim — caduca)
 
-La implementación estable está en:
+**Implementación:** `romeo_hydra.evidence.automation`  
+**REMOVE_AFTER:** 2027-02-17
 
-**`romeo_hydra.evidence.automation`**
+No añadir lógica aquí. Migrar imports a:
 
 ```python
 from romeo_hydra.evidence import AutomationEvidenceSealer
 ```
-
-Este directorio `lab/automation_evidence/` solo reexporta por compatibilidad.
-No añadir lógica nueva aquí.
