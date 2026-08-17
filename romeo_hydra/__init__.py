@@ -1,16 +1,15 @@
-# -*- coding: utf-8 -*
+# -*- coding: utf-8 -*-
 """
 ROMEO-HYDRA 0.1.3
 =================
-Offline package. SHA-256 always. Crypto extras optional for Termux.
-Genesis block frozen (Satoshi model).
-Control Plane / Gateway: governance middleware for any external LLM.
-Kernel muscle: P_LAM + ε-Invarianza + Bifurcación 1→4 (Anexo Q)
-             + Dossier Matemático Supremo (HPR / PPRH / Σ).
+Offline, installable Python package for SHA-256 evidence ledgers,
+a stability/governance kernel, and an optional conceptual HE bridge.
 
-REGLA CERO: ROMEO-HYDRA NO ES UN LLM.
-Es el cerebro de gobernanza (Protocolo PPRH) por el que debe pasar
-cualquier IA antes de ejecutar una acción en entorno regulado.
+Not an LLM. Not a compiled TFHE library. Not a CNBV folio.
+
+Product surface for evaluators: install, pilots, tests, genesis root,
+CI. Internal module names (PPRH, Kernel Sigma, PLAM, HPR, etc.) are
+*project-specific* nomenclature — not industry standards.
 
 Author: Luis Angel Vazquez Martinez
 DOI Version: 10.5281/zenodo.21922106
@@ -21,8 +20,8 @@ from __future__ import annotations
 __version__ = "0.1.3"
 __trl__ = "6"
 __status__ = (
-    "offline installable; Control Plane + Genesis + SHA256+ledger "
-    "+ PLAM quantum containment + Dossier Math (HPR/PPRH); not an LLM"
+    "offline installable; genesis root + SHA-256 ledgers + "
+    "stability kernel + optional HE bridge; not an LLM"
 )
 __author__ = "Luis Angel Vazquez Martinez"
 __license__ = "AGPL-3.0-or-later / Comercial EMMOROR"
@@ -62,7 +61,7 @@ from romeo_hydra.kernel import (
     BifurcationMode,
     ContainmentStatus,
     plam_quantum_wrapper,
-    # Dossier Matemático Supremo
+    # Dossier Matemático Supremo (lab math core — API kept for compatibility)
     AXIOM_I,
     AXIOM_II,
     AXIOM_III,
@@ -177,6 +176,7 @@ if _CRYPTO_OK:
 
 
 def get_info() -> dict:
+    """Public metadata for evaluators and operators (no secrets)."""
     genesis_ok = verify_genesis()
     info = {
         "name": "romeo-hydra",
@@ -190,18 +190,21 @@ def get_info() -> dict:
         "genesis_ok": genesis_ok,
         "genesis_timestamp_utc": GENESIS_PAYLOAD["timestamp_utc"],
         "wheel_is_compiled_tfhe": False,
-        "plam_quantum_containment": True,
-        "dossier_math": True,
-        "axioms": {"I": AXIOM_I, "II": AXIOM_II, "III": AXIOM_III},
         "role": (
-            "Governance Control Plane (PPRH Protocol) + PLAM/ε-Invarianza "
-            "+ Dossier Math (HPR) — not an LLM"
+            "Offline evidence + stability kernel + optional governance "
+            "gateway for external models — not an LLM"
         ),
+        "nomenclature_note": (
+            "Names such as PPRH, Kernel Sigma, PLAM, HPR, and "
+            "DossierMathCore are internal module names of this project, "
+            "not external industry standards."
+        ),
+        "lab_modules_present": True,
         "honest_note": (
             "Pure-Python package. Not a multi-MB compiled TFHE library. "
-            "Not a language model. Pilot ledgers are internal evidence, not CNBV folios. "
-            "Genesis hash is the frozen root of trust. "
-            "DossierMathCore implements HPR, Σ, PPRH 1→4, Sigma thresholds."
+            "Not a language model. Pilot ledgers are internal evidence, "
+            "not CNBV folios. Genesis hash is the frozen root of trust. "
+            "Seeking first offline pilot LOI; 0 paying customers / $0 MRR."
         ),
     }
     if _CRYPTO_OK:
