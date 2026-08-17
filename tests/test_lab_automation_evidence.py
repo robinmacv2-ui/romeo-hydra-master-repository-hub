@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""LAB tests: external automation events sealed via AtomicLedgerWriter."""
+"""Tests: external automation events sealed via AtomicLedgerWriter (product evidence)."""
 
 from __future__ import annotations
 
@@ -7,13 +7,16 @@ from pathlib import Path
 
 import pytest
 
-from lab.automation_evidence import (
+from romeo_hydra.evidence import (
     EVIDENCE_DISCLAIMER,
+    SCHEMA_VERSION,
     AutomationEvidenceSealer,
     build_evidence_payload,
     validate_external_event,
 )
-from lab.automation_evidence.sealer import EVIDENCE_KIND, RECORDER
+from romeo_hydra.evidence.automation import EVIDENCE_KIND, RECORDER
+
+from lab.automation_evidence import AutomationEvidenceSealer as LabSealer
 
 
 def _sample_event(**overrides):
@@ -40,7 +43,9 @@ def test_seal_event_commits_with_disclaimer_and_source(tmp_path: Path) -> None:
     assert result.payload["decision_by_romeo_hydra"] is False
     assert result.payload["source_system"] == "n8n"
     assert result.payload["kind"] == EVIDENCE_KIND
+    assert result.payload["schema_version"] == SCHEMA_VERSION == "1"
     assert result.payload["recorder"] == RECORDER
+    assert RECORDER.startswith("romeo_hydra.evidence")
 
     evidence = sealer.list_evidence()
     assert len(evidence) == 1
@@ -49,7 +54,7 @@ def test_seal_event_commits_with_disclaimer_and_source(tmp_path: Path) -> None:
     disk = ledger.read_text(encoding="utf-8")
     assert "evidence_note" in disk
     assert "decision_by_romeo_hydra" in disk
-    assert "lab.automation_evidence" in disk
+    assert "romeo_hydra.evidence.automation" in disk
 
 
 def test_missing_source_system_rejected() -> None:
@@ -91,3 +96,23 @@ def test_build_payload_never_claims_romeo_decision() -> None:
     assert payload["decision_by_romeo_hydra"] is False
     assert payload["evidence_note"] == EVIDENCE_DISCLAIMER
     assert payload["kind"] == EVIDENCE_KIND
+    assert payload["schema_version"] == "1"
+
+
+def test_lab_shim_still_resolves(tmp_path: Path) -> None:
+    sealer = LabSealer(tmp_path / "shim.jsonl")
+    r = sealer.seal(_sample_event(source_system="n8n"))
+    assert r.ok and r.chain_ok
+
+
+def test_import_surface_is_ledger_only() -> None:
+    import inspect
+    import romeo_hydra.evidence.automation as mod
+
+    src = inspect.getsource(mod)
+    assert "AtomicLedgerWriter" in src
+    assert "gateway" not in src.lower()
+    assert "KernelSigma" not in src
+    assert "from romeo_hydra.core.storage.atomic_writer import AtomicLedgerWriter" in src
+    assert "from romeo_hydra import" not in src
+    assert "import romeo_hydra.gateway" not in src
