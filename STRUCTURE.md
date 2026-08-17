@@ -7,68 +7,82 @@ Repo: romeo-hydra-master-repository-hub (~300 archivos; no se borra historia)
 
 ## Principio
 
-| Zona | Que es | Para quien |
+| Zona | Qué es | Para quién |
 |------|--------|------------|
-| **PRODUCTO** | Instalable, testeable, documentado para jurado | FIAB / BIND / 500 LATAM |
-| **LAB** | Experimentos, scripts sueltos, bitacoras, assets | Autor / linaje |
-| **SATELITES** | Submodulos / clones de otros repos DOI | Trazabilidad |
+| **PRODUCTO** | Instalable, testeable, documentado para jurado | FIAB / BIND / 500 LATAM / YC |
+| **LAB** | Experimentos, scripts sueltos, bitácoras, assets | Autor / linaje |
+| **SATÉLITES** | Otros repos DOI del mismo perfil | Trazabilidad |
 
 ---
 
-## PRODUCTO (mirar solo esto en evaluacion)
+## PRODUCTO (mirar solo esto en evaluación)
 
 ```text
 romeo_hydra/           # paquete pip (kernel, core, crypto, metrics, risk)
-pilot/                 # ledgers offline stdlib (+ blind en rama fhe)
-tests/                 # pytest
-native/                # CMake libromeo_native (opcional)
+pilot/                 # ledgers offline stdlib
+tests/                 # pytest (34 tests)
+native/                # CMake opcional (stub; TFHE no shippeado)
 scripts/               # smoke, audit_judge, bench_parallel_cpu
-docs/                  # FHE_STATUS, TERMUX, whitepapers
+docs/                  # FHE_STATUS, TERMUX, GENESIS, PRODUCT_VOICE, …
 examples/
-requirements.txt
+requirements.txt       # solo numpy en main
 pyproject.toml
 main.py
 README.md
 FOR_EVALUATORS.md
 OPS_RULES.md
-ARCHITECTURE.md
+STRUCTURE.md
 ECOSYSTEM.md
 DOI_HISTORY.md
 CITATION.cff
 LICENSE
+Dockerfile
+.github/workflows/     # CI fail-closed
+security_audit/        # STRICT_DEPS, power-loss notes
 ```
 
-Instalacion evaluador: ver README seccion "Guia rapida".
+Instalación evaluador: ver README → “Guía rápida”.
+
+### Nomenclatura interna (no son estándares de industria)
+
+Estos nombres aparecen en el código y en docs de lab. Son **propios del proyecto**:
+
+| Nombre interno | Lectura neutra para evaluadores |
+|----------------|----------------------------------|
+| PPRH Protocol | Gateway / control plane de gobernanza (implementación propia) |
+| Kernel Sigma | Módulo de estabilidad / métricas del kernel |
+| PLAM / ε-Invarianza / Anexo Q | Investigación de contención; no feature de producto empaquetado |
+| HPR / Dossier Matemático Supremo | Núcleo matemático experimental del lab → API técnica, no pitch |
+| HydraVault | Contenedor demo de números con Paillier pure-Python |
+
+En pitch y docs de jurado, preferir las columnas de la derecha o frases genéricas (“stability kernel”, “optional governance gateway”, “conceptual HE bridge”).
 
 ---
 
 ## LAB (ruido controlado — no borrar)
 
-Archivos y carpetas en la raiz que **no** son la superficie de producto:
-
-| Patron / carpeta | Contenido tipico |
+| Patrón / carpeta | Contenido típico |
 |------------------|------------------|
 | `BITACORA_PERSONAL/` | Notas personales |
 | `algorithms/`, `core/`, `src/`, `romeo/`, `romeo_hydra_core/` | Prototipos y capas legacy |
-| `security_audit/`, `outreach/` | Auditorias y mensajes |
-| `activar_*.sh`, `automedicina*.py`, `banking_*.py`, `api_sigma.py`, … | Scripts de experimento en raiz |
-| `*.jpg`, assets geometricos | Material visual |
-| `02_Codigo/` | Historico |
+| `outreach/` | Mensajes y kit YC (sí es útil; no es runtime) |
+| `activar_*.sh`, `automedicina*.py`, `banking_*.py`, … | Scripts de experimento en raíz |
+| `02_Codigo/` | Histórico |
 
-**Politica a medio plazo (sin rewrite agresivo):**
+**Política a medio plazo (sin rewrite agresivo):**
 
-1. Nuevos experimentos → crear bajo `lab/<tema>/` (no mas scripts sueltos en raiz).
-2. Cuando un experimento madure → promover a `romeo_hydra/` o `pilot/` con test.
-3. No `git filter-repo` masivo hasta tener tag de backup y tiempo; el indice basta para el jurado.
+1. Nuevos experimentos → `lab/<tema>/` (no más scripts sueltos en raíz).
+2. Cuando madure → promover a `romeo_hydra/` o `pilot/` con test.
+3. No `git filter-repo` masivo hasta tag de backup; el índice basta para el jurado.
 
-Indice vivo del lab: [`lab/README.md`](./lab/README.md).
+Índice vivo del lab: [`lab/README.md`](./lab/README.md).
 
 ---
 
-## SATELITES (otros repos, no el producto)
+## SATÉLITES
 
 Listados en [`ECOSYSTEM.md`](./ECOSYSTEM.md).  
-DOIs satelite solo en [`DOI_HISTORY.md`](./DOI_HISTORY.md).
+DOIs satélite solo en [`DOI_HISTORY.md`](./DOI_HISTORY.md) — no citarlos como el producto.
 
 ---
 
@@ -81,15 +95,14 @@ DOIs satelite solo en [`DOI_HISTORY.md`](./DOI_HISTORY.md).
 
 ---
 
-## Checklist socio de sistemas
-
-Antes de push a main:
+## Checklist antes de push a main
 
 ```bash
 bash scripts/smoke_termux.sh
 # o
 python -m pilot.run_scoring_audit --entity SOFIPO-DEMO --n 20
 python -m pilot.run_offline_audit --days 30 --entity SOFIPO-DEMO
+pytest tests/ -q
 ```
 
 Ver [`OPS_RULES.md`](./OPS_RULES.md).

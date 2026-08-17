@@ -1,26 +1,32 @@
 # FOR EVALUATORS — FIAB / BIND / 500 LATAM / YC
 
-**ROMEO-HYDRA · 0.1.2**
+**ROMEO-HYDRA · 0.1.3**
 
 Autor: **Luis Angel Vazquez Martinez**
 
 ---
 
-## 0. YC Application Kit (Fall 2026 / Winter 2027)
+## 0. YC Application Kit
 
-Ready-to-paste answers + video script + asset checklist:
+Ready-to-paste answers + checklist:
 
 **[`outreach/YC_APPLICATION.md`](./outreach/YC_APPLICATION.md)**
 
-Built from public patterns of accepted solo / edge / LATAM founders (clarity, recent momentum, technical execution, honest limits).
-
 ---
 
-## 1. Que es
+## 1. Qué es
 
-Paquete Python offline (~55K wheel+sdist class), reproducible en entorno limpio (venv).
+Paquete Python offline (~55K wheel+sdist), reproducible en entorno limpio (venv / Termux aarch64).
 
-Entrega: kernel, pilotos de evidencia SHA-256, DOI Zenodo, documentacion de limites.
+Entrega verificable:
+
+- Kernel de estabilidad + gateway de gobernanza opcional (no es un LLM)
+- Pilotos de evidencia SHA-256 (stdlib only)
+- Genesis hash congelado (fail-closed)
+- DOI Zenodo + CI reproducible
+- Documentación explícita de límites
+
+Nombres de módulos internos (*PPRH*, *Kernel Sigma*, *PLAM*, *HPR*, etc.) son **nomenclatura propia del proyecto**, no estándares de la industria.
 
 ---
 
@@ -31,7 +37,7 @@ Entrega: kernel, pilotos de evidencia SHA-256, DOI Zenodo, documentacion de limi
 | **Version** | **[10.5281/zenodo.21922106](https://doi.org/10.5281/zenodo.21922106)** |
 | Concept | [10.5281/zenodo.21744014](https://doi.org/10.5281/zenodo.21744014) |
 
-Historial satelite: [`DOI_HISTORY.md`](./DOI_HISTORY.md)
+Historial satélite (teoría/ontología, no producto): [`DOI_HISTORY.md`](./DOI_HISTORY.md)
 
 ---
 
@@ -49,31 +55,41 @@ python -m pilot.run_scoring_audit --entity EVAL --n 20
 python -m pilot.run_offline_audit --days 30 --entity EVAL
 ```
 
-O en un comando: `bash scripts/audit_judge.sh`
+O: `bash scripts/audit_judge.sh`
 
-Esperado: JSON en `pilot/output/` con `folio_note` que dice **NO es folio CNBV** y `tfhe_full` / equivalencias en **false**.
+**Esperado:** JSON en `pilot/output/` con `folio_note` que dice **NO es folio CNBV** y flags de TFHE/full HE en **false**.
 
 ---
 
 ## 4. Frase oficial
 
-v0.1.2 es un build Python puro ~55K, DOI 21922106, que corre offline (incl. Termux aarch64) sin depender de Rust. Implementa integridad SHA-256 y un puente conceptual a FHE; **no** es una libreria TFHE compilada de produccion. El piloto genera ledger con **folio interno**, no un folio CNBV oficial.
+Build Python puro ~55K, DOI 21922106, offline (incl. Termux aarch64) sin depender de Rust. Implementa integridad SHA-256 y un puente conceptual a HE; **no** es una librería TFHE compilada de producción. El piloto genera ledger con **folio interno**, no un folio CNBV oficial. Hoy: 0 clientes de pago / $0 MRR; buscando primera LOI de piloto offline.
 
 ---
 
-## 5. Que no se reclama
+## 5. Qué no se reclama
 
-- No es sistema bancario/bursatil en produccion
-- No esta certificado por CNBV
+- No es sistema bancario/bursátil en producción
+- No está certificado por CNBV ni ninguna autoridad
 - El wheel no contiene TFHE/HElib compilados
 - 0 clientes de pago / 0 MRR
-- Homomorfico full = rama/slot nativo, no el runtime por defecto de main
+- Homomórfico “full” = investigación / rama nativa, no el runtime por defecto de `main`
+- No es un LLM ni un chatbot
 
 ---
 
-## 6. Licencia
+## 6. Dónde mirar (producto) y qué ignorar (lab)
 
-AGPL-3.0 (evaluacion/PoC) · Comercial EMMOROR (produccion) · emmororromeohydra@gmail.com
+| Mirar | Ignorar en evaluación |
+|-------|------------------------|
+| `romeo_hydra/`, `pilot/`, `tests/`, `scripts/`, `docs/FHE_STATUS.md` | Scripts sueltos en raíz, `BITACORA_PERSONAL/`, prototipos, repos satélite de teoría |
+| [`STRUCTURE.md`](./STRUCTURE.md) | Nombres grandilocuentes en carpetas de lab |
+
+---
+
+## 7. Licencia
+
+AGPL-3.0 (evaluación/PoC) · Comercial EMMOROR (producción) · emmororromeohydra@gmail.com
 
 ---
 
