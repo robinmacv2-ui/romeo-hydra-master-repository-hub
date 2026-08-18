@@ -1,129 +1,87 @@
-"""
-Runtime de agente offline.
-- No llama OpenAI/Anthropic/ni red.
-- Toda acción pasa un gate fail-closed (evidencia + entidad).
-- Opcional: enriquecer con pilot scoring si existe.
-"""
-from __future__ import annotations
-
-import json
+"""Bucle DFA: ESPERANDO -> EJECUTANDO|RECHAZADO -> ESPERANDO."""
 import hashlib
-from datetime import datetime, timezone
-from pathlib import Path
-from typing import Any, Dict, List, Optional
+import json
+import pathlib
+import time
+
+from .admissible import is_admissible
+from .parser import parse_neutral
+from .tools import (
+    tool_echo,
+    tool_status,
+    tool_hash,
+    tool_hashfile,
+    tool_score,
+    tool_audit,
+)
+
+ROOT = pathlib.Path(__file__).resolve().parents[1]
+LOG_PATH = ROOT / "pilot" / "output" / "agent_log.jsonl"
 
 
-def _utc() -> str:
-    return datetime.now(timezone.utc).isoformat()
+def _receipt(payload: dict) -> str:
+    raw = json.dumps(payload, sort_keys=True, ensure_ascii=False).encode("utf-8")
+    return hashlib.sha256(raw).hexdigest()[:16]
 
 
-def _sha(s: str) -> str:
-    return hashlib.sha256(s.encode("utf-8")).hexdigest()
+def _log(entry: dict) -> None:
+    LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with LOG_PATH.open("a", encoding="utf-8") as f:
+        f.write(json.dumps(entry, ensure_ascii=False, sort_keys=True) + "\n")
 
 
-class AgentRuntime:
-    """Agente determinista local. Tools en whitelist."""
+def _dispatch(parsed: dict) -> dict:
+    verb = parsed["verb"]
+    entity = parsed.get("entity", "")
+    args = parsed.get("args", {}) or {}
+    if verb == "echo":
+        return tool_echo(args)
+    if verb == "status":
+        return tool_status()
+    if verb == "hash":
+        return tool_hash(entity, args)
+    if verb == "hashfile":
+        return tool_hashfile(entity)
+    if verb == "score":
+        return tool_score(entity, args)
+    if verb == "audit":
+        return tool_audit(entity, args)
+    return {"error": "verbo admitido sin tool asociada", "tool": None}
 
-    ALLOWED_TOOLS = frozenset({"echo", "hash", "status", "score_demo"})
 
-    def __init__(self, workdir: Optional[str] = None) -> None:
-        self.workdir = Path(workdir or ".")
-        self.log_path = self.workdir / "pilot" / "output" / "agent_log.jsonl"
-        self.log_path.parent.mkdir(parents=True, exist_ok=True)
-        self.history: List[Dict[str, Any]] = []
+def run(line: str) -> dict:
+    t0 = time.time()
+    parsed = parse_neutral(line)
+    admitido, motivo = is_admissible(parsed)
 
-    def _gate(self, action: Dict[str, Any]) -> Dict[str, Any]:
-        """Fail-closed: exige entity.id/type y evidence no vacía."""
-        entity = action.get("entity") or {}
-        evidence = action.get("evidence") or []
-        ont_ok = bool(
-            isinstance(entity, dict)
-            and str(entity.get("id", "")).strip()
-            and str(entity.get("type", "")).strip()
-        )
-        ev_ok = isinstance(evidence, list) and len(evidence) > 0
-        if not ont_ok or not ev_ok:
-            return {
-                "status": "deny",
-                "reason": "ex_ante_failed",
-                "ontology_valid": ont_ok,
-                "evidence_count": len(evidence) if isinstance(evidence, list) else 0,
-            }
-        return {"status": "allow", "reason": "ex_ante_passed", "ontology_valid": True}
-
-    def _record(self, event: Dict[str, Any]) -> None:
-        event = dict(event)
-        event["ts"] = _utc()
-        self.history.append(event)
-        with self.log_path.open("a", encoding="utf-8") as f:
-            f.write(json.dumps(event, ensure_ascii=False, sort_keys=True) + "\n")
-
-    def run(self, user_text: str, entity_id: str = "termux", entity_type: str = "session") -> Dict[str, Any]:
-        """
-        Un turno de agente:
-        1) arma acción
-        2) gate ex-ante
-        3) si allow, ejecuta tool segura
-        """
-        tool = "echo"
-        low = user_text.strip().lower()
-        if low.startswith("hash "):
-            tool = "hash"
-        elif low in ("status", "estado"):
-            tool = "status"
-        elif low.startswith("score"):
-            tool = "score_demo"
-
-        action = {
-            "entity": {"id": entity_id, "type": entity_type},
-            "evidence": [f"user:{_sha(user_text)[:16]}", f"tool:{tool}"],
-            "intent": tool,
-            "payload": {"text": user_text},
+    if not admitido:
+        entry = {
+            "ts": t0,
+            "input": line,
+            "parsed": parsed,
+            "gate": {"status": "deny", "reason": motivo},
         }
-        gate = self._gate(action)
-        if gate["status"] != "allow":
-            out = {"status": "deny", "gate": gate, "reply": "Acción rechazada (fail-closed)."}
-            self._record(out)
-            return out
+        entry["receipt"] = _receipt(entry)
+        _log(entry)
+        return entry
 
-        reply = self._exec_tool(tool, user_text)
-        out = {
-            "status": "allow",
-            "gate": gate,
-            "tool": tool,
-            "reply": reply,
-            "receipt": _sha(json.dumps(action, sort_keys=True))[:24],
-        }
-        self._record(out)
-        return out
-
-    def _exec_tool(self, tool: str, text: str) -> str:
-        if tool not in self.ALLOWED_TOOLS:
-            return "tool no permitida"
-        if tool == "echo":
-            return f"ROMEO agent (offline): {text}"
-        if tool == "hash":
-            payload = text[5:].strip() or text
-            return f"sha256={_sha(payload)}"
-        if tool == "status":
-            return json.dumps(
-                {"agent": "romeo_agent", "offline": True, "events": len(self.history)},
-                sort_keys=True,
-            )
-        if tool == "score_demo":
-            # Usa la librería si está; si no, respuesta local
-            try:
-                # no lanza pilot completo; solo señala integración
-                import romeo_hydra  # noqa: F401
-                return "score_demo: romeo_hydra import OK (usa pilot.run_scoring_audit para ledger completo)"
-            except Exception as e:
-                return f"score_demo: librería no importable ({type(e).__name__})"
-        return "noop"
+    result = _dispatch(parsed)
+    entry = {
+        "ts": t0,
+        "input": line,
+        "parsed": parsed,
+        "gate": {"status": "allow", "reason": motivo},
+        "result": result,
+    }
+    entry["receipt"] = _receipt(entry)
+    _log(entry)
+    return entry
 
 
 def main() -> None:
-    agent = AgentRuntime()
-    print("ROMEO agent offline — comandos: texto | hash <msg> | status | score | exit")
+    print("ROMEO agent offline (DFA)")
+    print("Sintaxis: verbo :: ENTIDAD k=v")
+    print("Ej: echo :: hola | hash :: secreto | score :: EVAL n=5 | status :: ledger | exit")
     while True:
         try:
             line = input("agent> ").strip()
@@ -134,8 +92,7 @@ def main() -> None:
             continue
         if line.lower() in ("exit", "quit"):
             break
-        r = agent.run(line)
-        print(json.dumps(r, ensure_ascii=False, sort_keys=True))
+        print(json.dumps(run(line), ensure_ascii=False, sort_keys=True))
 
 
 if __name__ == "__main__":
