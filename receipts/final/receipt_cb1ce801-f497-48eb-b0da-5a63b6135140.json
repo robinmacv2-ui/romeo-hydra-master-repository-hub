@@ -1,0 +1,19 @@
+{
+  "candidate_id": "cb1ce801-f497-48eb-b0da-5a63b6135140",
+  "evidence": {
+    "file_diff": "",
+    "tool_calls_reales": [
+      "write"
+    ],
+    "estado_previo_hash": "695252f664b93b23",
+    "estado_posterior_hash": "263ed901527a5a52",
+    "stdout_hash": "414d370fd6eb7105",
+    "stderr": ""
+  },
+  "homeostasis_check": "pass",
+  "quantum_logic_card_id": "card_default",
+  "delivery_authorization": "granted",
+  "c2pa_watermark": "preserve",
+  "zettelkasten_note_id": "Z-20260818082441",
+  "timestamp": "2026-08-18T08:24:41.711261+00:00"
+}

@@ -1,0 +1,15 @@
+{
+  "id": "68cd1c39-7346-40c4-8328-c2df2d7855af",
+  "timestamp": "2026-08-18T08:19:35.960717+00:00",
+  "tool": "write",
+  "args": {
+    "path": "reporte.md",
+    "content": "# Reporte"
+  },
+  "particula": "write",
+  "politica_aplicada": "card_default",
+  "capabilities_solicitadas": [
+    "write"
+  ],
+  "args_hash": "5ec4f1c5ad1e671e"
+}

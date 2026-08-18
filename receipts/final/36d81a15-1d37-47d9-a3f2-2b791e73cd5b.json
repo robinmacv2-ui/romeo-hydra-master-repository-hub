@@ -1,0 +1,17 @@
+{
+  "candidate_id": "36d81a15-1d37-47d9-a3f2-2b791e73cd5b",
+  "evidence": {
+    "estado_previo_hash": "0b91f99b5ec8b85e",
+    "estado_posterior_hash": "5ec4f1c5ad1e671e",
+    "tool_calls_reales": [
+      "write"
+    ],
+    "stdout_hash": "225712873e3bc0db",
+    "file_diff": "write {'path': 'reporte.md', 'content': '# Reporte'}"
+  },
+  "homeostasis_check": "pass",
+  "quantum_logic_card_id": "card_default",
+  "delivery_authorization": "granted",
+  "c2pa_watermark": "preserve",
+  "timestamp": "2026-08-18T08:21:28.717886+00:00"
+}

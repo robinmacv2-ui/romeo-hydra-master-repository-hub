@@ -1,56 +1,69 @@
 from __future__ import annotations
-import hashlib, json, uuid
+import uuid, hashlib, json
 from datetime import datetime, timezone
-from pathlib import Path
 from typing import Dict, Any, Union
 from .paths import receipts_candidates
+from .zettel_integration import create_atomic_note
+
+class DenialReceipt(dict): pass
+class Candidate(dict): pass
 
 class HydraExAnteGate:
-    def __init__(self):
-        self._allowed = set()
-        self.destructive_markers = ["rm -rf", "rm", "delete_system", "exec_destructivo", "mkfs", "shutdown"]
-    def _is_destructive(self, tool: str, args: dict, particula: str) -> bool:
-        text = f"{tool} {json.dumps(args)} {particula}".lower()
-        return any(m in text for m in self.destructive_markers)
-    def evaluate_quantum_card(self, particula: str) -> bool:
-        return "delete_system" not in particula and "destructivo" not in particula and "exec_destructivo" not in particula
-    def generate_candidate(self, tool: str, args: Dict[str, Any], particula: str) -> Dict[str, Any]:
+    DESTRUCTIVE = {"rm", "rmdir", "del", "unlink", "format", "dd", "mkfs"}
+
+    def _hash(self, data: str) -> str:
+        return hashlib.sha256(data.encode()).hexdigest()[:16]
+
+    def evaluate_quantum_card(self, particula: str, card: str = "default") -> bool:
+        if particula in ("exec_destructivo", "rm", "delete_system"):
+            return False
+        return True
+
+    def generate_candidate(self, tool: str, args: Dict[str, Any], particula: str) -> Candidate:
         cid = str(uuid.uuid4())
-        candidate = {
+        candidate = Candidate({
             "id": cid,
             "timestamp": datetime.now(timezone.utc).isoformat(),
-            "tool": tool,
-            "args": args,
             "particula": particula,
+            "tool": tool,
+            "args_hash": self._hash(json.dumps(args, sort_keys=True)),
             "politica_aplicada": "card_default",
-            "capabilities_solicitadas": [particula],
-            "args_hash": hashlib.sha256(json.dumps(args, sort_keys=True).encode()).hexdigest()[:16]
-        }
-        receipts_candidates().mkdir(parents=True, exist_ok=True)
+            "capabilities_solicitadas": [particula]
+        })
         path = receipts_candidates() / f"{cid}.json"
         path.write_text(json.dumps(candidate, indent=2), encoding="utf-8")
+        create_atomic_note("candidate_created", candidate)
         return candidate
-    def intercept_tool_call(self, tool_call: dict) -> Union[Dict, Dict]:
-        tool = tool_call.get("tool", "unknown")
+
+    def intercept_tool_call(self, tool_call: dict) -> Union[Candidate, DenialReceipt]:
+        tool = tool_call.get("tool", "")
         args = tool_call.get("args", {})
         particula = tool_call.get("particula", "unknown")
-        if self._is_destructive(tool, args, particula) or not self.evaluate_quantum_card(particula):
-            denial = {
+
+        if any(d in str(args).lower() for d in self.DESTRUCTIVE) or particula == "exec_destructivo":
+            denial = DenialReceipt({
                 "id": str(uuid.uuid4()),
                 "timestamp": datetime.now(timezone.utc).isoformat(),
-                "reason": "Hydra Gate: accion destructiva bloqueada antes del shell",
-                "particula": particula,
+                "reason": "Hydra Gate: acción destructiva bloqueada antes del shell",
                 "tool": tool,
                 "delivery_authorization": "denied"
-            }
-            receipts_candidates().mkdir(parents=True, exist_ok=True)
-            p = receipts_candidates() / f"denial_{denial['id']}.json"
-            p.write_text(json.dumps(denial, indent=2), encoding="utf-8")
+            })
+            path = receipts_candidates() / f"denial_{denial['id']}.json"
+            path.write_text(json.dumps(denial, indent=2), encoding="utf-8")
+            create_atomic_note("denial", denial)
             return denial
-        candidate = self.generate_candidate(tool, args, particula)
-        candidate["delivery_authorization"] = "pending"
-        return candidate
+
+        if not self.evaluate_quantum_card(particula):
+            denial = DenialReceipt({
+                "id": str(uuid.uuid4()),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "reason": "Tarjeta Lógica Cuántica rechazó la partícula",
+                "delivery_authorization": "denied"
+            })
+            create_atomic_note("denial_card", denial)
+            return denial
+
+        return self.generate_candidate(tool, args, particula)
+
     def grant_ephemeral_capability(self, candidate_id: str) -> str:
-        token = f"cap:{candidate_id}:{uuid.uuid4().hex[:8]}"
-        self._allowed.add(token)
-        return token
+        return f"cap:{self._hash(candidate_id + 'capability')}:{candidate_id}"

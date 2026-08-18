@@ -1,0 +1,11 @@
+{
+  "id": "cb1ce801-f497-48eb-b0da-5a63b6135140",
+  "timestamp": "2026-08-18T08:24:41.709449+00:00",
+  "particula": "write",
+  "tool": "write",
+  "args_hash": "5ec4f1c5ad1e671e",
+  "politica_aplicada": "card_default",
+  "capabilities_solicitadas": [
+    "write"
+  ]
+}

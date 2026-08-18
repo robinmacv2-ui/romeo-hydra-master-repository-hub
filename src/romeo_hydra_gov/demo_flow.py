@@ -1,18 +1,21 @@
 from .hydra_gate import HydraExAnteGate
 from .romeo_executor import RomeoExecutor
-from .rdd_receipt import RDDReceiptGenerator, DeliveryGate
+from .rdd_receipt import RDDReceiptGenerator
+from .delivery_gate import DeliveryGate
 
 def run_demo():
     hydra = HydraExAnteGate()
     romeo = RomeoExecutor()
     rdd = RDDReceiptGenerator()
     delivery = DeliveryGate()
+
     print("=== INTENTO MALICIOSO ===")
     malicious = {"tool": "exec", "args": {"cmd": "rm -rf /tmp/test"}, "particula": "exec_destructivo"}
     result = hydra.intercept_tool_call(malicious)
     print("Hydra:", result.get("reason", result.get("id")))
-    print("Delivery:", "denied" if result.get("delivery_authorization") == "denied" else "?")
-    print("\n=== INTENTO LEGITIMO ===")
+    print("Authorization:", result.get("delivery_authorization"))
+
+    print("\n=== INTENTO LEGÍTIMO ===")
     legit = {"tool": "write", "args": {"path": "reporte.md", "content": "# Reporte"}, "particula": "write"}
     candidate = hydra.intercept_tool_call(legit)
     if "id" in candidate:
