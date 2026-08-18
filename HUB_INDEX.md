@@ -1,53 +1,121 @@
 # HUB INDEX — Ecosistema ROMEO-HYDRA
 
-**Master:** https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub  
-**Indice completo de repos:** [`ECOSYSTEM.md`](./ECOSYSTEM.md)  
-**Producto vs lab:** [`STRUCTURE.md`](./STRUCTURE.md)
+> **Master Hub** · Control plane de gobernanza offline + evidencia SHA-256 + kernel de estabilidad  
+> Autor: **Luis Angel Vazquez Martinez**  
+> Licencia: AGPL-3.0 (evaluación/PoC) · Comercial EMMOROR (producción)
 
-Autor: **Luis Angel Vazquez Martinez**  
-Licencia hub: AGPL-3.0 / Comercial EMMOROR
+| Recurso | Enlace |
+|---------|--------|
+| **Repositorio** | [romeo-hydra-master-repository-hub](https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub) |
+| **Índice completo de repos** | [`ECOSYSTEM.md`](./ECOSYSTEM.md) |
+| **Producto vs laboratorio** | [`STRUCTURE.md`](./STRUCTURE.md) |
+| **Para evaluadores** | [`FOR_EVALUATORS.md`](./FOR_EVALUATORS.md) |
+| **Estado honesto** | [`STATUS.md`](./STATUS.md) |
+| **Reglas operativas** | [`OPS_RULES.md`](./OPS_RULES.md) |
 
 ---
 
-## Nucleo ejecutable (producto)
+## 1. Núcleo ejecutable (producto evaluable)
 
-| Item | Valor |
+| Ítem | Valor |
 |------|--------|
-| Repo | romeo-hydra-master-repository-hub |
-| Paquete | `romeo_hydra` 0.1.2 |
-| DOI Version | **10.5281/zenodo.21922106** |
-| DOI Concept | **10.5281/zenodo.21744014** |
-| Evaluadores | [`FOR_EVALUATORS.md`](./FOR_EVALUATORS.md) |
+| Paquete | `romeo_hydra` **0.1.2** |
+| DOI Version | **[10.5281/zenodo.21922106](https://doi.org/10.5281/zenodo.21922106)** |
+| DOI Concept | **[10.5281/zenodo.21744014](https://doi.org/10.5281/zenodo.21744014)** |
+| Python | ≥ 3.11 · offline · Termux aarch64 |
+| Dependencia principal | `numpy` (cryptography opcional) |
+| Agente offline | `romeo_agent` (DFA + gate fail-closed) |
 
 ```bash
+git clone https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub.git
+cd romeo-hydra-master-repository-hub
+python3 -m venv .venv && source .venv/bin/activate
+pip install -U pip setuptools wheel
 pip install -r requirements.txt && pip install -e .
+
+# Smoke de producto
 python main.py
 python -m pilot.run_scoring_audit --entity EVAL --n 20
+python -m pilot.run_offline_audit --days 30 --entity EVAL
+
+# Agente offline (DFA)
+python -m romeo_agent
 ```
 
----
-
-## Mapa rapido de capas
-
-1. **Producto** — este hub (`romeo_hydra/`, `pilot/`, `tests/`)
-2. **Linaje codigo** — romeo-hydra, Romeo_Framework, Romeo_Hydra_Framework, hydra.master
-3. **Linaje DOI teoria** — Postulado, Particula, Tarjeta, Manifiesto, Geomitria
-4. **Banking exploratorio** — Romeo-BANKING, ROMEO-HYDRA-BANKING
-5. **Otros** — LOOPER-STATION, -clean
-
-Detalle y URLs: [`ECOSYSTEM.md`](./ECOSYSTEM.md)  
-DOIs satelite: [`DOI_HISTORY.md`](./DOI_HISTORY.md)
+Auditoría aislada para jurado: `bash scripts/audit_judge.sh`  
+Tests: `pytest tests/ -q`
 
 ---
 
-## Submodulos
+## 2. Mapa de capas (señal / ruido)
+
+| Capa | Contenido | Para quién |
+|------|-----------|------------|
+| **0 · PRODUCTO** | `romeo_hydra/`, `romeo_agent/`, `pilot/`, `tests/`, `native/`, `docs/`, `scripts/` | Evaluadores (FIAB / BIND / 500 LATAM / YC) |
+| **1 · LINAJE CÓDIGO** | romeo-hydra · Romeo_Framework · Romeo_Hydra_Framework · hydra.master | Trazabilidad técnica |
+| **2 · LINAJE DOI / TEORÍA** | Postulado · Partícula · Tarjeta · Manifiesto · Geometría | Ontología (no producto) |
+| **3 · BANKING (exploratorio)** | Romeo-BANKING · ROMEO-HYDRA-BANKING | Experimentos de gobernanza |
+| **4 · OTROS** | LOOPER-STATION · -clean | Fuera de línea crítica |
+
+Detalle completo de URLs y DOIs: [`ECOSYSTEM.md`](./ECOSYSTEM.md)  
+Historial de DOIs satélite: [`DOI_HISTORY.md`](./DOI_HISTORY.md)
+
+---
+
+## 3. Superficie de producto (lo que debe mirar un evaluador)
+
+```text
+romeo_hydra/          # paquete pip: kernel, crypto (Paillier), evidence, metrics, risk, gateway
+romeo_agent/          # agente offline DFA + gate ex-ante (fail-closed)
+pilot/                # ledgers SHA-256 + scoring + auditoría offline
+tests/                # pytest (estabilidad, no-leak, genesis, vault…)
+native/               # CMake opcional (stubs; TFHE no shippeado en wheel)
+scripts/              # smoke_termux, audit_judge, bench
+docs/                 # FHE_STATUS, GENESIS, PPRH, TOPOLOGY, PRODUCT_VOICE…
+main.py
+pyproject.toml
+requirements.txt
+FOR_EVALUATORS.md
+STRUCTURE.md
+```
+
+**No** es un LLM. **No** es folio CNBV. **No** hay TFHE compilado en el wheel. **No** hay MRR todavía.
+
+---
+
+## 4. Agente ROMEO (romeo_agent)
+
+Runtime offline fail-closed sobre el hub:
+
+- **DFA**: ESPERANDO → EJECUTANDO | RECHAZADO → ESPERANDO
+- **Gate ex-ante** (`admissible.py`): solo verbos del conjunto C = {score, audit, hash, hashfile, status, echo}
+- **Parser neutral** + tools de profundidad (hash, score, audit, etc.)
+- **Receipts** SHA-256 truncados + log append-only en `pilot/output/agent_log.jsonl`
+
+Sintaxis: `verbo :: ENTIDAD k=v`  
+Ejemplos: `echo :: hola` · `hash :: secreto` · `score :: EVAL n=5` · `status :: ledger`
+
+Documentación formal del teorema de invarianza (cero escapes): ver `docs/` cuando exista `FORMALIZACION_DFA.md`.
+
+---
+
+## 5. Submódulos
 
 ```bash
 git clone --recurse-submodules https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub.git
 ```
 
-No requerido para la prueba de humo del producto.
+**No requerido** para la prueba de humo del producto ni para el agente.
 
 ---
 
-Luis Angel Vazquez Martinez
+## 6. Citas recomendadas
+
+- **Código / versión**: DOI 10.5281/zenodo.21922106  
+- **Concepto**: DOI 10.5281/zenodo.21744014  
+- Formato CFF: [`CITATION.cff`](./CITATION.cff)
+
+---
+
+**Luis Angel Vazquez Martinez**  
+Contacto comercial: emmororromeohydra@gmail.com

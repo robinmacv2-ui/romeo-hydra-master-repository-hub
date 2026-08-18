@@ -1,7 +1,8 @@
 # Estructura del Master Hub — producto vs laboratorio
 
-Autor: Luis Angel Vazquez Martinez  
-Repo: romeo-hydra-master-repository-hub (~300 archivos; no se borra historia)
+**Autor:** Luis Angel Vazquez Martinez  
+**Repo:** [romeo-hydra-master-repository-hub](https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub)  
+(~400 archivos; no se borra historia)
 
 ---
 
@@ -18,12 +19,13 @@ Repo: romeo-hydra-master-repository-hub (~300 archivos; no se borra historia)
 ## PRODUCTO (mirar solo esto en evaluación)
 
 ```text
-romeo_hydra/           # paquete pip (kernel, core, crypto, metrics, risk, evidence)
-pilot/                 # ledgers offline stdlib
+romeo_hydra/           # paquete pip (kernel, core, crypto, metrics, risk, evidence, gateway)
+romeo_agent/           # agente offline DFA + gate ex-ante fail-closed
+pilot/                 # ledgers offline stdlib + scoring + auditoría
 tests/                 # pytest
 native/                # CMake opcional (stub; TFHE no shippeado)
 scripts/               # smoke, audit_judge, bench_parallel_cpu
-docs/                  # FHE_STATUS, TERMUX, GENESIS, PRODUCT_VOICE, …
+docs/                  # FHE_STATUS, TERMUX, GENESIS, PRODUCT_VOICE, PPRH, TOPOLOGY…
 examples/
 requirements.txt       # solo numpy en main
 pyproject.toml
@@ -33,6 +35,7 @@ FOR_EVALUATORS.md
 OPS_RULES.md
 STRUCTURE.md
 ECOSYSTEM.md
+HUB_INDEX.md
 DOI_HISTORY.md
 CITATION.cff
 LICENSE
@@ -42,6 +45,14 @@ security_audit/        # STRICT_DEPS, power-loss notes
 ```
 
 Instalación evaluador: ver README → “Guía rápida”.
+
+### romeo_agent (producto)
+
+- Runtime DFA offline: ESPERANDO → EJECUTANDO | RECHAZADO → ESPERANDO.
+- Gate ex-ante (`admissible.py`) sobre conjunto cerrado de verbos.
+- Tools: echo, status, hash, hashfile, score, audit.
+- Receipts SHA-256 + log append-only en `pilot/output/agent_log.jsonl`.
+- Documentación: [`romeo_agent/README.md`](./romeo_agent/README.md).
 
 ### evidence (producto)
 
@@ -61,8 +72,9 @@ Estos nombres aparecen en el código y en docs de lab. Son **propios del proyect
 | PLAM / ε-Invarianza / Anexo Q | Investigación de contención; no feature de producto empaquetado |
 | HPR / Dossier Matemático Supremo | Núcleo matemático experimental del lab → API técnica, no pitch |
 | HydraVault | Contenedor demo de números con Paillier pure-Python |
+| DFA / Gate C | Autómata del agente offline + conjunto admisible de verbos |
 
-En pitch y docs de jurado, preferir las columnas de la derecha o frases genéricas (“stability kernel”, “optional governance gateway”, “conceptual HE bridge”).
+En pitch y docs de jurado, preferir las columnas de la derecha o frases genéricas (“stability kernel”, “optional governance gateway”, “conceptual HE bridge”, “offline DFA agent”).
 
 ---
 
@@ -76,11 +88,12 @@ En pitch y docs de jurado, preferir las columnas de la derecha o frases genéric
 | `outreach/` | Mensajes y kit YC |
 | `activar_*.sh`, `automedicina*.py`, `banking_*.py`, … | Scripts de experimento en raíz |
 | `02_Codigo/` | Histórico |
+| `receipts/` | Candidatos y finales de experimentos de gate |
 
 **Política a medio plazo (sin rewrite agresivo):**
 
 1. Nuevos experimentos → `lab/<tema>/`.
-2. Cuando madure → promover a `romeo_hydra/` o `pilot/` con test.
+2. Cuando madure → promover a `romeo_hydra/` o `pilot/` o `romeo_agent/` con test.
 3. No `git filter-repo` masivo hasta tag de backup.
 
 ---
@@ -98,6 +111,7 @@ DOIs satélite solo en [`DOI_HISTORY.md`](./DOI_HISTORY.md).
 |------|-----|
 | `main` | Producto estable + lab conviviendo; pilotos stdlib; sin cryptography obligatoria |
 | `feat/fhe-next-level` | PHE Paillier (`phe`); no mezclar a main sin smoke Termux |
+| `release/topology-fold-v0.2.0` | Topología de plegado de información |
 
 ---
 
@@ -106,10 +120,11 @@ DOIs satélite solo en [`DOI_HISTORY.md`](./DOI_HISTORY.md).
 ```bash
 bash scripts/smoke_termux.sh
 pytest tests/ -q
+python -m romeo_agent   # smoke interactivo opcional
 ```
 
 Ver [`OPS_RULES.md`](./OPS_RULES.md).
 
 ---
 
-Luis Angel Vazquez Martinez
+**Luis Angel Vazquez Martinez**
