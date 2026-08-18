@@ -13,6 +13,20 @@ from .lineage import get_lineage
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 LOG_PATH = ROOT / "pilot" / "output" / "agent_log.jsonl"
 CAT_MAX_BYTES = 64 * 1024
+HUB_URL = "https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub"
+
+
+def _pilot_root() -> pathlib.Path:
+    """Configurable pilot directory.
+
+    Priority:
+      1. Env ROMEO_PILOT_ROOT (absolute or relative path)
+      2. ROOT / "pilot" (default, works when agent lives inside the hub)
+    """
+    env = (os.environ.get("ROMEO_PILOT_ROOT") or "").strip()
+    if env:
+        return pathlib.Path(env).expanduser().resolve()
+    return (ROOT / "pilot").resolve()
 
 
 def _resolve_under_root(rel: str) -> pathlib.Path | None:
@@ -43,16 +57,22 @@ def tool_help() -> dict:
             "hashfile": "sha256 de archivo",
             "log": "últimas N líneas del log",
             "verify": "buscar receipt en log",
-            "score": "scoring offline (requiere pilot en hub)",
-            "audit": "auditoría offline (requiere pilot en hub)",
+            "score": "scoring offline (requiere pilot)",
+            "audit": "auditoría offline (requiere pilot)",
             "lineage": "mapa DOI / arquitecto / régimen (solo lectura)",
         },
         "policy": "fail-closed · offline · sin red · sin shell libre",
+        "pilot_root_env": "ROMEO_PILOT_ROOT",
     }
 
 
 def tool_pwd() -> dict:
-    return {"root": str(ROOT), "cwd": os.getcwd(), "tool": "pwd"}
+    return {
+        "root": str(ROOT),
+        "cwd": os.getcwd(),
+        "pilot_root": str(_pilot_root()),
+        "tool": "pwd",
+    }
 
 
 def tool_status() -> dict:
@@ -189,16 +209,20 @@ def tool_verify(entity: str, args: dict) -> dict:
 
 def tool_score(entity: str, args: dict) -> dict:
     n = int(args.get("n", 5))
-    pilot = ROOT / "pilot"
-    if not pilot.exists():
+    pilot = _pilot_root()
+    if not pilot.is_dir():
         return {
-            "error": "pilot no presente en este paquete core; usa el Master Hub",
-            "hub": "https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub",
+            "error": "pilot no presente",
+            "hint": "export ROMEO_PILOT_ROOT=/path/to/hub/pilot  o clona el Master Hub",
+            "pilot_root": str(pilot),
+            "hub": HUB_URL,
             "tool": "score",
         }
     cmd = ["python3", "-m", "pilot.run_scoring_audit", "--entity", entity, "--n", str(n)]
     try:
-        r = subprocess.run(cmd, capture_output=True, text=True, cwd=str(ROOT), timeout=120)
+        r = subprocess.run(
+            cmd, capture_output=True, text=True, cwd=str(pilot.parent), timeout=120
+        )
     except subprocess.TimeoutExpired:
         return {"error": "timeout", "cmd": " ".join(cmd), "tool": "score"}
     except FileNotFoundError:
@@ -208,22 +232,27 @@ def tool_score(entity: str, args: dict) -> dict:
         "stdout_tail": (r.stdout or "")[-500:],
         "stderr_tail": (r.stderr or "")[-300:],
         "returncode": r.returncode,
+        "pilot_root": str(pilot),
         "tool": "score",
     }
 
 
 def tool_audit(entity: str, args: dict) -> dict:
     n = int(args.get("n", 7))
-    pilot = ROOT / "pilot"
-    if not pilot.exists():
+    pilot = _pilot_root()
+    if not pilot.is_dir():
         return {
-            "error": "pilot no presente en este paquete core; usa el Master Hub",
-            "hub": "https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub",
+            "error": "pilot no presente",
+            "hint": "export ROMEO_PILOT_ROOT=/path/to/hub/pilot  o clona el Master Hub",
+            "pilot_root": str(pilot),
+            "hub": HUB_URL,
             "tool": "audit",
         }
     cmd = ["python3", "-m", "pilot.run_offline_audit", "--days", str(n), "--entity", entity]
     try:
-        r = subprocess.run(cmd, capture_output=True, text=True, cwd=str(ROOT), timeout=120)
+        r = subprocess.run(
+            cmd, capture_output=True, text=True, cwd=str(pilot.parent), timeout=120
+        )
     except subprocess.TimeoutExpired:
         return {"error": "timeout", "cmd": " ".join(cmd), "tool": "audit"}
     except FileNotFoundError:
@@ -232,6 +261,7 @@ def tool_audit(entity: str, args: dict) -> dict:
         "cmd": " ".join(cmd),
         "stdout_tail": (r.stdout or "")[-500:],
         "returncode": r.returncode,
+        "pilot_root": str(pilot),
         "tool": "audit",
     }
 

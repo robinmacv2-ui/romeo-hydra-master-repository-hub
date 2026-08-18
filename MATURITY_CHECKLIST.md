@@ -1,6 +1,6 @@
 # MATURITY CHECKLIST — Documentos adjuntos ↔ Código real
 
-**Fecha:** 2026-08-18  
+**Fecha:** 2026-08-18 (actualizado)  
 **Autor del marco:** Luis Angel Vazquez Martinez  
 **Repos evaluados:** `romeo-hydra-core` + `romeo-hydra-master-repository-hub`
 
@@ -11,7 +11,7 @@ Principio: solo se marca **OPERATIVO** lo que ya corre offline, es stdlib-first 
 | **FORMALIZACION_DFA.pdf** | **OPERATIVO** | `romeo_agent/admissible.py`, `runtime.py`, `parser.py` | C operativo = formal + verbs de inspección. Gate + receipt ya implementados. |
 | **Manifiesto IH (CCL PPRH)** | **OPERATIVO (metadatos)** | `romeo_agent/lineage.py` + `romeo_hydra/__init__.py` | DOIs y arquitecto ahora viajan en cada receipt. |
 | **Dictamen de Autoría y Linaje** | **OPERATIVO** | `lineage.py` + campo `lineage` en receipts | Sujeto de prueba cero = el agente; no se atribuye invención. |
-| **Documentación de Auditoría ROMEO-HYDRA** | **OPERATIVO (pilots)** | `pilot/run_offline_audit.py`, `pilot/run_scoring_audit.py` | Evidencia interna, no folio CNBV. |
+| **Documentación de Auditoría ROMEO-HYDRA** | **OPERATIVO (pilots)** | `pilot/run_offline_audit.py`, `pilot/run_scoring_audit.py` | Evidencia interna, no folio CNBV. Path configurable vía `ROMEO_PILOT_ROOT`. |
 | **Dossier Consolidación Final PPRH** | **DOC + LAB** | `CITATION.cff`, DOIs en `__init__.py`, submódulos | Índice de DOIs; no cambia el DFA. |
 | **Antología Matemática Final** | **LAB** | `romeo_hydra/kernel/dossier_math.py`, PLAM, HPR | Matemáticas de laboratorio; no en camino crítico del agente. |
 | **Firmware Gobernanza DMA** | **DOC / SPEC** | — | Especificación hardware. Sin implementación en el wheel offline. |
@@ -23,32 +23,37 @@ Principio: solo se marca **OPERATIVO** lo que ya corre offline, es stdlib-first 
 | **Hydra Deterministic AI Infrastructure (blueprint)** | **DOC** | — | Blueprint visual; el núcleo real es el DFA + pilots. |
 | **PDF Master Framework Investment Banking** | **DOC** | — | Roadmap de volúmenes; no afecta runtime. |
 
-## Decisiones de acoplamiento tomadas (2026-08-18)
+## Decisiones de acoplamiento (2026-08-18)
 
-1. **C operativo** se mantiene amplio (incluye `help`, `pwd`, `ls`, `cat`, `lineage`) porque es necesario para demos offline y no viola fail-closed.
-2. **Lineage** se inyecta en *todo* receipt (allow y deny) antes del hash → prueba de régimen Delta.
-3. **Nuevo verbo** `lineage ::` es de solo lectura y no tiene side-effects.
-4. **DMA / hardware / TFHE compilado** quedan fuera del camino crítico y del wheel principal (política OPS_RULES).
-5. **PLAM / HSI / Antología** permanecen en `romeo_hydra/kernel/` como lab; se pueden invocar solo si el evaluador lo pide explícitamente.
+1. **C operativo** amplio (`help`, `pwd`, `ls`, `cat`, `lineage` + formal mínimo).
+2. **Lineage** en *todo* receipt (allow y deny) antes del hash → Régimen Delta.
+3. **Verbo** `lineage ::` solo lectura.
+4. **DMA / hardware / TFHE compilado** fuera del camino crítico.
+5. **PLAM / HSI / Antología** en `romeo_hydra/kernel/` (lab).
+6. **Pilot path** configurable: `export ROMEO_PILOT_ROOT=/ruta/al/hub/pilot` (default `ROOT/pilot`).
+7. **Tests de lineage** en core: `python -m unittest tests.test_lineage_in_receipt -v`
 
-## Cómo verificar en 30 segundos
+## Cómo verificar
 
 ```bash
 # Core
-cd romeo-hydra-core
+cd romeo-hydra-core && git pull
+python -m unittest tests.test_lineage_in_receipt -v
 python -m romeo_agent -c "lineage ::"
-python -m romeo_agent -c "echo :: hola"
-python -m romeo_agent -c "rm :: /tmp"   # debe DENY
+python -m romeo_agent -c "pwd ::"          # muestra pilot_root
 
-# Hub (mismo agente)
-cd romeo-hydra-master-repository-hub
+# Core sin pilot (mensaje claro)
+unset ROMEO_PILOT_ROOT
+python -m romeo_agent -c "score :: EVAL n=3"
+
+# Core apuntando al hub
+export ROMEO_PILOT_ROOT=/ruta/romeo-hydra-master-repository-hub/pilot
+python -m romeo_agent -c "score :: EVAL n=3"
+
+# Hub
+cd romeo-hydra-master-repository-hub && git pull
 python -m romeo_agent -c "lineage ::"
 python -m pilot.run_scoring_audit --entity EVAL --n 5
 ```
-
-## Siguiente incremento recomendado
-
-- Test unitario `tests/test_lineage_in_receipt.py` que afirme que todo entry tiene `lineage` y que el receipt cambia si se altera el DOI.
-- Submodule o path configurable para que el core pueda vivir sin el directorio `pilot/` y solo falle con mensaje claro.
 
 — Project Manager · 2026-08-18
