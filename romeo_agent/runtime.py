@@ -1,16 +1,26 @@
-"""Bucle DFA: ESPERANDO -> EJECUTANDO|RECHAZADO -> ESPERANDO."""
+"""Bucle DFA: ESPERANDO -> EJECUTANDO|RECHAZADO -> ESPERANDO. CLI offline."""
+from __future__ import annotations
+
+import argparse
 import hashlib
 import json
 import pathlib
+import sys
 import time
 
-from .admissible import is_admissible
+from .admissible import is_admissible, VERBOS_ADMISIBLES
 from .parser import parse_neutral
 from .tools import (
     tool_echo,
     tool_status,
+    tool_help,
+    tool_pwd,
+    tool_ls,
+    tool_cat,
     tool_hash,
     tool_hashfile,
+    tool_log,
+    tool_verify,
     tool_score,
     tool_audit,
 )
@@ -32,16 +42,29 @@ def _log(entry: dict) -> None:
 
 def _dispatch(parsed: dict) -> dict:
     verb = parsed["verb"]
-    entity = parsed.get("entity", "")
+    entity = parsed.get("entity", "") or ""
     args = parsed.get("args", {}) or {}
+
     if verb == "echo":
         return tool_echo(args)
+    if verb == "help":
+        return tool_help()
+    if verb == "pwd":
+        return tool_pwd()
     if verb == "status":
         return tool_status()
+    if verb == "ls":
+        return tool_ls(entity, args)
+    if verb == "cat":
+        return tool_cat(entity, args)
     if verb == "hash":
         return tool_hash(entity, args)
     if verb == "hashfile":
-        return tool_hashfile(entity)
+        return tool_hashfile(entity, args)
+    if verb == "log":
+        return tool_log(args)
+    if verb == "verify":
+        return tool_verify(entity, args)
     if verb == "score":
         return tool_score(entity, args)
     if verb == "audit":
@@ -78,10 +101,37 @@ def run(line: str) -> dict:
     return entry
 
 
-def main() -> None:
-    print("ROMEO agent offline (DFA)")
-    print("Sintaxis: verbo :: ENTIDAD k=v")
-    print("Ej: echo :: hola | hash :: secreto | score :: EVAL n=5 | status :: ledger | exit")
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(
+        prog="romeo_agent",
+        description="ROMEO agent offline (DFA) — fail-closed, sin red ni APIs",
+    )
+    parser.add_argument(
+        "-c",
+        "--command",
+        metavar="CMD",
+        help='comando único no interactivo, ej: -c "echo :: hola"',
+    )
+    parser.add_argument(
+        "-q",
+        "--quiet",
+        action="store_true",
+        help="solo imprime JSON (sin banner)",
+    )
+    args = parser.parse_args(argv)
+
+    if args.command is not None:
+        out = run(args.command)
+        print(json.dumps(out, ensure_ascii=False, sort_keys=True))
+        return 0 if out.get("gate", {}).get("status") == "allow" else 2
+
+    if not args.quiet:
+        print("ROMEO agent offline (DFA)")
+        print("Sintaxis: verbo :: ENTIDAD k=v")
+        print("Verbos:", ", ".join(sorted(VERBOS_ADMISIBLES)))
+        print("Ej: help :: | ls :: romeo_agent | cat :: README.md | hash :: x | exit")
+        print("No interactivo: python -m romeo_agent -c \"echo :: hola\"")
+
     while True:
         try:
             line = input("agent> ").strip()
@@ -93,7 +143,8 @@ def main() -> None:
         if line.lower() in ("exit", "quit"):
             break
         print(json.dumps(run(line), ensure_ascii=False, sort_keys=True))
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
