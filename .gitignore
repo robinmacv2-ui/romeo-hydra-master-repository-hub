@@ -14,3 +14,7 @@ circuito.cpp
 hydra_env_64/
 venv/
 .env
+.venv/
+__pycache__/
+pilot/output/*.json
+pilot/output/*.sha256
