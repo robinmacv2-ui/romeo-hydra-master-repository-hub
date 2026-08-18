@@ -7,6 +7,7 @@
 | Recurso | Enlace |
 |---------|--------|
 | **Repositorio** | [romeo-hydra-master-repository-hub](https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub) |
+| **Core agent v0.1.0** | [romeo-hydra-core](https://github.com/robinmacv2-ui/romeo-hydra-core/releases/tag/v0.1.0) |
 | **Índice completo de repos** | [`ECOSYSTEM.md`](./ECOSYSTEM.md) |
 | **Producto vs laboratorio** | [`STRUCTURE.md`](./STRUCTURE.md) |
 | **Para evaluadores** | [`FOR_EVALUATORS.md`](./FOR_EVALUATORS.md) |
@@ -88,14 +89,14 @@ STRUCTURE.md
 Runtime offline fail-closed sobre el hub:
 
 - **DFA**: ESPERANDO → EJECUTANDO | RECHAZADO → ESPERANDO
-- **Gate ex-ante** (`admissible.py`): solo verbos del conjunto C = {score, audit, hash, hashfile, status, echo}
+- **Gate ex-ante** (`admissible.py`): solo verbos del conjunto C = {score, audit, hash, hashfile, status, echo, help, pwd, ls, cat, log, verify}
 - **Parser neutral** + tools de profundidad (hash, score, audit, etc.)
 - **Receipts** SHA-256 truncados + log append-only en `pilot/output/agent_log.jsonl`
 
 Sintaxis: `verbo :: ENTIDAD k=v`  
 Ejemplos: `echo :: hola` · `hash :: secreto` · `score :: EVAL n=5` · `status :: ledger`
 
-Documentación formal del teorema de invarianza (cero escapes): ver `docs/` cuando exista `FORMALIZACION_DFA.md`.
+Core standalone: [romeo-hydra-core v0.1.0](https://github.com/robinmacv2-ui/romeo-hydra-core/releases/tag/v0.1.0)
 
 ---
 
@@ -117,5 +118,9 @@ git clone --recurse-submodules https://github.com/robinmacv2-ui/romeo-hydra-mast
 
 ---
 
-**Luis Angel Vazquez Martinez**  
-Contacto comercial: emmororromeohydra@gmail.com
+**Luis Angel Vazquez Martinez** (`robinmacv2-ui`)
+
+- Email: [robinmac.v2@gmail.com](mailto:robinmac.v2@gmail.com)
+- LinkedIn: [luis-angel-vazquez-martinez](https://www.linkedin.com/in/luis-angel-vazquez-martinez-066ba9422)
+- Tel: +52 56 5015 3935
+- GitHub: [robinmacv2-ui](https://github.com/robinmacv2-ui)
