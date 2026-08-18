@@ -1,20 +1,14 @@
 # Python
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-romeo_hydra.egg-info/
-*.egg-info/
-dist/
-build/
-*.so
-*.o
-circuito
-circuito.cpp
-hydra_env_64/
-venv/
-.env
 .venv/
 __pycache__/
-pilot/output/*.json
-pilot/output/*.sha256
+*.pyc
+
+# Agente - NO versionar ledger efimero
+receipts/
+romeo_agent/output/
+pilot/output/
+build/
+*.pyz
+
+# No anidar repos
+romeo-hydra-core/
