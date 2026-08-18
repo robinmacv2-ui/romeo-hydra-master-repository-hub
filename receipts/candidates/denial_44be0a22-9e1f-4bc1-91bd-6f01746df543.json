@@ -1,0 +1,8 @@
+{
+  "id": "44be0a22-9e1f-4bc1-91bd-6f01746df543",
+  "timestamp": "2026-08-18T08:18:36.692496+00:00",
+  "reason": "Hydra Gate: accion destructiva bloqueada antes del shell",
+  "particula": "exec_destructivo",
+  "tool": "exec",
+  "delivery_authorization": "denied"
+}
