@@ -2,6 +2,9 @@
 
 Autor: **Luis Angel Vazquez Martinez**  
 Perfil: https://github.com/robinmacv2-ui  
+LinkedIn: https://www.linkedin.com/in/luis-angel-vazquez-martinez-066ba9422  
+Email: robinmac.v2@gmail.com  
+Tel: +52 56 5015 3935  
 Hub maestro: https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub
 
 Este archivo **indexa** todos los repos publicos. No borra historia.
@@ -13,6 +16,7 @@ Este archivo **indexa** todos los repos publicos. No borra historia.
 | Repo | Rol | DOI / nota |
 |------|-----|------------|
 | **[romeo-hydra-master-repository-hub](https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub)** | Producto 0.1.2: `romeo_hydra/`, `pilot/`, tests, native, docs | Version **10.5281/zenodo.21922106** · Concept **10.5281/zenodo.21744014** |
+| **[romeo-hydra-core](https://github.com/robinmacv2-ui/romeo-hydra-core)** | Agente DFA offline fail-closed · stdlib only | **[v0.1.0](https://github.com/robinmacv2-ui/romeo-hydra-core/releases/tag/v0.1.0)** |
 
 Superficie de producto dentro del hub: ver [`STRUCTURE.md`](./STRUCTURE.md).
 
@@ -68,8 +72,9 @@ No son certificacion CNBV ni producto de produccion.
 ```text
 robinmacv2-ui
 ├── PRODUCTO (evaluar aqui)
-│   └── romeo-hydra-master-repository-hub
-│         romeo_hydra/  pilot/  tests/  native/  docs/
+│   ├── romeo-hydra-master-repository-hub
+│   │     romeo_hydra/  pilot/  tests/  native/  docs/
+│   └── romeo-hydra-core v0.1.0  (agente standalone)
 ├── LINAJE CODIGO
 │   romeo-hydra · Romeo_Framework · Romeo_Hydra_Framework · hydra.master
 ├── LINAJE DOI / TEORIA
@@ -94,5 +99,7 @@ Evaluadores **no** necesitan submodulos para el smoke de producto (`requirements
 
 ---
 
-Luis Angel Vazquez Martinez
-- **romeo-hydra-core v0.1.0** (Latest) - Offline DFA agent fail-closed: https://github.com/robinmacv2-ui/romeo-hydra-core/releases/tag/v0.1.0
+**Luis Angel Vazquez Martinez**  
+Email: robinmac.v2@gmail.com · Tel: +52 56 5015 3935  
+LinkedIn: https://www.linkedin.com/in/luis-angel-vazquez-martinez-066ba9422  
+Core: https://github.com/robinmacv2-ui/romeo-hydra-core/releases/tag/v0.1.0
