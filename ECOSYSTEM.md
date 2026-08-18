@@ -95,3 +95,4 @@ Evaluadores **no** necesitan submodulos para el smoke de producto (`requirements
 ---
 
 Luis Angel Vazquez Martinez
+- **romeo-hydra-core v0.1.0** (Latest) - Offline DFA agent fail-closed: https://github.com/robinmacv2-ui/romeo-hydra-core/releases/tag/v0.1.0
