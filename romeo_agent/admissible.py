@@ -1,4 +1,11 @@
-"""Gate ex-ante: conjunto admisible C. Fail-closed. O(1)."""
+"""Gate ex-ante: conjunto admisible C. Fail-closed. O(1).
+
+Operational C (practical, Termux-ready) extends the minimal formal set
+defined in FORMALIZACION_DFA.pdf (score, audit, hash, status, echo)
+with inspection verbs that remain offline and path-sandboxed.
+
+Any verb not in VERBOS_ADMISIBLES => deny.
+"""
 from __future__ import annotations
 
 # Conjunto cerrado C — sin red, sin shell libre, sin APIs externas.
@@ -15,6 +22,7 @@ VERBOS_ADMISIBLES = {
     "verify",
     "score",
     "audit",
+    "lineage",  # read-only lineage / DOI map (EMMOROR Delta)
 }
 
 N_MIN, N_MAX = 1, 1000
@@ -67,7 +75,7 @@ def is_admissible(parsed: dict) -> tuple[bool, str]:
 
     if verb == "verify":
         receipt = args.get("receipt", entity)
-        if not receipt or len(receipt) < 8:
+        if not receipt or len(str(receipt)) < 8:
             return False, "receipt_invalido"
         return True, "ex_ante_passed"
 
@@ -80,7 +88,7 @@ def is_admissible(parsed: dict) -> tuple[bool, str]:
             return False, f"n_fuera_de_rango:{n}"
         return True, "ex_ante_passed"
 
-    if verb in ("echo", "status", "help", "pwd", "hash"):
+    if verb in ("echo", "status", "help", "pwd", "hash", "lineage"):
         return True, "ex_ante_passed"
 
     return False, "caso_no_contemplado"

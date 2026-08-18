@@ -1,4 +1,6 @@
-"""Bucle DFA: ESPERANDO -> EJECUTANDO|RECHAZADO -> ESPERANDO. CLI offline."""
+"""Bucle DFA: ESPERANDO -> EJECUTANDO|RECHAZADO -> ESPERANDO. CLI offline.
+Receipt siempre lleva lineage (EMMOROR Delta).
+"""
 from __future__ import annotations
 
 import argparse
@@ -9,6 +11,7 @@ import sys
 import time
 
 from .admissible import is_admissible, VERBOS_ADMISIBLES
+from .lineage import get_lineage
 from .parser import parse_neutral
 from .tools import (
     tool_echo,
@@ -23,6 +26,7 @@ from .tools import (
     tool_verify,
     tool_score,
     tool_audit,
+    tool_lineage,
 )
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -69,6 +73,8 @@ def _dispatch(parsed: dict) -> dict:
         return tool_score(entity, args)
     if verb == "audit":
         return tool_audit(entity, args)
+    if verb == "lineage":
+        return tool_lineage()
     return {"error": "verbo admitido sin tool asociada", "tool": None}
 
 
@@ -76,6 +82,7 @@ def run(line: str) -> dict:
     t0 = time.time()
     parsed = parse_neutral(line)
     admitido, motivo = is_admissible(parsed)
+    lineage = get_lineage()
 
     if not admitido:
         entry = {
@@ -83,6 +90,7 @@ def run(line: str) -> dict:
             "input": line,
             "parsed": parsed,
             "gate": {"status": "deny", "reason": motivo},
+            "lineage": lineage,
         }
         entry["receipt"] = _receipt(entry)
         _log(entry)
@@ -95,6 +103,7 @@ def run(line: str) -> dict:
         "parsed": parsed,
         "gate": {"status": "allow", "reason": motivo},
         "result": result,
+        "lineage": lineage,
     }
     entry["receipt"] = _receipt(entry)
     _log(entry)
@@ -129,7 +138,7 @@ def main(argv: list[str] | None = None) -> int:
         print("ROMEO agent offline (DFA)")
         print("Sintaxis: verbo :: ENTIDAD k=v")
         print("Verbos:", ", ".join(sorted(VERBOS_ADMISIBLES)))
-        print("Ej: help :: | ls :: romeo_agent | cat :: README.md | hash :: x | exit")
+        print("Ej: help :: | lineage :: | ls :: romeo_agent | cat :: README.md | hash :: x | exit")
         print("No interactivo: python -m romeo_agent -c \"echo :: hola\"")
 
     while True:

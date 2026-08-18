@@ -1,12 +1,14 @@
 """Tools solo tras is_admissible(). Stdlib only. Sin red / sin APIs."""
 from __future__ import annotations
 
+import base64
 import hashlib
 import json
 import os
 import pathlib
 import subprocess
-from datetime import datetime, timezone
+
+from .lineage import get_lineage
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 LOG_PATH = ROOT / "pilot" / "output" / "agent_log.jsonl"
@@ -33,16 +35,17 @@ def tool_help() -> dict:
         "verbs": {
             "echo": "eco de texto",
             "help": "esta ayuda",
-            "pwd": "raíz del hub (ROOT)",
+            "pwd": "raíz del paquete (ROOT)",
             "status": "estado del log del agente",
-            "ls": "listar directorio bajo ROOT (ls :: path)",
-            "cat": "leer archivo <=64KiB (cat :: path)",
-            "hash": "sha256 de texto (hash :: texto)",
-            "hashfile": "sha256 de archivo (hashfile :: path)",
-            "log": "últimas N líneas del log (log :: n=10)",
-            "verify": "buscar receipt en log (verify :: <hex>)",
-            "score": "scoring offline pilot (score :: ENTITY n=5)",
-            "audit": "auditoría offline (audit :: ENTITY n=7)",
+            "ls": "listar directorio bajo ROOT",
+            "cat": "leer archivo <=64KiB",
+            "hash": "sha256 de texto",
+            "hashfile": "sha256 de archivo",
+            "log": "últimas N líneas del log",
+            "verify": "buscar receipt en log",
+            "score": "scoring offline (requiere pilot en hub)",
+            "audit": "auditoría offline (requiere pilot en hub)",
+            "lineage": "mapa DOI / arquitecto / régimen (solo lectura)",
         },
         "policy": "fail-closed · offline · sin red · sin shell libre",
     }
@@ -54,12 +57,17 @@ def tool_pwd() -> dict:
 
 def tool_status() -> dict:
     if not LOG_PATH.exists():
-        return {"log_exists": False, "lines": 0, "path": str(LOG_PATH.relative_to(ROOT)), "tool": "status"}
+        return {
+            "log_exists": False,
+            "lines": 0,
+            "path": "pilot/output/agent_log.jsonl",
+            "tool": "status",
+        }
     lines = LOG_PATH.read_text(encoding="utf-8").splitlines()
     return {
         "log_exists": True,
         "lines": len(lines),
-        "path": str(LOG_PATH.relative_to(ROOT)),
+        "path": "pilot/output/agent_log.jsonl",
         "tool": "status",
     }
 
@@ -114,7 +122,7 @@ def tool_cat(entity: str, args: dict) -> dict:
         return {
             "path": rel,
             "bytes": size,
-            "content_b64_prefix": __import__("base64").b64encode(data[:512]).decode("ascii"),
+            "content_b64_prefix": base64.b64encode(data[:512]).decode("ascii"),
             "encoding": "binary",
             "tool": "cat",
             "note": "binario; solo prefijo b64 512B",
@@ -181,6 +189,13 @@ def tool_verify(entity: str, args: dict) -> dict:
 
 def tool_score(entity: str, args: dict) -> dict:
     n = int(args.get("n", 5))
+    pilot = ROOT / "pilot"
+    if not pilot.exists():
+        return {
+            "error": "pilot no presente en este paquete core; usa el Master Hub",
+            "hub": "https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub",
+            "tool": "score",
+        }
     cmd = ["python3", "-m", "pilot.run_scoring_audit", "--entity", entity, "--n", str(n)]
     try:
         r = subprocess.run(cmd, capture_output=True, text=True, cwd=str(ROOT), timeout=120)
@@ -188,26 +203,24 @@ def tool_score(entity: str, args: dict) -> dict:
         return {"error": "timeout", "cmd": " ".join(cmd), "tool": "score"}
     except FileNotFoundError:
         return {"error": "python3/pilot no encontrado", "tool": "score"}
-
-    out_files = sorted((ROOT / "pilot" / "output").glob(f"scoring_{entity}_{n}.json"))
-    if not out_files:
-        return {
-            "cmd": " ".join(cmd),
-            "stdout_tail": (r.stdout or "")[-500:],
-            "stderr_tail": (r.stderr or "")[-300:],
-            "error": "sin archivo de salida",
-            "tool": "score",
-        }
-    latest = out_files[-1]
-    try:
-        data = json.loads(latest.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as e:
-        return {"error": f"json invalido: {e}", "output": str(latest), "tool": "score"}
-    return {"cmd": " ".join(cmd), "output": str(latest.relative_to(ROOT)), "parsed": data, "tool": "score"}
+    return {
+        "cmd": " ".join(cmd),
+        "stdout_tail": (r.stdout or "")[-500:],
+        "stderr_tail": (r.stderr or "")[-300:],
+        "returncode": r.returncode,
+        "tool": "score",
+    }
 
 
 def tool_audit(entity: str, args: dict) -> dict:
     n = int(args.get("n", 7))
+    pilot = ROOT / "pilot"
+    if not pilot.exists():
+        return {
+            "error": "pilot no presente en este paquete core; usa el Master Hub",
+            "hub": "https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub",
+            "tool": "audit",
+        }
     cmd = ["python3", "-m", "pilot.run_offline_audit", "--days", str(n), "--entity", entity]
     try:
         r = subprocess.run(cmd, capture_output=True, text=True, cwd=str(ROOT), timeout=120)
@@ -221,3 +234,8 @@ def tool_audit(entity: str, args: dict) -> dict:
         "returncode": r.returncode,
         "tool": "audit",
     }
+
+
+def tool_lineage() -> dict:
+    """Read-only map of architect + DOIs + policy (EMMOROR Delta)."""
+    return {"tool": "lineage", "lineage": get_lineage()}
