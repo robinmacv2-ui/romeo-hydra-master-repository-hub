@@ -1,3 +1,6 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21744014.svg)](https://doi.org/10.5281/zenodo.21744014)
+[![ORCID](https://img.shields.io/badge/ORCID-0009--0006--8163--3759-green)](https://orcid.org/0009-0006-8163-3759)
+
 # ROMEO-HYDRA V3.1
 
 **Capa de admisibilidad y trazabilidad criptográfica para decisiones algorítmicas críticas.**
