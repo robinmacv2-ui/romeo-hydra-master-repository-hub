@@ -12,3 +12,7 @@ build/
 
 # No anidar repos
 romeo-hydra-core/
+romeo_hydra.egg-info/
+__pycache__/
+*.egg-info/
+.venv/
