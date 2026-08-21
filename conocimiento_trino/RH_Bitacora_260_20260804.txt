@@ -1,0 +1,97 @@
+sLa imagen muestra que en Gemini dejaste preparado este mensaje:
+> "Recuérdame paso a paso cómo generar el repositorio ahora con esta configuración final."
+Ese es un buen siguiente paso. Con la configuración actual de ROMEO Framework, yo seguiría este flujo:
+Paso 1. Crear la carpeta raíz
+ROMEO_Framework/
+---
+Paso 2. Crear la estructura
+ROMEO_Framework/
+│
+├── README.md
+├── LICENSE
+├── CITATION.cff
+├── CHANGELOG.md
+├── CODE_OF_CONDUCT.md
+│
+├── manuscript/
+│   ├── ROMEO_I_Foundations.pdf
+│   ├── ROMEO_II_Synthetic_Validation.pdf
+│   └── Technical_Annex_IIA_ROMEO_HPR.pdf
+│
+├── docs/
+│   ├── Framework_Charter.pdf
+│   ├── Author_Statement.pdf
+│   └── Reproducibility_Statement.pdf
+│
+├── algorithms/
+│   ├── HPR_pseudocode.md
+│   ├── python/
+│   ├── julia/
+│   └── matlab/
+│
+├── notebooks/
+│
+├── synthetic_data/
+│
+├── results/
+│
+├── figures/
+│
+├── supplementary/
+│
+└── references/
+---
+Paso 3. Preparar el README
+Debe contener:
+Nombre oficial: ROMEO Framework
+Expansión del acrónimo.
+Objetivo científico.
+Estructura del proyecto.
+Cómo reproducir los experimentos.
+Licencia.
+Cómo citar el trabajo.
+---
+Paso 4. Añadir la licencia
+Usa Creative Commons Attribution 4.0 (CC BY 4.0) para los documentos, si ese es el esquema de publicación que has decidido. Si además publicarás código, considera una licencia de software apropiada (por ejemplo, MIT, BSD o Apache 2.0), ya que CC BY no suele recomendarse para código.
+---
+Paso 5. Incluir la declaración de reproducibilidad
+Describe:
+versión del framework;
+software utilizado;
+parámetros;
+datos sintéticos;
+protocolo experimental.
+---
+Paso 6. Añadir el Anexo Técnico
+Coloca:
+Definición del operador ROMEO-HPR.
+Formulación variacional.
+Hipótesis.
+Pseudocódigo.
+Métricas.
+---
+Paso 7. Preparar el depósito
+Antes de subir el repositorio verifica que estén incluidos:
+Manuscritos.
+Anexos.
+Código.
+Datos sintéticos.
+README.
+Licencia.
+Archivo de citación.
+---
+Paso 8. Publicar en Zenodo
+1. Crear un nuevo depósito.
+2. Subir todos los archivos.
+3. Completar los metadatos.
+4. Seleccionar la licencia correspondiente.
+5. Publicar.
+6. Guardar el DOI asignado.
+---
+Paso 9. Actualizar el repositorio
+Una vez obtenido el DOI:
+añadirlo al README;
+incorporarlo al manuscrito;
+incluirlo en CITATION.cff.
+Mi recomendación
+Antes de publicar, prepararía una versión 1.0 estable del proyecto con esta estructura y evitaría modificar el nombre o la organización después de obtener el DOI. A partir de ahí, las siguientes mejoras deberían publicarse como ROMEO Framework v1.1, v1.2, v2.0, etc., para mantener una trazabilidad clara de la evolución del proyecto.

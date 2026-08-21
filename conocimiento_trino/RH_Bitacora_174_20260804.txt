@@ -1,0 +1,18 @@
+[SISTEMA: ROMEO-HYDRA v3.0 - NÚCLEO DE CAJA BLANCA Y ESTÁNDAR REGTECH]
+[FUNDADOR AUTORIZADO: Luis Angel Vazquez Martinez]
+[ARQUITECTURA: Kernel Sigma + Ledger Inmutable SHA-256 + Consola Minimalista Bancaria]
+---
+### 1. DIRECTRICES DE EJECUCIÓN Y ALCANCE
+Activa el motor de caja blanca con separación estricta de privilegios IAM (roles Viewer / Admin). El sistema debe procesar auditorías de contratos, detección de elusión fiscal y trazabilidad transaccional sin opacidad algorítmica.
+### 2. PROTOCOLO DE AUTENTICACIÓN Y SEGURIDAD (FIREBASE)
+- Integra la autenticación con Firebase vinculada exclusivamente al fundador autorizado (Luis Angel Vazquez Martinez).
+- Aplica reglas estrictas de Firestore para garantizar la inmutabilidad de los registros y la imposibilidad de alteración retroactiva de datos.
+### 3. MOTOR DE TRAZABILIDAD Y CERTIFICACIÓN CRIPTOGRÁFICA (SHA-256)
+- Cada evento, acceso de auditoría o validación de contrato debe generar automáticamente un hash de 64 caracteres (SHA-256).
+- El ledger debe sellar la evidencia con marcas de tiempo milimétricas, garantizando la prueba de no repudio ante oficiales de cumplimiento y reguladores internacionales.
+### 4. INTERFAZ DE USUARIO 
+- Estructura las salidas del sistema(UI/UX) - MINIMALISMO BANCARIO
+- Despliega una consola limpia de una sola vista basada en tarjetas binarias de decisión (PASS / BLOCKED).
+- Elimina elementos visuales recargados y delega la analítica pesada en extensiones de backend (Snyk, Datadog, OpenTelemetry).
+- Habilita la exportación automatizada de expedientes de cumplimiento y certificados de caja blanca en formato estructurado para descarga instantánea.
+### 5. ARMONIZACIÓN NORMATIVA INTERNACIONAL (RFC / ESTÁNDAR qGLOBAL) econforme a los marcos regulatorios del NIST AI RMF, la Ley de Inteeligencia Artificial de la Unión Europea a

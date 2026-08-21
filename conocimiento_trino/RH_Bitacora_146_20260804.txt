@@ -1,0 +1,205 @@
+La caja blanca de la IA
+ROMEO-HYDRA: GOBERNANZA DE INTELIGENCIA ARTIFICIAL BASADA EN PRIMEROS PRINCIPIOS
+Framework experimental para auditoría algorítmica, trazabilidad forense y verificación de activos físicos
+Autor: Luis Angel Vazquez Martinez
+Versión: 3.0-RC1 V4 — Núcleo Ampliado
+Fecha: 20 de julio de 2026
+Referencia: DOI 10.5281/zenodo.21406719
+Resumen
+La expansión de los sistemas de inteligencia artificial y de los procesos automatizados ha incrementado la velocidad con la que se toman decisiones críticas, pero no necesariamente ha incrementado la capacidad institucional para auditarlas, explicarlas y reconstruirlas de forma forense.
+Este white paper presents ROMEO-HYDRA, un framework experimental de gobernanza de inteligencia artificial diseñado para integrar la seguridad, la trazabilidad y la auditoría directamente en la arquitectura operativa de los sistemas automatizados.
+El framework se fundamenta en una premisa central: la gobernanza de un sistema de inteligencia artificial no debe funcionar exclusivamente como una capa documental o regulatoria posterior, sino como una propiedad estructural del propio sistema.
+ROMEO-HYDRA articula tres mecanismos principales:
+Kernel Sigma: encargado de aplicar límites normativos y detener automáticamente procesos de inferencia que superen los umbrales de riesgo definidos.
+Delta Ledger: diseñado como un registro inmutable de eventos y decisiones, con mecanismos de integridad criptográfica basados en SHA-256.
+Calibración Cognitiva: un protocolo orientado a reducir el ruido comercial, contextual o no probatorio que pueda interferir con el procesamiento de evidencia técnica.
+El framework también propone un modelo de auditoría multimodal capaz de cruzar la evidencia visual y operacional de activos físicos con información contractual y financiera. El objetivo es identificar discrepancias entre los recursos declarados, los trabajos contratados y el estado observable de la realidad física.
+La arquitectura incorpora, además, un protocolo de verificación de causalidad basado en ventanas temporales dinámicas y evidencia forense mediante hash proof. Este mecanismo busca diferenciar anomalías causalmente relevantes de variaciones ambientales o ruido operacional.
+1. Introducción
+Los sistemas automatizados contemporáneos pueden procesar grandes volúmenes de información y ejecutar decisiones en escalas temporales que superan ampliamente la capacidad de auditoría tradicional.
+Esta asimetría genera un problema fundamental: un sistema puede ser técnicamente eficiente y, al mismo tiempo, resultar difícil de auditar cuando produce una decisión crítica.
+La auditoría tradicional suele operar de manera retrospectiva. Primero se ejecuta el proceso y posteriormente se revisan sus resultados mediante informes, controles administrativos o revisiones documentales.
+ROMEO-HYDRA propone una inversión de este modelo.
+En lugar de tratar la gobernanza como una activity posterior, el framework plantea que la capacidad de:
+detectar desviaciones;
+limitar la ejecución;
+preservar evidencia;
+reconstruir decisiones;
+y vincular eventos con sus causas
+debe formar parte del diseño operativo del sistema desde el principio.
+La tesis fundamental del framework puede expresarse de la siguiente manera:
+«Un sistema automatizado no puede considerarse plenamente confiable si no es capaz de demostrar, mediante trazabilidad forense, cómo llegó a una decisión crítica y bajo qué condiciones decidió continuar, limitar o detener su operación.»
+2. Problema de investigación
+2.1. La desconexión entre velocidad y auditabilidad
+Los sistemas automatizados pueden ejecutar inferencias y operaciones en tiempo real. Sin embargo, los procesos tradicionales de auditoría suelen depender de:
+revisiones manuales;
+documentación posterior;
+controles administrativos;
+muestras limitadas;
+y reconstrucciones incompletas de los eventos.
+Esta diferencia entre la velocidad de ejecución y la velocidad de verificación crea una zona de riesgo.
+Cuando un sistema procesa datos fuera de su distribución esperada, cuando una infraestructura física no coincide con los recursos declarados o cuando una decisión algorítmica no puede ser reconstruida, la capacidad de respuesta institucional puede llegar demasiado tarde.
+ROMEO-HYDRA aborda este problema mediante una arquitectura de control preventivo y trazabilidad integrada.
+2.2. Opacidad en sistemas físicos y contractuales
+Los entornos físicos y operativos constituyen un desafío particular para la auditoría automatizada.
+En sistemas tradicionales, pueden existir diferencias entre:
+el estado físico real de una infraestructura;
+el trabajo contratado;
+los materiales facturados;
+los recursos financieros asignados;
+y los resultados efectivamente observables.
+Cuando estos dominios se gestionan de forma separada, se generan puntos ciegos.
+La propuesta de ROMEO-HYDRA consiste en utilizar la evidencia física y operacional como una fuente de verificación obligatoria, cruzándola con la información contractual y financiera correspondiente.
+3. Objetivos del framework
+3.1. Objetivo general
+Diseñar un framework experimental de gobernanza de inteligencia artificial capaz de integrar control preventivo, trazabilidad criptográfica, auditoría multimodal y verificación causal en sistemas automatizados.
+3.2. Objetivos específicos
+El framework persigue los siguientes objetivos:
+Detectar desviaciones estadísticas durante la fase de inferencia.
+Aplicar mecanismos automáticos de suspensión preventiva.
+Registrar eventos críticos mediante una estructura de trazabilidad inmutable.
+Cruzar evidencia visual y operacional con información contractual.
+Detectar discrepancias entre la realidad física y los registros administrativos.
+Vincular anomalías con eventos operacionales mediante ventanas temporales dinámicas.
+Reducir falsos positivos mediante validación causal y evidencia criptográfica.
+Proporcionar una base técnica para la reconstrucción forense de decisiones automatizadas.
+4. Arquitectura conceptual
+ROMEO-HYDRA se organiza alrededor de tres componentes principales.
+4.1. Kernel Sigma
+El Kernel Sigma constituye el núcleo de control preventivo del framework.
+Su función principal es evaluar si las operaciones del sistema permanecen dentro de los límites normativos y estadísticos establecidos.
+Conceptualmente, el Kernel Sigma opera sobre un espacio de seguridad definido por umbrales. Cuando una inferencia o evento supera dichos límites, el sistema puede:
+marcar el evento como anómalo;
+incrementar el nivel de riesgo;
+bloquear el flujo de inferencia;
+registrar el evento;
+y activar mecanismos de revisión.
+La lógica de control se basa en un principio de contención:
+«Una operación que excede los límites definidos no debe continuar automáticamente sin una evaluación adicional.»
+4.2. Delta Ledger
+El Delta Ledger constituye la capa de trazabilidad del framework.
+Su función es preservar la integridad de eventos críticos, decisiones automatizadas y acciones de mitigación.
+El modelo utiliza mecanismos de integridad criptográfica basados en SHA-256 para generar evidencia verificable de la secuencia de eventos.
+El registro puede incluir:
+identificador del evento;
+marca temporal;
+módulo involucrado;
+condición detectada;
+puntuación de riesgo;
+acción ejecutada;
+estado resultante;
+y evidencia asociada.
+El objetivo no es únicamente almacenar información, sino permitir la reconstrucción de la cadena de decisión.
+4.3. Calibración Cognitiva
+La Calibración Cognitiva es un protocolo orientado a reducir la influencia de información irrelevante o ruido contextual sobre los procesos de evaluación técnica.
+El principio operativo es que el sistema debe priorizar:
+evidencia verificable;
+datos técnicos;
+señales operacionales;
+registros auditables;
+y pruebas con trazabilidad.
+La información no relacionada con la evidencia técnica debe ser tratada como potencial fuente de ruido y, cuando corresponda, excluida del proceso de evaluación.
+5. Modelo de gobernanza basado en primeros principios
+ROMEO-HYDRA parte de cinco principios fundamentales.
+Principio 1: La seguridad debe ser arquitectónica
+La seguridad no debe depender exclusivamente de controles administrativos posteriores. Debe existir en el flujo de ejecución.
+Principio 2: Toda decisión crítica debe ser reconstruible
+Una decisión no es plenamente auditable si no puede reconstruirse su secuencia causal.
+Principio 3: La evidencia física debe tener valor computacional
+La realidad observable de un activo puede constituir una fuente de verificación frente a registros contractuales y financieros.
+Principio 4: La anomalía debe generar contención proporcional
+Cuando un sistema detecta una desviación relevante, la respuesta no debe limitarse a generar una alerta. Debe existir la capacidad de limitar o suspender el proceso.
+Principio 5: La trazabilidad debe ser resistente a alteraciones
+Los registros de auditoría deben preservar la integridad de la evidencia y permitir la verificación posterior de su autenticidad.
+6. Simulación forense: escenario de Data Drift
+6.1. Descripción del escenario
+El sistema fue sometido a una prueba de estrés orientada a evaluar su comportamiento ante una deriva de datos o Data Drift.
+Durante la fase de inferencia se introdujo una ráfaga de datos fuera de la distribución estadística base.
+El objetivo fue observar si el sistema:
+detectaba la desviación;
+evaluaba su nivel de riesgo;
+aplicaba una medida preventiva;
+y preservaba la trazabilidad del evento.
+6.2. Registro técnico
+Evento: EVT-889-DRIFT
+Estado: SECURED
+Marca temporal: 20 de julio de 2026, 10:50:00 UTC
+Módulo: KERNEL_SIGMA_CORE
+Evento: DATA_DISTRIBUTION_DRIFT_DETECTED
+Puntuación de riesgo: 0.07
+Límite normativo: 0.05
+Acción: INFERENCE_AUTO_SHUTDOWN
+Estado: LOCKED
+
+La desviación detectada superó el límite normativo establecido. Como respuesta, el sistema ejecutó una suspensión automática del flujo de inferencia.
+6.3. Interpretación de auditoría
+Desde la perspectiva del framework, la suspensión no constituye necesariamente un fallo del sistema. Por el contrario, representa una respuesta de mitigación preventiva.
+El comportamiento observado puede describirse como:
+Desviación detectada → Evaluación de riesgo → Superación del umbral → Suspensión preventiva → Registro forense
+La finalidad de esta secuencia es impedir que un sistema continúe generando inferencias bajo condiciones que podrían incrementar el riesgo de sesgo o degradación operacional.
+7. Auditoría de activos físicos y cruce contractual
+7.1. El problema del sistema legacy
+Los sistemas tradicionales suelen separar la administración contractual, la gestión financiera, la supervisión operativa y la inspección física.
+Esta separación puede generar inconsistencias difíciles de detectar. Por ejemplo, un contrato puede registrar una intervención, una factura puede declarar determinados materiales y un sistema financiero puede mostrar la ejecución presupuestaria, mientras que la evidencia física disponible no refleja los resultados esperados. ROMEO-HYDRA propone integrar estas fuentes.
+7.2. Cruce de realidad y contrato
+El modelo utiliza registros visuales y operacionales como insumos de verificación. En el escenario documentado, los registros asociados a los nodos 4446–4463 se utilizan como evidencia multimodal para evaluar el estado físico y operacional del entorno.
+El proceso conceptual es:
+Evidencia física + Datos operacionales + Información contractual + Flujos financieros ⇒ Evaluación de coherencia
+Cuando se identifica una discrepancia significativa, el sistema puede emitir una alerta crítica y activar un bloqueo preventivo.
+8. Módulo de ingestión multimodal y telemetría visual
+El objetivo de esta arquitectura es transformar la evidencia visual y operacional en señales capaces de alimentar procesos de evaluación automatizada. La información multimodal no se trata únicamente como material descriptivo. Se integra como parte del mecanismo de control y verificación.
+9. Protocolo de verificación de causalidad
+Una anomalía no necesariamente constituye una causa. Puede existir una desviación estadística, una diferencia visual o un cambio operacional que sea consecuencia de ruido ambiental, variación normal o factores externos no relacionados con el evento investigado.
+Por esta razón, ROMEO-HYDRA incorpora ventanas de latencia dinámica. El modelo considera una ventana temporal de referencia t - δL, donde t representa el momento de detección del evento y δL representa la ventana de latencia utilizada para buscar eventos precedentes potencialmente relacionados.
+La finalidad es determinar si existe una relación temporal y operacional entre:
+la anomalía detectada;
+un evento antecedente;
+la evidencia observable;
+y la consecuencia registrada.
+El protocolo busca reducir falsos positivos mediante la combinación de proximidad temporal, coherencia operacional, evidencia multimodal y hash proof.
+10. Flujo operacional propuesto
+El funcionamiento general del framework puede representarse mediante la siguiente secuencia:
+Fase 1: Ingestión
+El sistema recibe datos de fuentes algorítmicas, visuales, operacionales y contractuales.
+Fase 2: Normalización
+Las señales son estructuradas para permitir su comparación.
+Fase 3: Evaluación
+El Kernel Sigma analiza la información frente a límites normativos y patrones esperados.
+Fase 4: Detección de desviación
+Cuando se identifica una anomalía, se calcula su nivel de riesgo.
+Fase 5: Contención
+Si el riesgo supera el umbral correspondiente, el flujo puede ser limitado o suspendido.
+Fase 6: Registro
+El evento y la respuesta del sistema se incorporan al Delta Ledger.
+Fase 7: Correlación causal
+La anomalía se relaciona con eventos operacionales dentro de una ventana temporal definida.
+Fase 8: Auditoría
+La evidencia consolidada se utiliza para reconstruir la secuencia de eventos y evaluar la coherencia entre la decisión, la evidencia y el resultado.
+11. Resultados observados
+El escenario de simulación documentado demuestra tres capacidades relevantes.
+11.1. Detección preventiva
+El sistema identificó una desviación de distribución durante la inferencia.
+11.2. Aplicación automática de límites
+La puntuación de riesgo superó el límite normativo establecido, provocando una suspensión preventiva.
+11.3. Trazabilidad
+El evento fue estructurado para su registro y revisión forense posterior. Estos resultados respaldan la hipótesis de que los mecanismos de gobernanza pueden incorporarse directamente en el flujo operativo de un sistema automatizado.
+12. Limitaciones y líneas de desarrollo
+Como framework experimental, ROMEO-HYDRA requiere validación adicional en entornos controlados y reales.
+Entre las principales líneas de desarrollo se encuentran:
+definición formal de los umbrales de riesgo;
+validación estadística de los mecanismos de detección de drift;
+evaluación de falsos positivos y falsos negativos;
+especificación completa del modelo de gobernanza de claves criptográficas;
+validación independiente de la integridad del Delta Ledger;
+pruebas de escalabilidad;
+evaluación de ataques adversariales;
+validación de modelos multimodales;
+y establecimiento de protocolos de revisión humana.
+Asimismo, la utilización de evidencia visual en procesos contractuales requiere procedimientos específicos de autenticidad, cadena de custodia, control de versiones, calibración de sensores y validación de la relación entre la evidencia capturada y el activo auditado.
+13. Conclusión
+ROMEO-HYDRA propone un modelo de gobernanza de inteligencia artificial basado en una idea central: la auditabilidad debe construirse dentro del sistema y no añadirse únicamente después de su ejecución.
+La arquitectura combina detección de desviaciones, control preventivo, trazabilidad criptográfica, ingestión multimodal, correlación causal y auditoría de la realidad física frente a los registros contractuales.
+El escenario de Data Drift demuestra el valor de una respuesta preventiva: cuando la desviación supera el límite definido, el sistema puede detener la inferencia antes de que la anomalía se convierta en una cadena de decisiones potencialmente comprometidas. Del mismo modo, el modelo de auditoría de activos físicos propone superar la separación tradicional entre el contrato, el flujo financiero y la realidad operacional.
+La tesis final del framework es, por tanto, la siguiente:
+«La confianza en un sistema automatizado no debe depender únicamente de su capacidad para producir una respuesta, sino de su capacidad para demostrar cuándo, por qué y bajo qué evidencia decidió producirla o detenerse.»
+ROMEO-HYDRA constituye una propuesta experimental para avanzar hacia sistemas de inteligencia artificial donde la seguridad, la trazabilidad y la gobernanza sean propiedades estructurales del diseño tecnológico.

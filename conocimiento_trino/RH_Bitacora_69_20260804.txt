@@ -1,0 +1,24 @@
+Para compilar un APK desde PowerShell a partir de un archivo ZIP, necesitas tener instalado el SDK de Android y Java (JDK).
+Ejecuta los siguientes comandos paso a paso:
+1. Descomprimir el archivo ZIP
+Navega a la carpeta donde está tu archivo y descomprímelo:
+Expand-Archive -Path ".\tu_codigo.zip" -DestinationPath ".\CodigoFuente"
+cd .\CodigoFuente
+
+2. Verificar el entorno de compilación
+Asegúrate de que las variables de entorno para Java y Android están configuradas temporalmente si no lo están en tu sistema:
+$env:JAVA_HOME = "C:\Program Files\Java\jdk-17" # Ajusta tu ruta de Java
+$env:ANDROID_HOME = "$env:LOCALAPPDATA\Android\Sdk"
+
+3. Compilar el archivo APK
+Dependiendo del framework en el que esté desarrollado tu código, ejecuta el comando correspondiente dentro de la carpeta descomprimida:
+Si es un proyecto nativo de Android o React Native / Flutter (Gradle):
+cd android
+.\gradlew assembleRelease
+
+Si es un proyecto de Cordova o Ionic:
+cordova build android --release
+
+Una vez finalizado el proceso, el archivo .apk generado se guardará en la ruta interna de salida de tu proyecto (por ejemplo, \app\build\outputs\apk\release\app-release.unsigned.apk).
+Expand-Archive -Path ".\looper-station.zip" -DestinationPath ".\looper-station"
+cd .\looper-station

@@ -1,0 +1,192 @@
+Programa de Investigación  ·  Coherencia Lógico-Convexa
+CLC v1.1  ·  Página 1
+ PROGRAMA DE INVESTIGACIÓN
+ Coherencia Lógico-Convexa (CLC)
+ Un Marco Geométrico para la Evolución de Paradigmas Científicos
+ y la Gobernanza de Sistemas Complejos
+ Versión 1.1 — Integrada
+ Julio 2026
+ Autor
+ Luis Angel Vazquez Martinez
+Integra: Ontología del Mar Ontológico · Formalización EMMOROR · Arquitectura ROMEO-HYDRA
+Documento preparado para depósito en repositorio de acceso abierto (Zenodo).
+Licencia recomendada: Creative Commons Attribution 4.0 International (CC BY 4.0).
+
+CLC v1.1  ·  Página 2
+1. Resumen
+Se propone un programa de investigación que modela la evolución de paradigmas científicos (y, por
+extensión, de sistemas de conocimiento y gobernanza) como un proceso dinámico sobre una variedad
+geométrica equipada con una función de coherencia.
+El modelo no pretende demostrar la “verdad” de ninguna teoría particular. Su objetivo es construir un
+formalismo matemático capaz de describir la estabilidad, la transición y la reorganización de marcos
+conceptuales mediante herramientas de geometría diferencial, sistemas dinámicos y teoría de la
+información, susceptibles de análisis y contraste empírico.
+Este formalismo se integra con una arquitectura de tres capas (Ontología – Hardware – Gobernanza)
+desarrollada bajo el nombre ROMEO-HYDRA, y se implementa computacionalmente a través de la
+plataforma abierta EMMOROR (Engine for Mathematical Modeling Of Research and Reasoning).
+2. Hipótesis Central
+Existe una estructura geométrica del espacio de teorías (y, más generalmente, del espacio de estados
+de conocimiento) en la cual la evolución del conocimiento sigue trayectorias de máxima coherencia
+estructural.
+Las revoluciones científicas (y las transiciones de régimen en sistemas complejos) corresponden a
+pérdidas de estabilidad local de dicha geometría, caracterizadas por la degeneración del tensor de
+coherencia.
+3. Arquitectura de Tres Capas
+El programa se organiza en tres capas interdependientes pero conceptualmente separadas:
+Capa
+Nombre
+Función principal
+Estado
+1. Ontológica
+Mar Ontológico / No-Espacio
+Define el espacio de significados admisibles y las
+condiciones de existencia de un estado
+Formalización en curso
+(v0.1-beta)
+2. Matemática
+CLC + EMMOROR
+Describe la dinámica de estabilidad y transición de
+paradigmas
+Programa de
+investigación formal
+3. Operativa
+ROMEO-HYDRA
+Impone restricciones geométricas en tiempo de
+ejecución (Governance-as-Constraint)
+Prototipos con DOI
+registrados
+La capa ontológica establece qué puede existir. La capa matemática describe cómo evoluciona la
+coherencia. La capa operativa garantiza que los estados no admisibles nunca se ejecuten.
+4. Definiciones Fundamentales (Capa Matemática)
+4.1 Espacio de Teorías
+Sea (■, g) una variedad diferenciable denominada Espacio de Teorías.
+Cada teoría (o estado de conocimiento) se representa mediante un vector de componentes
+cuantificables:
+ C = (CP, CE, CM, CS, CR, …) ∈ ■■
+donde CP = poder predictivo, CE = alcance explicativo, CM = coherencia matemática interna, CS =
+simplicidad estructural, CR = robustez experimental.
+
+CLC v1.1  ·  Página 3
+4.2 Función de Coherencia
+Se define Σ : ■ → ■ como una función escalar que mide la estabilidad estructural del marco
+conceptual. No representa verdad. Representa resistencia local a la perturbación.
+4.3 Principio de Coherencia Lógico-Convexa
+Un sistema posee Coherencia Lógico-Convexa cuando el Hessiano de Σ es semidefinido positivo en un
+entorno del punto actual:
+ ∇²Σ ■ 0
+Esta condición garantiza estabilidad local frente a pequeñas perturbaciones.
+4.4 Tensor de Coherencia
+ Kij = ∇i ∇j Σ
+Los autovalores de K caracterizan las direcciones de estabilidad o inestabilidad.
+4.5 Condición de Bifurcación (Cambio de Paradigma)
+Se postula que un cambio estructural ocurre cuando el menor autovalor del tensor de coherencia se
+anula:
+ λmin(K) = 0
+Esta es la condición de degeneración métrica que marca la pérdida de estabilidad local.
+4.6 Dinámica
+La evolución temporal se modela como un flujo de gradiente del potencial de coherencia:
+ dC / dt = −∇Φ(C)
+donde Φ es un potencial derivado de Σ.
+4.7 Entropía Lógica
+Se introduce una medida de tensión conceptual:
+ SL = −ln( Σ / (1 + A) )
+donde A ≥ 0 representa la magnitud agregada de anomalías acumuladas.
+5. Formalización Matemática Ampliada (Integración con EMMOROR)
+Se adopta la forma de potencial estructural desarrollada en EMMOROR:
+ Σ(x) = −∑i wi ln(xi) + ½ xT A x
+ El término logarítmico actúa como barrera de punto interior (impide la extinción de dimensiones
+esenciales).
+ La matriz A (definida positiva) codifica la topología de interacciones entre componentes del
+paradigma.
+Se define el balance tipo energía libre:
+ ■(x) = Σ(x) − λ H(x)
+donde H es una medida de entropía/dispersión y λ actúa como parámetro de “temperatura” o volatilidad
+del entorno.
+
+CLC v1.1  ·  Página 4
+La dinámica natural (gradiente natural) es:
+ dxi / dt = − gij ∂■ / ∂xj
+Para evitar la inversión costosa de la métrica se contemplan cuatro vías computacionales (ordenadas
+de más geométrica a más pragmática):
+1. Coordenadas duales de Legendre (método de Amari)
+2. Productos Hessiano-Vector (HVP) + Gradientes Conjugados
+3. Aproximación L-BFGS
+4. Factorización de Kronecker (K-FAC)
+6. Capa Ontológica (Mar Ontológico / No-Espacio)
+La capa ontológica formaliza las condiciones de admisibilidad de un estado.
+Se postula un espacio de estados admisibles Ω ⊆ ■¹²■ (64 observables + 64 latentes en la versión
+actual de ROMEO-HYDRA) y un predicado de admisibilidad:
+ Admissible(x) ⇔ x ∈ Ωont ∧ hessian_ok(x) ∧ ¬frontier_crossed(x)
+con:
+ hessian_ok(x) ⇔ λmin(∇²L(x)) ≥ −τ   (τ = 0.05)
+ frontier_crossed(x) ⇔ dist(x, ∂Ω) < ε   (ε = 0.01)
+Esta capa traduce la intuición filosófica de las “No-Leyes de la Irrealidad” (la realidad material como
+residuo de la validación del observador) en restricciones geométricas ejecutables.
+7. Capa Operativa (ROMEO-HYDRA)
+ROMEO-HYDRA implementa Governance-as-Constraint:
+ Ledger ∆: registro inmutable de cambios de estado (auditoría criptográfica).
+ Función Σ: interruptor de energía / límite duro de recursos.
+ Jacobiano efímero: recálculo continuo del terreno de juego para impedir planificación a largo plazo
+de estados no admisibles.
+Protocolo de Continuidad Lógica (Blackout Survival): si se pierde la conectividad central, un nodo
+local conserva las reglas de validación y continúa rechazando estados no admisibles. El estado
+prohibido nunca llega a existir.
+8. Programa Experimental y Validación
+Casos de estudio iniciales (capa matemática):
+ Sistema geocéntrico → heliocentrismo
+ Mecánica aristotélica → mecánica newtoniana
+ Mecánica clásica → relatividad
+ Mecánica clásica → mecánica cuántica
+ Fijismo → tectónica de placas
+Criterios de validación:
+1. Consistencia matemática interna.
+2. Demostraciones formales de propiedades del flujo y del tensor de coherencia.
+
+CLC v1.1  ·  Página 5
+3. Parámetros fijados antes de la evaluación de datos históricos.
+4. Capacidad de reconstruir múltiples transiciones con el mismo formalismo.
+5. Posibilidad de refutación clara.
+Criterios de éxito de la plataforma EMMOROR:
+ Modularidad · Reproducibilidad total · Trazabilidad · Extensibilidad · Motor de refutación activo
+9. Hoja de Ruta (5 años)
+Año
+Objetivo principal
+1
+Formalización axiomática completa + definición rigurosa del espacio de teorías
+2
+Demostraciones de existencia, unicidad y estabilidad del flujo
+3
+Implementación computacional de EMMOROR (núcleo + geometría + dinámica)
+4
+Reconstrucción cuantitativa de al menos tres revoluciones científicas
+5
+Validación estadística, publicación de resultados (incluyendo limitaciones y posibles refutaciones) y apertura
+del código
+10. Alcance y Límites Explícitos
+Este programa no afirma:
+ Que la geometría propuesta describa la realidad física última.
+ Que la consciencia o el “No-Espacio” hayan sido demostrados.
+ Que ROMEO-HYDRA sea actualmente un sistema de gobernanza listo para despliegue crítico.
+Afirma únicamente:
+ Que es posible construir un formalismo matemático coherente para estudiar la estabilidad y
+transición de paradigmas.
+ Que dicho formalismo puede implementarse de forma reproducible.
+ Que las restricciones geométricas pueden imponerse en tiempo de ejecución (capa operativa).
+El valor del programa residirá exclusivamente en su consistencia matemática, su capacidad de
+contrastación empírica y su utilidad como infraestructura abierta de modelado.
+11. Principios de Diseño de EMMOROR
+1. Modularidad: cada componente puede sustituirse sin romper el resto.
+2. Reproducibilidad: todo experimento debe poder repetirse bit a bit.
+3. Trazabilidad: cada resultado indica axiomas, datos y algoritmos utilizados.
+4. Extensibilidad: admite otros modelos además de CLC.
+5. Refutabilidad: el motor debe facilitar la búsqueda de contraejemplos con la misma potencia con
+la que busca evidencia a favor.
+Fin del documento v1.1
+Este documento constituye un programa de investigación abierto. Su valor se medirá por la calidad de las
+
+CLC v1.1  ·  Página 6
+demostraciones, la reproducibilidad de los experimentos y la capacidad del formalismo para ser refutado o
+mejorado por la comunidad.
+ Autor: Luis Angel Vazquez Martinez
+ Julio 2026
+Preparado para depósito en Zenodo bajo licencia CC BY 4.0.

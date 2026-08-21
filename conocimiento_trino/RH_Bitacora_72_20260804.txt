@@ -1,0 +1,957 @@
+Respuestas de cloude grock y chatgpt sin ningún valor en el orden presentado 
+Va sin rodeos, como pediste. Piensa en esto como armar una casa: primero los cuartos vacíos con puertas bien puestas, y luego metes los muebles (la lógica de ROMEO) sin tener que tumbar paredes.
+**La idea general**
+Vas a tener 4 partes separadas que se hablan entre sí por "puertas" muy claras. Así, cuando quieras meter a ROMEO después, solo lo conectas a una puerta específica sin tocar el resto.
+---
+**1. El cuarto de los sentidos (`/sensors`)**
+Aquí vive el código que le pregunta al teléfono: "¿dónde estás?" y "¿qué tan rápido te mueves?". Usa el GPS y el acelerómetro del celular directamente — nada de servidores, nada de internet.
+- `sensorReader.js` — pide la ubicación y velocidad cada cierto tiempo (por ejemplo, cada segundo) y las deja guardadas en la memoria del teléfono.
+- `sensorBuffer.js` — es como una libreta donde se van anotando esos datos en orden, para que no se pierdan aunque no haya internet.
+**Por qué separado:** si mañana cambias de GPS a otro sensor, solo tocas este cuarto. Nada más se entera.
+---
+**2. El cuarto de la memoria local (`/storage`)**
+Como la app debe funcionar sin internet, necesita guardar todo en el propio teléfono, no en la nube.
+- `localDB.js` — una base de datos chiquita que vive en el navegador del celular (se llama IndexedDB, pero no necesitas saber el nombre técnico — piénsalo como un cajón privado del teléfono).
+- Aquí se guardan los datos del GPS, la velocidad, y después, las decisiones que tome ROMEO.
+---
+**3. El cuarto del mapa bonito (`/map`)**
+Esto es solo la decoración — el "lienzo" como dijiste.
+- `mapView.js` — llama a la API de Google Maps y dibuja el mapa de fondo.
+- `mapMarkers.js` — pone el puntito que representa dónde estás tú (usando los datos del cuarto 1).
+**Importante:** este cuarto NO piensa nada. Solo dibuja lo que le dicen los otros cuartos. Es pura decoración, cero lógica.
+---
+**4. La puerta para ROMEO (`/brain`)**
+Esta es la parte más importante que pediste: el "guante a la medida". Aquí no metemos ninguna lógica todavía — solo dejamos la puerta bien construida para que ROMEO entre después sin fricción.
+- `brainInterface.js` — este archivo es literalmente solo una puerta vacía. Recibe los datos del cuarto 1 (ubicación, velocidad) y del cuarto 2 (historial guardado), y los entrega en una cajita ordenada. Por ahora, esa cajita no hace nada con los datos — solo los pasa. Cuando conectes a ROMEO, él va a "escuchar" en esta puerta y va a devolver una decisión (por ejemplo: "semáforo en 200 metros va a estar en rojo, baja la velocidad").
+- `decisionOutput.js` — donde se guarda lo que ROMEO decida, para que el resto de la app lo pueda mostrar en pantalla.
+**Por qué esto es clave:** al dejar esta puerta vacía y bien definida desde el inicio, cuando ROMEO esté listo, no vas a tener que reescribir nada de los otros 3 cuartos. Solo conectas el cable ahí.
+---
+**5. El cuarto que junta todo (`/app`)**
+- `App.js` (o `index.js`) — es el que prende todo: enciende los sensores, abre el mapa, revisa la puerta de ROMEO, y muestra el resultado en pantalla.
+- `manifest.json` y `service-worker.js` — estos dos son los que hacen que la app funcione sin internet y se pueda "instalar" en el teléfono como si fuera una app normal (esto es lo que la hace una PWA de verdad, no solo una página web).
+---
+**Cómo se conectan, en una frase:**
+Sensores → guardan en memoria local → el mapa dibuja lo que hay en memoria → la puerta de ROMEO lee esa misma memoria y (cuando la conectes) entrega una decisión → esa decisión se muestra en pantalla.
+¿Quieres que te arme el árbol de carpetas completo tal cual lo pegarías en AI Studio, con los nombres exactos de archivo listos para crear uno por uno?
+**Aquí tienes el esqueleto exacto**, explicado como si se lo contara a alguien que nunca ha programado.  
+Todo es simple, gratis y pensado desde el primer día para que después le enchufes el cerebro ROMEO como un guante.
+### Qué va a hacer la app (en palabras de calle)
+- Muestra un mapa bonito de Google (solo de fondo, como Uber).
+- Tiene un botoncito que saca del teléfono tu ubicación y tu velocidad (con los sensores del propio celular, sin internet).
+- Manda esos datos puros a un servidor externo (donde vive ROMEO) para que él decida.
+---
+### Lista de archivos que tienes que crear  
+(Hazlos uno por uno en la terminal de Google AI Studio)
+**1. index.html**  
+Este es el cuerpo de la app.  
+Aquí va:
+- El mapa de Google.
+- El botoncito grande que dice “Capturar datos”.
+- Un espacio donde se vean los números de ubicación y velocidad.
+**2. estilos.css**  
+Este archivo solo se encarga de que se vea limpio y bonito en el celular.  
+Nada más.
+**3. app.js**  
+Este es el cerebro chiquito de la app.  
+Aquí van las tres cosas básicas:
+- Cómo se prende el mapa.
+- Cómo el botoncito lee la ubicación y la velocidad del teléfono.
+- Cómo manda esos datos al servidor de ROMEO.
+**4. manifest.json**  
+Este archivo le dice al celular: “Esta página se puede instalar como una app”.  
+Es lo que la convierte en PWA.
+**5. service-worker.js**  
+Este archivo hace que la recolección de datos siga funcionando aunque no haya internet.  
+Guarda en el teléfono lo que captura el botoncito.
+---
+### Cómo se conectan entre ellos (como piezas de Lego)
+```
+index.html
+   │
+   ├── llama a estilos.css          → para que se vea bien
+   ├── llama a app.js               → para que funcione el botón y el mapa
+   ├── llama a manifest.json        → para que se pueda instalar
+   └── llama a service-worker.js    → para que funcione sin internet
+```
+Dentro de **app.js** hay tres partes bien separadas (así ROMEO se conecta fácil después):
+1. **Parte del mapa**  
+   Solo pinta el mapa de Google y pone un puntito donde estás.
+2. **Parte del botoncito**  
+   Cuando le picas, el teléfono entrega:
+   - latitud
+   - longitud
+   - velocidad  
+   (todo sale directo de los sensores del celular, sin servidor).
+3. **Parte de envío a ROMEO**  
+   Toma esos tres números y los manda por una conexión simple al servidor donde está corriendo ROMEO.  
+   Esa conexión está lista para que después le pongas la dirección exacta del cerebro ROMEO (el endpoint que ya conoces).
+---
+### Orden exacto para crearlos en la terminal de Google AI Studio
+1. Crea la carpeta del proyecto.  
+2. Crea el archivo `index.html`.  
+3. Crea el archivo `estilos.css`.  
+4. Crea el archivo `app.js`.  
+5. Crea el archivo `manifest.json`.  
+6. Crea el archivo `service-worker.js`.
+Cuando termines de crear estos cinco archivos, la app ya tiene:
+- Pantalla con mapa
+- Botón que lee sensores del teléfono
+- Enlace listo para mandar los datos a ROMEO
+Y está diseñado desde el principio para que ROMEO se enchufe después sin tener que rehacer nada.
+¿Quieres que ahora te dé el contenido exacto de cada archivo, uno por uno, todavía con palabras súper sencillas?
+Sí. Voy a plantearlo desde el principio pensando en ROMEO, no como una PWA genérica.
+Primero, una aclaración importante para que el diseño no nazca con una contradicción:
+La recolección de ubicación y velocidad sí puede funcionar sin internet, usando directamente el teléfono.
+La aplicación puede guardar los datos localmente sin servidores.
+La comunicación entre teléfonos puede diseñarse sin depender de un servidor central.
+Pero el mapa de Google como fondo visual necesita una conexión cuando se carga. Si se exige que el mapa de Google también funcione completamente sin internet, esa parte choca con la idea de usar Google Maps como lienzo. Además, Google Maps Platform funciona con facturación por uso y límites gratuitos por servicio, no como un servicio ilimitado y universalmente gratis. 
+Por eso, la estructura correcta será:
+> ROMEO manda la lógica.
+El teléfono recoge los datos.
+La aplicación guarda los datos.
+El mapa solo dibuja.
+La aplicación no debe tomar decisiones importantes por su cuenta.
+---
+1. La idea completa, con peras y manzanas
+Imagina una casa:
+┌─────────────────────────────┐
+│        PANTALLA             │
+│       La aplicación         │
+├─────────────────────────────┤
+│       ROMEO ADAPTER         │
+│   La puerta hacia ROMEO      │
+├─────────────────────────────┤
+│       MOTOR DE DATOS         │
+│   Ordena y prepara datos     │
+├─────────────────────────────┤
+│      SENSORES DEL TELÉFONO  │
+│  GPS + velocidad + tiempo    │
+├─────────────────────────────┤
+│       ALMACÉN LOCAL          │
+│  Datos guardados en teléfono │
+└─────────────────────────────┘
+Y aparte:
+┌─────────────────────────────┐
+│        GOOGLE MAPS           │
+│      Fondo visual            │
+└─────────────────────────────┘
+Google Maps no debe ser el cerebro.
+El mapa solamente dice:
+> “Aquí está la calle.”
+ROMEO será quien diga:
+> “Con estos datos, el semáforo debería hacer esto.”
+---
+2. La regla de oro para que ROMEO encaje perfectamente
+No vamos a hacer esto:
+Pantalla
+   ↓
+Lógica del semáforo
+   ↓
+GPS
+Eso sería un error porque la lógica queda mezclada con la pantalla.
+Vamos a hacer esto:
+TELÉFONO
+   │
+   ├── ubicación
+   ├── velocidad
+   ├── hora
+   └── estado del sensor
+          │
+          ▼
+   NORMALIZADOR DE DATOS
+          │
+          ▼
+   PAQUETE DE ENTRADA
+          │
+          ▼
+     ROMEO
+          │
+          ▼
+   RESPUESTA DE ROMEO
+          │
+          ├── decisión
+          ├── confianza
+          ├── explicación
+          └── acciones
+          │
+          ▼
+   PANTALLA / SEMÁFORO / REGISTRO
+ROMEO debe recibir siempre un paquete con una forma fija.
+Por ejemplo:
+ROMEO recibe:
+{
+  "version": "1.0",
+  "momento": "...",
+  "dispositivo": "...",
+  "ubicacion": {
+    "latitud": 19.000,
+    "longitud": -99.000,
+    "precision": 8
+  },
+  "movimiento": {
+    "velocidad": 35,
+    "rumbo": 90
+  },
+  "entorno": {
+    "conexion": "offline"
+  }
+}
+Y ROMEO devuelve:
+{
+  "decision": "...",
+  "accion": "...",
+  "motivo": "...",
+  "momento": "...",
+  "version_regla": "..."
+}
+La idea es muy sencilla:
+> La aplicación prepara la comida. ROMEO decide qué hacer con ella.
+---
+3. La estructura completa de carpetas
+Yo empezaría así:
+smart-traffic-pwa/
+│
+├── package.json
+├── vite.config.ts
+├── tsconfig.json
+├── index.html
+├── .env.example
+├── README.md
+│
+├── public/
+│   ├── manifest.webmanifest
+│   ├── sw.js
+│   ├── icons/
+│   │   ├── icon-192.png
+│   │   └── icon-512.png
+│   └── offline.html
+│
+└── src/
+    │
+    ├── main.tsx
+    ├── App.tsx
+    │
+    ├── app/
+    │   ├── AppShell.tsx
+    │   ├── appConfig.ts
+    │   └── appTypes.ts
+    │
+    ├── ui/
+    │   ├── MapView.tsx
+    │   ├── TrafficStatus.tsx
+    │   ├── SensorStatus.tsx
+    │   ├── OfflineBanner.tsx
+    │   └── DebugPanel.tsx
+    │
+    ├── sensors/
+    │   ├── LocationSensor.ts
+    │   ├── MotionSensor.ts
+    │   ├── SensorManager.ts
+    │   └── sensorTypes.ts
+    │
+    ├── telemetry/
+    │   ├── TelemetryCollector.ts
+    │   ├── TelemetryNormalizer.ts
+    │   ├── TelemetryValidator.ts
+    │   └── telemetryTypes.ts
+    │
+    ├── storage/
+    │   ├── LocalDatabase.ts
+    │   ├── TelemetryRepository.ts
+    │   ├── EventRepository.ts
+    │   └── storageTypes.ts
+    │
+    ├── romeo/
+    │   ├── RomeoAdapter.ts
+    │   ├── RomeoInputBuilder.ts
+    │   ├── RomeoOutputValidator.ts
+    │   ├── RomeoContract.ts
+    │   └── romeoTypes.ts
+    │
+    ├── decentralized/
+    │   ├── PeerTransport.ts
+    │   ├── PeerDiscovery.ts
+    │   ├── PeerMessage.ts
+    │   └── decentralizedTypes.ts
+    │
+    ├── map/
+    │   ├── GoogleMapAdapter.ts
+    │   ├── MapLayer.ts
+    │   └── mapTypes.ts
+    │
+    ├── domain/
+    │   ├── TrafficState.ts
+    │   ├── Intersection.ts
+    │   ├── SignalState.ts
+    │   └── domainTypes.ts
+    │
+    └── tests/
+        ├── romeo/
+        ├── telemetry/
+        ├── storage/
+        └── decentralized/
+Ahora te explico cada parte como si fueran habitaciones de la casa.
+---
+4. Los archivos principales
+package.json
+Es la lista de cosas que necesita la aplicación.
+Como una lista de compras:
+Necesito:
+- React
+- TypeScript
+- herramienta para construir la aplicación
+- almacenamiento local
+- soporte PWA
+No debe contener cosas innecesarias.
+La regla sería:
+> Cada paquete externo debe justificar por qué existe.
+---
+vite.config.ts
+Es la configuración de cómo se construye la aplicación.
+Piensa en esto como:
+> “Cuando termine de construir la casa, ¿cómo empaqueto todo para que pueda abrirse?”
+Aquí se prepara también el comportamiento de PWA.
+---
+index.html
+Es la puerta de entrada.
+Cuando el teléfono abre la aplicación:
+index.html
+      ↓
+main.tsx
+      ↓
+App.tsx
+---
+5. La carpeta public/
+Aquí van los archivos que deben estar disponibles directamente.
+manifest.webmanifest
+Es la tarjeta de identidad de la PWA.
+Le dice al teléfono:
+Nombre:
+Semáforo Inteligente
+Icono:
+...
+Color:
+...
+Modo:
+Aplicación instalada
+Gracias a esto, la aplicación puede comportarse más como una aplicación instalada.
+---
+sw.js
+Este es uno de los archivos más importantes para el modo sin internet.
+Su trabajo es:
+Internet disponible:
+    ↓
+guarda lo necesario
+Internet desaparece:
+    ↓
+usa lo guardado
+Pero hay que entender algo:
+> El sw.js no debe intentar guardar la telemetría del teléfono.
+La telemetría debe ir a una base local del dispositivo.
+El sw.js se ocupa principalmente de que la aplicación pueda abrirse y funcionar aunque no haya red.
+---
+6. La carpeta sensors/
+Esta es la parte que escucha al teléfono.
+LocationSensor.ts
+Se ocupa de la ubicación.
+Su trabajo es:
+Teléfono
+   ↓
+"Estoy aquí"
+   ↓
+latitud
+longitud
+precisión
+hora
+No debe decidir nada sobre semáforos.
+Solo informa.
+Ejemplo:
+{
+  latitude: 19.4326,
+  longitude: -99.1332,
+  accuracy: 8,
+  timestamp: 123456789
+}
+---
+MotionSensor.ts
+Se ocupa del movimiento.
+Puede recoger información disponible directamente en el teléfono, como:
+velocidad
+dirección
+aceleración
+movimiento
+Importante:
+> La velocidad no debe inventarse.
+Si el teléfono no entrega una velocidad válida, la aplicación debe decir:
+velocidad: desconocida
+No:
+velocidad: 0
+Porque:
+"no sé"
+no significa:
+"está detenido"
+Esta diferencia será muy importante para ROMEO.
+---
+SensorManager.ts
+Es el coordinador.
+Hace esto:
+LocationSensor
+       │
+MotionSensor
+       │
+       ▼
+SensorManager
+       │
+       ▼
+datos crudos
+Ejemplo:
+{
+  ubicacion: {...},
+  movimiento: {...},
+  fecha: ...
+}
+El SensorManager no decide qué significa esa información.
+Solo junta las piezas.
+---
+7. La carpeta telemetry/
+Aquí convertimos los datos del teléfono en datos ordenados.
+TelemetryCollector.ts
+Recibe los datos de los sensores:
+GPS
+  +
+velocidad
+  +
+hora
+  +
+estado del teléfono
+Y crea una lectura:
+TelemetryRecord
+---
+TelemetryNormalizer.ts
+Este archivo evita que cada teléfono mande los datos de una forma diferente.
+Por ejemplo:
+Teléfono A:
+speed: 30
+Teléfono B:
+velocity: 30
+Teléfono C:
+vel: 30
+El normalizador convierte todo a:
+speed_mps: 8.33
+Así ROMEO recibe siempre la misma forma.
+---
+TelemetryValidator.ts
+Este archivo pregunta:
+¿La ubicación existe?
+¿La precisión es razonable?
+¿La hora existe?
+¿La velocidad es válida?
+Ejemplo:
+Si:
+latitud = 19.43
+longitud = -99.13
+precisión = 8
+OK
+Pero:
+latitud = 9999
+Entonces:
+NO ES VÁLIDO
+---
+telemetryTypes.ts
+Aquí se define la forma exacta de cada dato.
+Por ejemplo:
+TelemetryRecord
+debe tener siempre:
+id
+timestamp
+location
+motion
+quality
+source
+Esta parte es fundamental para ROMEO.
+Porque ROMEO necesita saber:
+> “¿Qué recibo exactamente?”
+---
+8. La carpeta storage/
+Esta es la caja fuerte local.
+Aquí se guardan los datos dentro del teléfono.
+Sensores
+   ↓
+Telemetría
+   ↓
+Base local
+Sin servidor.
+Sin nube.
+Sin conexión.
+---
+LocalDatabase.ts
+Abre y prepara el almacenamiento local.
+La idea:
+Aplicación
+    ↓
+Base de datos del teléfono
+Para este proyecto, yo separaría claramente:
+datos de sensores
+      ↓
+datos de decisiones
+      ↓
+eventos
+No mezclaría todo en una sola tabla.
+---
+TelemetryRepository.ts
+Guarda:
+lecturas de ubicación
+lecturas de velocidad
+hora
+calidad
+Ejemplo:
+{
+  id: "telemetry-001",
+  timestamp: "...",
+  latitude: 19.43,
+  longitude: -99.13,
+  speed: 8.3,
+  accuracy: 7
+}
+---
+EventRepository.ts
+Guarda acontecimientos importantes:
+ROMEO decidió X
+ROMEO recibió Y
+sensor perdió señal
+se recuperó la conexión
+se detectó otro dispositivo
+Esto es muy útil para revisar después qué pasó.
+---
+9. La carpeta más importante: romeo/
+Aquí está el enchufe exacto para ROMEO.
+La aplicación no debe conocer los detalles internos del cerebro.
+Debe conocer solamente:
+Qué entra
+Qué sale
+Cómo se llama
+Cómo se valida
+---
+10. RomeoContract.ts
+Este es el contrato.
+Es el documento que dice:
+> “ROMEO recibe esto y devuelve esto.”
+Por ejemplo:
+ROMEO_INPUT
+{
+  version: "1.0",
+  timestamp: "...",
+  device: {
+    id: "...",
+    capabilities: [...]
+  },
+  position: {
+    latitude: 19.43,
+    longitude: -99.13,
+    accuracy: 8
+  },
+  movement: {
+    speed: 8.3,
+    heading: 90
+  },
+  local_context: {
+    nearby_devices: [],
+    local_events: []
+  }
+}
+Y:
+ROMEO_OUTPUT
+{
+  version: "1.0",
+  decision: {
+    type: "...",
+    value: "..."
+  },
+  reason: "...",
+  validity: {
+    valid_until: "..."
+  }
+}
+La clave es esta:
+> El contrato debe ser estable.
+ROMEO puede cambiar por dentro.
+Pero la puerta de entrada debe seguir siendo igual.
+---
+11. RomeoInputBuilder.ts
+Este archivo construye el paquete para ROMEO.
+Hace esto:
+datos de sensores
+       +
+datos locales
+       +
+datos de otros teléfonos
+       ↓
+RomeoInputBuilder
+       ↓
+paquete exacto para ROMEO
+Ejemplo:
+Sensor:
+"Estoy a 30 km/h"
+Base local:
+"Hay una intersección"
+Otro teléfono:
+"Hay 4 vehículos acercándose"
+RomeoInputBuilder:
+"ROMEO, aquí tienes todo ordenado."
+---
+12. RomeoAdapter.ts
+Este es el enchufe.
+Su trabajo será:
+Aplicación
+     │
+     ▼
+RomeoAdapter
+     │
+     ▼
+ROMEO
+     │
+     ▼
+RomeoAdapter
+     │
+     ▼
+Aplicación
+La aplicación nunca debería llamar directamente a funciones internas de ROMEO.
+Debe hacer algo parecido a:
+const input = buildRomeoInput(data);
+const result = await romeoAdapter.evaluate(input);
+validateRomeoOutput(result);
+Así, si ROMEO mañana cambia por completo por dentro, solo cambiamos el adaptador.
+No destruimos toda la aplicación.
+---
+13. RomeoOutputValidator.ts
+Este archivo revisa la respuesta de ROMEO.
+Por ejemplo:
+ROMEO dice:
+acción = "abrir"
+La aplicación pregunta:
+¿La respuesta tiene el formato correcto?
+Si no:
+ROMEO respondió mal
+Entonces:
+NO ejecutar una acción peligrosa
+Este archivo es una barrera de seguridad.
+---
+14. La comunicación descentralizada
+Aquí está una parte muy importante de tu idea.
+No queremos:
+Teléfono A
+     ↓
+Servidor central
+     ↓
+Teléfono B
+Queremos:
+Teléfono A  ←────────→  Teléfono B
+      ↑                    ↑
+      │                    │
+   sensores             sensores
+Y:
+Teléfono C  ←────────→  Teléfono D
+La aplicación debe diseñarse desde el inicio para poder intercambiar pequeños mensajes entre dispositivos cercanos.
+---
+15. PeerTransport.ts
+Este archivo es el cartero.
+Su trabajo:
+enviar mensaje
+recibir mensaje
+Ejemplo:
+Teléfono A:
+"Estoy aquí.
+Voy a 30 km/h.
+Mi lectura tiene 5 segundos."
+        ↓
+Teléfono B
+Pero el cartero no decide nada.
+Solo transporta.
+---
+16. PeerDiscovery.ts
+Su trabajo es encontrar otros dispositivos cercanos.
+La idea:
+¿Hay otro dispositivo compatible cerca?
+Si sí:
+Encontrado.
+Después se puede establecer comunicación directa.
+La tecnología exacta puede elegirse más adelante según las capacidades reales del navegador y del teléfono.
+Lo importante ahora es que el sistema tenga esta puerta:
+PeerDiscovery
+       ↓
+PeerTransport
+       ↓
+PeerMessage
+       ↓
+ROMEO
+No hay que esconder esta parte para después.
+Debe existir desde el primer día.
+---
+17. PeerMessage.ts
+Todos los mensajes entre teléfonos deben tener una forma común.
+Por ejemplo:
+{
+  message_id: "...",
+  sender_id: "...",
+  sent_at: "...",
+  message_type: "telemetry",
+  payload: {
+    latitude: 19.43,
+    longitude: -99.13,
+    speed: 8.3
+  }
+}
+Esto es importante porque ROMEO puede recibir:
+datos propios
++
+datos de otros teléfonos
+Pero debe poder distinguirlos.
+---
+18. El flujo completo
+La aplicación funcionaría así:
+1. El teléfono despierta
+        ↓
+2. Lee sus sensores
+        ↓
+3. Obtiene ubicación y movimiento
+        ↓
+4. Valida los datos
+        ↓
+5. Guarda los datos localmente
+        ↓
+6. Escucha dispositivos cercanos
+        ↓
+7. Recibe datos descentralizados
+        ↓
+8. Junta todo
+        ↓
+9. Construye la entrada de ROMEO
+        ↓
+10. ROMEO toma la decisión
+        ↓
+11. Se valida la respuesta
+        ↓
+12. Se guarda el resultado
+        ↓
+13. Se muestra en pantalla
+Visualmente:
+┌──────────────┐
+│  GPS/TELÉFONO│
+└──────┬───────┘
+       ▼
+┌──────────────┐
+│  TELEMETRÍA  │
+└──────┬───────┘
+       ▼
+┌──────────────┐
+│ BASE LOCAL   │
+└──────┬───────┘
+       │
+       ├──────────────┐
+       ▼              ▼
+┌──────────────┐  ┌──────────────┐
+│ OTROS MÓVILES│  │ MAPA VISUAL  │
+└──────┬───────┘  └──────────────┘
+       │
+       ▼
+┌──────────────────────────────┐
+│     ENTRADA DE ROMEO         │
+└──────────────┬───────────────┘
+               ▼
+          ┌────────┐
+          │ ROMEO  │
+          └────┬───┘
+               ▼
+┌──────────────────────────────┐
+│     SALIDA DE ROMEO           │
+└──────────────┬───────────────┘
+               ▼
+       ┌───────────────┐
+       │ PANTALLA       │
+       │ REGISTRO       │
+       │ ACCIÓN         │
+       └───────────────┘
+---
+19. El mapa de Google
+La carpeta:
+map/
+debe estar totalmente separada de ROMEO.
+GoogleMapAdapter.ts
+solo debe responder:
+¿Dónde dibujo?
+Por ejemplo:
+dibujar vehículo
+dibujar intersección
+dibujar zona
+dibujar estado
+ROMEO responde:
+qué está pasando
+El mapa responde:
+dónde lo dibujo
+No mezclar ambos.
+---
+20. La pantalla principal
+App.tsx debería ser muy simple:
+App
+ │
+ ├── MapView
+ │
+ ├── TrafficStatus
+ │
+ ├── SensorStatus
+ │
+ ├── OfflineBanner
+ │
+ └── DebugPanel
+La pantalla no debe contener lógica complicada.
+Nunca deberíamos tener esto:
+if (speed > 30 && distance < 100) {
+   cambiar semáforo
+}
+dentro de MapView.tsx.
+Eso sería lógica de ROMEO metida en la pantalla.
+La pantalla solamente muestra el resultado:
+ROMEO decidió:
+"Estado: ..."
+---
+21. El orden exacto en que yo crearía los archivos
+No crearía todo de golpe.
+Lo haría en este orden:
+Paso 1: crear la base
+package.json
+vite.config.ts
+tsconfig.json
+index.html
+src/main.tsx
+src/App.tsx
+Primero debe abrir una pantalla vacía.
+---
+Paso 2: convertirla en PWA
+Crear:
+public/manifest.webmanifest
+public/sw.js
+public/offline.html
+Objetivo:
+La aplicación puede abrirse aunque no haya internet.
+---
+Paso 3: crear los tipos comunes
+Crear:
+src/app/appTypes.ts
+src/sensors/sensorTypes.ts
+src/telemetry/telemetryTypes.ts
+src/storage/storageTypes.ts
+src/romeo/romeoTypes.ts
+src/decentralized/decentralizedTypes.ts
+Estos archivos son como los moldes.
+Antes de hacer piezas, definimos su forma.
+---
+Paso 4: crear los sensores
+LocationSensor.ts
+MotionSensor.ts
+SensorManager.ts
+Objetivo:
+El teléfono entrega sus datos.
+---
+Paso 5: crear la telemetría
+TelemetryCollector.ts
+TelemetryNormalizer.ts
+TelemetryValidator.ts
+Objetivo:
+Datos desordenados
+        ↓
+datos limpios y uniformes
+---
+Paso 6: crear el almacenamiento local
+LocalDatabase.ts
+TelemetryRepository.ts
+EventRepository.ts
+Objetivo:
+Sin internet:
+    sigo recogiendo
+    sigo guardando
+---
+Paso 7: crear el contrato de ROMEO
+Antes de conectar ROMEO de verdad:
+RomeoContract.ts
+RomeoInputBuilder.ts
+RomeoOutputValidator.ts
+RomeoAdapter.ts
+Al principio, ROMEO puede ser un simulador.
+Por ejemplo:
+FakeRomeoAdapter
+Así probamos la aplicación antes de conectar el cerebro real.
+---
+Paso 8: crear la comunicación descentralizada
+PeerTransport.ts
+PeerDiscovery.ts
+PeerMessage.ts
+Primero:
+Teléfono A → Teléfono B
+Después:
+Teléfono A
+Teléfono B
+Teléfono C
+---
+Paso 9: conectar ROMEO
+El flujo final:
+SensorManager
+      ↓
+TelemetryCollector
+      ↓
+TelemetryValidator
+      ↓
+LocalDatabase
+      ↓
+RomeoInputBuilder
+      ↓
+RomeoAdapter
+      ↓
+RomeoOutputValidator
+      ↓
+EventRepository
+      ↓
+Pantalla
+---
+22. La estructura que yo NO recomiendo
+No recomiendo esto:
+src/
+├── components/
+├── utils/
+├── helpers/
+├── services/
+└── stuff/
+¿Por qué?
+Porque dentro de seis meses nadie sabrá:
+¿Dónde está la lógica de ROMEO?
+¿Dónde se recoge el GPS?
+¿Dónde se guardan los datos?
+¿Dónde se comunica con otros teléfonos?
+Para este proyecto, las carpetas deben representar las piezas reales del sistema:
+sensors/
+telemetry/
+storage/
+romeo/
+decentralized/
+map/
+Así cada cosa tiene su lugar.
+---
+23. La arquitectura final, en una sola frase
+La aplicación debe ser:
+> Un teléfono que recoge sus propios datos, los guarda localmente, intercambia pequeñas piezas de información directamente con otros dispositivos, prepara un paquete exacto para ROMEO, recibe una decisión determinista y usa el mapa solamente para mostrar dónde ocurre todo.
+Y la regla más importante:
+ROMEO = decide
+Sensores = observan
+Telemetría = ordena
+Base local = guarda
+Comunicación = comparte
+Mapa = dibuja
+Pantalla = muestra
+Para construirla desde Google AI Studio, la forma más segura es pedirle que cree primero el proyecto por capas y que respete estas fronteras; AI Studio puede generar aplicaciones web con frontend y runtime de servidor, pero en este diseño el núcleo de telemetría local debe mantenerse en el dispositivo y no depender de ese servidor. 
+La siguiente pieza que conviene definir
+Antes de escribir el código real de ROMEO, el siguiente documento debería ser el contrato exacto de entrada y salida de ROMEO:
+ROMEO_INPUT
+    ↓
+ROMEO
+    ↓
+ROMEO_OUTPUT
+Ese contrato será el molde que hará que todo el resto de la aplicación encaje como un guante.

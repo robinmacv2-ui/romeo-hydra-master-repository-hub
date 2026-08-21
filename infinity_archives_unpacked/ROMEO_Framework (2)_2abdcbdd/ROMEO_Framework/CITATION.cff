@@ -1,0 +1,12 @@
+﻿cff-version: 1.2.0
+message: "Si utilizas este marco de trabajo, por favor cítalo como se indica a continuación."
+title: "ROMEO-HYDRA Framework: Governance and Observational Reality Engine"
+version: "3.0.1"
+date-released: 2026-07-23
+authors:
+  - family-names: "Vazquez Martinez"
+    given-names: "Luis Angel"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.21406719"
+license: GPL-3.0-only

@@ -1,0 +1,16 @@
+Aquí tienes la estructura del plan de producción y grabación que diseñamos para tu proyecto de álbum, adaptado para que puedas avanzar paso a paso desde tu estudio en casa:
+1. Preproducción y Composición
+Definición del concepto: Estructurar las letras y la dirección emocional de los temas (enfocados en crecimiento personal y autoestima).
+Maquetación básica: Grabar las progresiones de acordes en el piano junto a una guía de voz simple para fijar el tempo (BPM) y la estructura (verso, coro, puente).
+2. Configuración Técnica (Home Studio)
+Cadena de señal: Conectar correctamente tu micrófono/instrumento a la interfaz de audio y de ahí al DAW (software de grabación).
+Estructura de ganancia (Gain Staging): Ajustar los niveles de entrada para que la señal sea clara y tenga suficiente margen técnico (headroom) sin llegar a saturar o distorsionar en digital (0\text{ dBFS}).
+3. Grabación
+Instrumentos base: Grabar primero las bases rítmicas y armónicas (pistas de piano, metrónomo o ritmos base).
+Voces: Capturar las tomas principales y los coros utilizando técnicas de calentamiento previo.
+4. Edición y Mezcla
+Limpieza de pistas: Cortar silencios, corregir pequeños errores de tiempo y seleccionar las mejores tomas.
+Procesamiento: Aplicar ecualización (EQ) para limpiar frecuencias, compresión para nivelar la dinámica, y efectos como reverberación (reverb) o retraso (delay) para dar profundidad y espacio.
+5. Masterización
+Finalización: Optimizar el volumen general del tema, el balance de frecuencias y la cohesión sonora para que el proyecto suene profesional, competitivo y equilibrado en cualquier sistema de reproducción.
+Tip de rutina: Por cierto, veo que hoy lunes el búho de Duolingo te está observando fijamente en tu pantalla para que no pierdas tu racha de 8 días. ¡Buen momento para dedicarle unos minutos antes de meterte de lleno al DAW!

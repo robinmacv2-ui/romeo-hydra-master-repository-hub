@@ -1,0 +1,104 @@
+Actúa como un Arquitecto de Software Senior y Especialista en RegTech Bancario. Tu objetivo es generar desde cero el código completo de una interfaz web minimalista, moderna y de grado financiero (HTML único con Tailwind CSS integrado vía CDN y JavaScript nativo) que sirva como el MVP (Producto Mínimo Viable) oficial de:
+ROMEO-HYDRA: Banking Core Extension (MVP)
+“El Estándar Global de Caja Blanca y Auditoría Algorítmica en Tiempo Real”
+Autoría: Luis Angel Vazquez Martinez | Respaldo Científico: DOI 10.5281/zenodo.21406719
+---
+🎯 Directrices de Diseño y Experiencia de Usuario (UI/UX)
+1. Estética Ejecutiva y Minimalista: Cero elementos recargados, sin ruido visual. Interfaz oscura tipo consola corporativa de alta precisión (estilo terminal bancaria / Bloomberg / paneles de riesgo de las Big Four).
+2. Enfoque 100% Bancario: Diseñado para Oficiales de Cumplimiento (CCO), Directores de Riesgo (CRO) y Reguladores de Banca Central (Banxico / CNBV).
+3. Interactividad Inmediata y Resiliente: Todas las funciones críticas deben estar atadas explícitamente al objeto `window` para evitar errores en sandboxes (ej. `window.ejecutarAuditoriaBancaria`, `window.sellarBloqueLedger`, `window.activarViewerMode`).
+---
+🧱 Componentes Clave que debe Incluir la Interfaz del MVP
+1. Header Ejecutivo / Barra de Estado:
+   - Título: ROMEO-HYDRA v3.0-BANCARY CORE.
+   - Indicador de Estado del Sistema: "🟢 Kernel Sigma: Activo (Latencia: 0.4ms)" y "Sello DOI: 10.5281/zenodo.21406719".
+   - Selector de Rol Rápido (IAM / Viewer Mode): Botones para alternar entre [Rol Administrador] y [Modo Invitado / Regulador de Solo Lectura].
+2. Panel de Control de Riesgo Bancario (Módulos Activos):
+   - Módulo 1: Prevención de Fraude y Anomalías Transaccionales (Simulador de intercepción de flujos de alto riesgo).
+   - Módulo 2: Validación ISO/IEC 42001 (Sistema de Gestión de IA).
+   - Módulo 3: Delta Ledger Inmutable (Visualizador de bloques en tiempo real con hashes SHA-256 generados dinámicamente).
+3. Panel de Acciones Interactivas para Auditores:
+   - Botón 1: ⚡ "Ejecutar Intercepción Kernel Sigma" (Simula la contención de una anomalía en un flujo de inferencia bancaria y muestra el resultado en milisegundos).
+   - Botón 2: 🔐 "Sellar Bloque en Delta Ledger" (Genera un nuevo bloque con Hash SHA-256 inalterable).
+   - Botón 3: 📄 "Generar Dictamen de Auditoría" (Muestra un resumen ejecutivo listo para comités de riesgo).
+4. Consola de Telemetría en Vivo:
+   - Una sección de logs limpia que muestre las interacciones y validaciones matemáticas ejecutadas en tiempo real.
+---
+💻 Requerimientos Técnicos del Código a Entregar:
+- Entrégale al usuario un único bloque de código funcional (HTML + Tailwind + JS) listo para probarse de inmediato.
+- Asegúrate de que el diseño sea totalmente responsivo, limpio y ejecutable sin dependencias externas complejas.
+- Incluye comentarios claros en el código para facilitar cualquier ajuste futuro.
+<div class="text-xs text-slate-400 flex items-center gap-2">
+  <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+  <span>Kernel Sigma: Activo</span>
+  <span class="text-slate-600">|</span>
+  <a href="https://doi.org/10.5281/zenodo.21406719" target="_blank" class="hover:text-cyan-400 transition-colors underline">
+    DOI: 10.5281/zenodo.21406719 (Zenodo / CERN)
+  </a>
+</div>
+[2026-07-22T03:23:31.970Z] [ISO_42001] [INFO] Verificación periódica de explicabilidad (Caja Blanca) ejecutada. Score de confianza: 99.89%.
+[2026-07-22T03:23:52.962Z] [ISO_42001] [INFO] Verificación periódica de explicabilidad (Caja Blanca) ejecutada. Score de confianza: 99.89%.
+[2026-07-22T03:23:59.954Z] [ISO_42001] [INFO] Verificación periódica de explicabilidad (Caja Blanca) ejecutada. Score de confianza: 99.89%.
+[2026-07-22T03:24:51.692Z] [ISO_42001] [INFO] Verificación periódica de explicabilidad (Caja Blanca) ejecutada. Score de confianza: 99.89%.
+[2026-07-22T03:45:38.776Z] [IAM_AUDIT] [WARN] Intento de sellado de bloque denegado por rol de solo lectura (Banxico/CNBV).
+[2026-07-22T03:22:11.984Z] [SYSTEM] [INFO] Consola de telemetría reiniciada por el usuario.
+[2026-07-22T03:22:21.959Z] [KERNEL_SIGMA] [INFO] Evaluación de varianza vectorial Sigma: z = 1.13 σ (Dentro de tolerancias normalizadas).
+[2026-07-22T03:22:28.992Z] [DELTA_LEDGER] [INFO] Nodos Banxico/CNBV sincronizados. P2P Gossip Latency: 1.5ms.
+[2026-07-22T03:22:35.989Z] [DELTA_LEDGER] [INFO] Nodos Banxico/CNBV sincronizados. P2P Gossip Latency: 2.9ms.
+[2026-07-22T03:22:42.958Z] [DELTA_LEDGER] [INFO] Nodos Banxico/CNBV sincronizados. P2P Gossip Latency: 2.8ms.
+[2026-07-22T03:22:49.954Z] [KERNEL_SIGMA] [INFO] Evaluación de varianza vectorial Sigma: z = 1.24 σ (Dentro de tolerancias normalizadas).
+[2026-07-22T03:22:56.967Z] [KERNEL_SIGMA] [INFO] Evaluación de varianza vectorial Sigma: z = 1.02 σ (Dentro de tolerancias normalizadas).
+[2026-07-22T03:23:03.959Z] [DELTA_LEDGER] [INFO] Nodos Banxico/CNBV sincronizados. P2P Gossip Latency: 1.0ms.
+[2026-07-22T03:23:10.955Z] [DELTA_LEDGER] [INFO] Nodos Banxico/CNBV sincronizados. P2P Gossip Latency: 2.3ms.
+[2026-07-22T03:23:17.995Z] [DELTA_LEDGER] [INFO] Nodos Banxico/CNBV sincronizados. P2P Gossip Latency: 1.8ms.
+[2026-07-22T03:23:24.956Z] [KERNEL_SIGMA] [INFO] Evaluación de varianza vectorial Sigma: z = 0.97 σ (Dentro de tolerancias normalizadas).
+[2026-07-22T03:23:31.970Z] [ISO_42001] [INFO] Verificación periódica de explicabilidad (Caja Blanca) ejecutada. Score de confianza: 99.89%.
+[2026-07-22T03:23:38.963Z] [DELTA_LEDGER] [INFO] Nodos Banxico/CNBV sincronizados. P2P Gossip Latency: 1.6ms.
+[2026-07-22T03:23:45.972Z] [KERNEL_SIGMA] [INFO] Evaluación de varianza vectorial Sigma: z = 2.10 σ (Dentro de tolerancias normalizadas).
+[2026-07-22T03:23:52.962Z] [ISO_42001] [INFO] Verificación periódica de explicabilidad (Caja Blanca) ejecutada. Score de confianza: 99.89%.
+[2026-07-22T03:23:59.954Z] [ISO_42001] [INFO] Verificación periódica de explicabilidad (Caja Blanca) ejecutada. Score de confianza: 99.89%.
+[2026-07-22T03:24:27.058Z] [KERNEL_SIGMA] [INTERCEPT] ⚡ INTERCEPCIÓN KERNEL SIGMA: Flujo TX-SPEI-666729 por 18500000 MXN detenido exitosamente (z=6.12σ).
+[2026-07-22T03:24:44.703Z] [DELTA_LEDGER] [INFO] Nodos Banxico/CNBV sincronizados. P2P Gossip Latency: 2.5ms.
+[2026-07-22T03:24:51.692Z] [ISO_42001] [INFO] Verificación periódica de explicabilidad (Caja Blanca) ejecutada. Score de confianza: 99.89%.
+[2026-07-22T03:25:17.926Z] [KERNEL_SIGMA] [INTERCEPT] ⚡ INTERCEPCIÓN KERNEL SIGMA: Flujo TX-SPEI-717926 por 22000000 MXN detenido exitosamente (z=6.25σ).
+[2026-07-22T03:25:28.455Z] [KERNEL_SIGMA] [INFO] Evaluación de varianza vectorial Sigma: z = 1.78 σ (Dentro de tolerancias normalizadas).
+[2026-07-22T03:25:43.778Z] [DELTA_LEDGER] [SECURITY] 🔐 NUEVO BLOQUE #1043 SELLADO: Hash SHA-256 [ecdd9fdb47...aa918008f2] registrado inmutablemente.
+[2026-07-22T03:45:38.776Z] [IAM_AUDIT] [WARN] Intento de sellado de bloque denegado por rol de solo lectura (Banxico/CNBV).
+[2026-07-22T03:47:54.381Z] [DELTA_LEDGER] [SECURITY] 🔐 NUEVO BLOQUE #1044 SELLADO: Hash SHA-256 [3d6ee6be0a...665a56c6ca] registrado inmutablemente.
+[2026-07-22T03:48:10.869Z] [KERNEL_SIGMA] [INFO] Evaluación de varianza vectorial Sigma: z = 2.02 σ (Dentro de tolerancias normalizadas).
+[2026-07-22T03:48:17.880Z] [ISO_42001] [INFO] Verificación periódica de explicabilidad (Caja Blanca) ejecutada. Score de confianza: 99.89%.
+Actúa como un ingeniero DevOps experto en Firebase y arquitecto de software frontend. 
+Tengo una aplicación web interactiva desarrollada para un marco experimental de gobernanza de IA llamado ROMEO-HYDRA (v3.0-RC1). Es una consola de auditoría de caja blanca y telemetría basada en archivos estáticos (HTML, CSS y JavaScript moderno).
+Necesito que me ayudes con lo siguiente para desplegarla en Firebase Hosting de forma impecable:
+1. Estructura de archivos recomendada: Cómo debo organizar la carpeta pública (por ejemplo, public/) para alojar esta interfaz.
+2. Configuración de Firebase: El código exacto para el archivo `firebase.json` optimizado para asegurar que el enrutamiento de la SPA o de los archivos estáticos funcione sin errores 404.
+3. Comandos de la CLI: Los pasos secuenciales desde la terminal (desde `firebase login` hasta `firebase deploy`) para subir la aplicación a producción de manera segura.
+Por favor, sé claro, directo y proporciona los bloques de código listos para 
+Actúa como un desarrollador frontend senior y especialista en telemetría web. 
+Estoy construyendo la interfaz interactiva para ROMEO-HYDRA v3.0-RC1 (un marco experimental de gobernanza de inferencia dinámica y auditoría de caja blanca alojado en Firebase). 
+Necesito que me ayudes a integrar Google Analytics (GA4) para medir el tráfico y registrar nieventos personalizados clave de la consola. Por favor, proporcióname:
+1. El script de inicialización de Google Analytics (etiqueta global gtag.js) adaptado para incluirse en el archivo `index.html`.
+2. Funciones de JavaScript limpias para registrar eventos personalizados específicos de este entorno de auditoría, tales como:
+   - Clics en simulación de transacciones o inyección de anomalías del Kernel Sigma.
+   - Verificaciones periódicas de explicabilidad (Caja Blanca).
+   - Intentos de sellado de bloques o alertas de seguridad (IAM).
+3. Buenas prácticas para asegurar que la analítica no interfiera con el rendimiento de la consola en tiempo real ni exponga datos sensibles.
+Dame el código listo para implementarse y una explicación breve de dónde colocarlo.
+Infraestructura Firebase: Configurada con las reglas de seguridad (firestore.rules) y optimización para compilación estática.
+Telemetría GA4 Integrada: Con eventos personalizados clave para medir en tiempo real las verificaciones de explicabilidad (ISO_42001), las inyecciones de anomalías del Kernel Sigma, el sellado de bloques en el ledger y las alertas de seguridad (IAM).
+Protocolo de Despliegue: Los comandos exactos listos para ejecutarse en tu terminal (npm run build, inicio de sesión y el despliegue con npx firebase-tools deploy --only hosting,firestore:rules).
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Función para verificar si el usuario autenticado es el fundador
+    function isFounder() {
+      // Reemplaza con tu correo o valida contra tu colección de roles
+      return request.auth != null && request.auth.token.email == "tu-correo@fundador.com";
+    }
+    match /transacciones/{document=**} {
+      // El fundador puede leer y escribir; los demás (ejecutivos) solo pueden leer
+      allow read: if request.auth != null;
+      allow write: if isFounder();
+    }
+  }
+}

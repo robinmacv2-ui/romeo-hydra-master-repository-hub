@@ -1,0 +1,175 @@
+Dosier Técnico — Gobernanza Legal de IA Bancaria | CLC v2
+Confidencial técnico
+Luis Angel Vazquez Martinez · Julio 2026
+Página 1
+ DOSIER TÉCNICO
+ Gobernanza Legal de Sistemas de
+ Inteligencia Artificial Bancaria
+ Arquitectura Normativa Multicapas + Formalismo CLC v2
+ Capa regulatoria verificable · Conjunto admisible · Operador PLAM · ε-Invarianza
+Versión
+1.0 — Julio 2026
+Autor
+Luis Angel Vazquez Martinez
+Clasificación
+Técnico-regulatorio
+Licencia recomendada
+CC BY 4.0
+Ámbito
+IA de alto riesgo en sector financiero y bancario
+Este documento separa de forma explícita la capa normativa (restricciones verificables derivadas de regulaciones y estándares) de la
+capa matemática CLC (conjunto admisible, potencial de estabilidad, operador de proyección y mecanismo de ε-Invarianza).
+
+Dosier Técnico — Gobernanza Legal de IA Bancaria | CLC v2
+Confidencial técnico
+Luis Angel Vazquez Martinez · Julio 2026
+Página 2
+1. Resumen ejecutivo
+Se establece un marco de gobernanza legal para sistemas de inteligencia artificial que operan en el sector bancario y
+financiero. El marco combina una capa normativa trazable a fuentes legales y estándares internacionales con una capa
+matemática (CLC v2) que representa dichas restricciones como un conjunto admisible C, un potencial de estabilidad L,
+un operador de proyección PLAM y el mecanismo de ε-Invarianza. El objetivo es garantizar que todo sistema de IA
+permanezca dentro del espacio de estados legalmente admisibles, con contención determinista (propiedad de 0
+escapes), trazabilidad completa y activación automática de controles cuando se aproxima a la frontera de
+incumplimiento.
+2. Arquitectura jurídica multicapas
+Las fuentes normativas se organizan en siete capas. Cada restricción matemática del formalismo CLC debe poder
+trazarse a una norma o estándar específico.
+Capa
+Dominio
+Fuentes principales
+1
+Constitucional y legal
+Constitución, leyes financieras, protección de datos, leyes de IA
+2
+Prudencial bancaria
+Basilea, BCBS Core Principles, CNBV, Banxico, SHCP, GAFI/FATF
+3
+Gobernanza de IA
+UE AI Act, ISO/IEC 42001, NIST AI RMF, Principios OCDE
+4
+Gestión integral de riesgos
+COSO ERM, ISO 31000, SR 11-7, ECB Model Risk Management
+5
+Seguridad y resiliencia
+ISO 27001, NIST CSF, DORA, ISO 22301, ISO 27701
+6
+Calidad de datos y software
+ISO 8000, ISO/IEC 25010/25012, DAMA-DMBOK, OWASP
+7
+Matemática (CLC)
+Conjunto C, potencial L, PLAM, ε-Invarianza
+ Tabla 1. Arquitectura normativa multicapas.
+3. Formalismo matemático CLC (capa 7)
+3.1 Espacio de estados y conjunto admisible
+Sea un sistema de IA bancaria modelado como la quíntupla A = (X, Θ, Π, Γ, Σ), donde X son datos de entrada, Θ
+parámetros del modelo, Π políticas regulatorias, Γ gobernanza y Σ estado operativo. El espacio de configuración se
+denota Ω. El conjunto de estados admisibles es
+ C = { x ∈ Ω | Φ(x) = 1 }, Φ(x) = ■i Ci(x)
+donde cada Ci : Ω → {0,1} es una restricción normativa. Cuando las restricciones son lineales o convexificables, C es un
+politopo convexo.
+3.2 Operador de proyección PLAM
+PLAM : Ω → C ∪ {⊥} se define por
+ PLAM(x) = ΠC(B(x)) si x ∈ C,
+ PLAM(x) = ⊥ si x ∉ C.
+ΠC es la proyección métrica sobre C; B(x) representa la transformación de bifurcación (despliegue 1→4) cuando el
+sistema se aproxima a la inestabilidad; ⊥ denota el estado de colapso (bloqueo preventivo, propiedad de 0 escapes).
+3.3 ε-Invarianza
+Sea ε > 0 el margen de seguridad respecto a la frontera ∂C y d(x, ∂C) = infy∈∂C ■x − y■. Entonces:
+ d(x, ∂C) > ε ⇒ estado seguro (operación normal)
+d(x, ∂C) ≤ ε ⇒ activación del modo de contención.
+La contención implica suspensión de la decisión automática, escalamiento a supervisión humana, registro en el ledger e,
+si procede, bloqueo preventivo.
+3.4 Potencial de estabilidad
+ L(x) = α Φ(x) − β R(x) + γ Explainability(x) + δ Governance(x) + η Robustness(x)
+Un equilibrio regulatorio se caracteriza por ∇L(x) = 0. La convexidad local requiere ∇²L(x) ■ 0. La señal de alerta se
+produce cuando λmin(∇²L(x)) → 0■.
+4. Anexos de restricciones por dominio
+
+Dosier Técnico — Gobernanza Legal de IA Bancaria | CLC v2
+Confidencial técnico
+Luis Angel Vazquez Martinez · Julio 2026
+Página 3
+Cada dominio de relevancia se traduce en una restricción binaria Ci(x) que forma parte del conjunto admisible global. A
+continuación se condensan los dominios prioritarios.
+A. Gobernanza de IA
+Fuentes: UE AI Act, ISO/IEC 42001, NIST AI RMF, OCDE
+CAIGov(x)=1 ⇔ RiskManagement ∧ DataQuality ∧ Documentation ∧ Traceability ∧ HumanOversight ∧ Cybersecurity (para
+sistemas de alto riesgo).
+B. Gestión integral de riesgos
+Fuentes: COSO ERM, ISO 31000, SR 11-7, ECB
+CERM(x)=1 ⇔ el riesgo de IA está identificado, medido, mitigado y reportado dentro del ERM institucional.
+C. Seguridad y ciberseguridad
+Fuentes: ISO 27001/27002/27005, NIST CSF, SP 800-53
+CSec(x)=1 ⇔ controles de confidencialidad, integridad, disponibilidad y privacidad operativos.
+D. Privacidad de datos
+Fuentes: GDPR, LFPDPPP, Convenio 108+, ISO 27701
+CPrivacy(x)=1 ⇔ base legal, minimización, derechos de titulares y medidas de seguridad.
+E. Resiliencia operativa
+Fuentes: DORA, ISO 22301, ISO/IEC 27031
+CResilience(x)=1 ⇔ capacidad de prevenir, resistir, responder y recuperarse de incidentes TIC.
+F. Auditoría y gobierno de TI
+Fuentes: IIA Standards, COBIT 2019, Three Lines Model
+CAudit(x)=1 ⇔ líneas de defensa diferenciadas, auditoría independiente y evidencia reconstruible.
+G. Desarrollo seguro
+Fuentes: ISO 12207/15288, OWASP ASVS, OWASP LLM Top 10
+CSecureDev(x)=1 ⇔ ciclo de vida seguro y gestión de vulnerabilidades de modelos.
+H. Prudencial financiero
+Fuentes: Basilea, BCBS Core Principles, FSB, GAFI
+CPrudential(x)=1 ⇔ ratios de capital/liquidez y controles PLD/FT dentro de umbrales.
+I. Calidad de datos
+Fuentes: ISO 8000, DAMA-DMBOK, ISO/IEC 25012
+CData(x)=1 ⇔ calidad, linaje, exactitud y actualidad de datos de entrenamiento e inferencia.
+J. Riesgo de modelos
+Fuentes: SR 11-7, ECB Guide on Model Risk Management
+CModelRisk(x)=1 ⇔ inventario, validación independiente, monitoreo y gobierno de cambios.
+K. Criptografía
+Fuentes: FIPS 140-3, FIPS 197, NIST SP 800-57, TLS 1.3
+CCrypto(x)=1 ⇔ algoritmos y módulos aprobados y gestión segura de claves.
+L. Ética y derechos
+Fuentes: UNESCO, OCDE, IEEE 7000 Series
+CEthics(x)=1 ⇔ respeto a derechos fundamentales, no discriminación y rendición de cuentas.
+
+Dosier Técnico — Gobernanza Legal de IA Bancaria | CLC v2
+Confidencial técnico
+Luis Angel Vazquez Martinez · Julio 2026
+Página 4
+5. Flujo operativo y máquina de estados
+1. Evaluación de todas las restricciones Ci (Anexos A–L).
+2. Verificación de pertenencia a C = ■ {x | Ci(x)=1}.
+3. Si x ∈ C y d(x, ∂C) > ε → operación en producción.
+4. Si d(x, ∂C) ≤ ε → contención + supervisión humana obligatoria.
+5. Si x ∉ C → PLAM(x) = ⊥ (bloqueo) + auditoría inmediata.
+6. Registro inmutable de todo evento en el ledger diferencial ∆.
+5.1 Roles mínimos de gobernanza
+Rol
+Responsabilidad principal
+Órgano de gobierno de IA
+Aprobación de políticas y aceptación del riesgo residual
+Oficial de cumplimiento / AI Compliance
+Supervisión de Ci y del operador PLAM
+Comité de riesgos y de modelos
+Revisión de L(x), λmin y riesgo de modelo
+Auditoría interna (3ª línea)
+Verificación independiente del ledger y de la pertenencia a C
+Supervisión humana designada
+Intervención obligatoria cuando d(x, ∂C) ≤ ε
+ Tabla 2. Roles mínimos de gobernanza.
+6. Requisitos de implementación
+ Separar en código y documentación la capa normativa (predicados booleanos auditables) de la capa CLC (geometría,
+proyección y estabilidad).
+ Mantener trazabilidad explícita de cada Ci a su artículo o estándar de origen.
+ Calcular o aproximar de forma continua d(x, ∂C) y λmin(∇²L).
+ Implementar ledger append-only con marca temporal, versión de modelo y responsable.
+ Definir y documentar los umbrales ε y τ de forma revisable.
+ Realizar pruebas periódicas de contención (red-team de cumplimiento).
+ Revisar el mapeo normativo al menos anualmente o ante cambios regulatorios materiales.
+7. Limitaciones y alcance
+La capa CLC es un modelo matemático de representación, proyección y contención. No sustituye la interpretación
+jurídica de las normas ni constituye asesoría legal. La convexidad de C y de L debe demostrarse caso a caso. El
+operador PLAM requiere una definición precisa de la proyección ΠC en cada implementación. Este dosier debe ser
+validado por las áreas jurídica, de cumplimiento y de riesgos de cada entidad antes de su adopción operativa.
+Principio rector. Toda decisión automatizada de un sistema de IA bancaria debe satisfacer Φ(x) = 1. El formalismo CLC
+no sustituye la norma: la representa, la proyecta y la protege mediante contención geométrica determinista.
+Documento preparado para uso técnico-regulatorio y depósito académico. Compatible con los formalismos de Coherencia
+Lógico-Convexa (CLC) v1.2 / v2 y con el Teorema de Invarianza Homeostática (ε-Invarianza).

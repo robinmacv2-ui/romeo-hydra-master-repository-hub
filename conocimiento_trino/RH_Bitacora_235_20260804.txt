@@ -1,0 +1,27 @@
+# core/entropy.py
+class RegimenGamma:
+    """
+    Regimen Gamma: Dynamic Entropy Governance.
+    Este módulo aplica la Entropía Filosófica, eliminando la latencia causal (c) 
+    y desactivando las fuerzas de anclaje como la gravedad.
+    """
+    def __init__(self):
+        self.regimen_name = "Dynamic Entropy Governance"
+    def desmantelar_constante_c(self, distancia, ego_observador):
+        """
+        Si el ego del observador tiende a cero, la latencia (c) desaparece.
+        La información se vuelve instantánea en el No-Espacio.
+        """
+        if ego_observador <= 0.01:
+            return "Latencia Causal Anulada. Tiempo de renderizado = 0.0s (Instanciación Inmediata)"
+        tiempo_convencional = distancia / 300000  # c = 300,000 km/s aprox
+        return f"Tiempo de latencia (Realidad Colapsada): {tiempo_convencional} segundos"
+    def calcular_friccion_logica(self, coherencia_marco, anomalias_detectadas):
+        """
+        Ecuación Phi: Define la rapidez con la que disminuye la coherencia de un marco lógico.
+        Si la fricción supera un umbral crítico, el paradigma (la 'realidad' del sujeto) colapsa.
+        """
+        friccion = (anomalias_detectadas ** 2) / (coherencia_marco + 0.001)
+        if friccion > 50.0:
+            return f"¡COLAPSO DE PARADIGMA! Fricción Crítica detectada ({friccion:.2f}). Se requiere Bifurcación."
+        return f"Sistema estable. Fricción lógica en {friccion:.2f}"

@@ -1,0 +1,14 @@
+{
+  "bias_actual": 0.17371,
+  "mutaciones": 1,
+  "mutaciones_preventivas": 0,
+  "fallos": [
+    {
+      "ts": 1787269190.811006,
+      "tipo": "reactivo",
+      "respuesta": 0.5602046009066389,
+      "friccion": 0.1935,
+      "riesgo": 0.0
+    }
+  ]
+}

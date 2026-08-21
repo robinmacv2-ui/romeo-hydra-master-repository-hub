@@ -1,0 +1,3 @@
+1. Un "Post-Mortem" Simulado (Backtesting sobre un caso real)
+Los bancos entienden con el dolor. Necesitas tomar un caso público de fracaso algorítmico o fraude (como el caso de TD Bank que mencionamos, o algún fraude con tarjetas) y crear una simulación de datos.
+La evidencia: Un reporte técnico que demuestre paso a paso: "Aquí está el set de datos que engañó al sistema tradicional. Aquí está el momento exacto (en milisegundos) en el que el Kernel Sigma de ROMEO-HYDRA detectó la anomalía geométrica, y aquí está el Hash SHA-256 que bloqueó la operación antes de que ocurriera la pérdida".

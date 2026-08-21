@@ -1,0 +1,145 @@
+# =============================================================================
+# Reproducible Build — Fail-Closed
+# Autor: Luis Angel Vazquez Martinez
+# =============================================================================
+
+name: Reproducible Build (Fail-Closed)
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  STRICT_DEPS: "1"
+  PYTHONPATH: "${{ github.workspace }}"
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: reproducible-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify-and-build:
+    name: Verify deps → Build wheel → Smoke → Atomic writer
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fail-Closed — STRICT_DEPS on requirements.txt
+        run: |
+          set -euo pipefail
+          if [ ! -f security_audit/deps.manifest.sha256 ]; then
+            echo "FAIL-CLOSED: falta security_audit/deps.manifest.sha256"
+            exit 1
+          fi
+          EXPECTED=$(awk '{print $1}' security_audit/deps.manifest.sha256 | head -1)
+          ACTUAL=$(sha256sum requirements.txt | awk '{print $1}')
+          echo "expected=$EXPECTED"
+          echo "actual=$ACTUAL"
+          if [ "$EXPECTED" != "$ACTUAL" ]; then
+            echo "FAIL-CLOSED: requirements.txt hash drift (STRICT_DEPS=1)"
+            exit 1
+          fi
+          echo "STRICT_DEPS: requirements.txt chain_ok"
+
+      - name: Install base deps, package, crypto (Ubuntu wheels OK)
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip setuptools wheel
+          pip install -r requirements.txt
+          pip install -e ".[dev,crypto]"
+
+      - name: Unit tests (full suite)
+        run: |
+          set -euo pipefail
+          export PYTHONPATH="${GITHUB_WORKSPACE}:${PYTHONPATH:-}"
+          python -c "import pilot; print('pilot ok', pilot.__version__)"
+          python -c "from romeo_hydra.core.storage import AtomicLedgerWriter; print('atomic ok')"
+          pytest tests/ -q --tb=short
+
+      - name: Build wheel (reproducible flags)
+        run: |
+          set -euo pipefail
+          pip install build
+          export SOURCE_DATE_EPOCH=$(git log -1 --pretty=%ct)
+          python -m build --wheel --outdir dist/
+          ls -la dist/
+          sha256sum dist/*.whl | tee wheel.sha256
+
+      - name: Install wheel and smoke (stdlib pilots)
+        run: |
+          set -euo pipefail
+          export PYTHONPATH="${GITHUB_WORKSPACE}:${PYTHONPATH:-}"
+          pip install --force-reinstall dist/*.whl
+          python main.py
+          python -m pilot.run_scoring_audit --entity CI-SMOKE --n 5
+          python -m pilot.run_offline_audit --days 7 --entity CI-SMOKE
+          grep -R "no es folio CNBV\|NO es folio CNBV\|no es folio cnbv" pilot/output/ || {
+            echo "FAIL-CLOSED: falta folio_note anti-CNBV en pilotos"
+            exit 1
+          }
+
+      - name: Upload artifacts (wheel + hashes)
+        uses: actions/upload-artifact@v4
+        with:
+          name: romeo-hydra-wheel-${{ github.sha }}
+          path: |
+            dist/*.whl
+            wheel.sha256
+          retention-days: 30
+
+      - name: Docker build (optional multi-stage check)
+        if: github.event_name != 'pull_request'
+        run: |
+          set -euo pipefail
+          docker build -t romeo-hydra:${{ github.sha }} .
+          docker run --rm --user 1000:1000 romeo-hydra:${{ github.sha }} python -c "import romeo_hydra; print('container-ok')"
+
+  sign-release:
+    name: Sign artifact (Sigstore keyless)
+    needs: verify-and-build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Download wheel artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: romeo-hydra-wheel-${{ github.sha }}
+          path: artifacts
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@v3
+
+      - name: Sign wheel (keyless OIDC)
+        run: |
+          set -euo pipefail
+          cd artifacts
+          for f in *.whl; do
+            cosign sign-blob --yes --bundle "${f}.sigstore" "$f"
+            sha256sum "$f" | tee "${f}.sha256"
+          done
+
+      - name: Upload signed artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: romeo-hydra-signed-${{ github.ref_name }}
+          path: artifacts/
+          retention-days: 90

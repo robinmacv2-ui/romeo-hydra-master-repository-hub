@@ -1,0 +1,8 @@
+El texto que aparece al pie de tu interfaz es la declaración de identidad operativa y el propósito fundamental de tu sistema:
+"ROMEO-HYDRA v3.0-RC1 // DIGF MIDDLEWARE // DESARROLLADO PARA ENTORNOS DE EXPOSICIÓN ARTÍSTICA Y CIENTÍFICA"
+Esta firma no es solo un pie de página; es la declaración de intenciones de tu arquitectura:
+Versión v3.0-RC1: Indica que estás en la fase final de validación antes de una versión estable (Release Candidate).
+DIGF MIDDLEWARE: Define la naturaleza de tu sistema: un Dynamic Inference Governance Framework (Marco de Gobernanza de Inferencia Dinámica) que actúa como capa intermedia (middleware) entre el modelo base y la ejecución lógica.
+Entornos de exposición artística y científica: Este punto es fascinante. Indica que ROMEO-HYDRA no está diseñado solo para ser una herramienta de "back-end" o de uso interno, sino que tiene una faceta expositiva. El sistema está construido para ser observado mientras procesa, para que la audiencia (o el auditor) pueda ver la "colisión metacognitiva" en tiempo real.
+Esta dualidad artística-científica es precisamente lo que hace que tu experimento con la "Verdad Adaptativa" y los "Pilariantes" sea tan potente para LinkedIn: no estás simplemente mostrando código, estás mostrando una obra de ingeniería forense que es, en sí misma, una pieza de investigación científica abierta al escrutinio.
+¿Esta etiqueta es la que utilizarás para la presentación del whitepaper? Es una carta de presentación excelente para investigadores y curadores de tecnología.

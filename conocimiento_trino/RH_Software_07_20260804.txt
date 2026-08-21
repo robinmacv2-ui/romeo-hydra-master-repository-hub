@@ -1,0 +1,36 @@
+¡Entendido a la perfección! Bajemos la matemática pesada tras bambalinas y transformemos la experiencia visual en algo que un usuario final, un conductor o un inversionista en LinkedIn entienda en un segundo: cochecitos, fluidez visual y mapas táctiles, tal como Waze o Uber.
+El motor ROMEO-HYDRA y el kernel RAEK-1.0-MX seguirán haciendo todo el trabajo sucio en el borde (filtrando los brincos feos del GPS y calculando la tensión de la red), pero de cara al usuario, la interfaz hablará el idioma de la calle.
+Aquí tienes la actualización del Prompt Maestro para Google AI Studio con este nuevo enfoque centrado en una experiencia de usuario (UX) sumamente intuitiva, interactiva y comercial.
+Prompt Maestro Actualizado para Google AI Studio (Enfoque Waze/Uber/DiDi UX)
+Actúa como un Diseñador e Ingeniero UI/UX Frontend Senior experto en React y aplicaciones de mapas interactivos. Necesito que generes el código completo para una PWA (Progressive Web App) autocontenida y offline-first llamada "ROMEO-HYDRA // Urban Control MX". 
+
+El objetivo es crear una interfaz móvil que sea tan intuitiva, limpia y visualmente atractiva como Waze, Uber o DiDi, eliminando consolas aburridas o términos matemáticos complejos para el usuario final. La aplicación simulará y auditará el flujo vehicular de la CDMX en tiempo real usando el framework matemático ROMEO-HYDRA (capa lógica oculta).
+
+Requerimientos de la Interfaz de Usuario (Estilo Uber/Waze):
+1. Mapa Vectorial Interactivo Central:
+   - Dibuja un lienzo (Canvas o SVG de pantalla completa) que simule un mapa urbano con calles interconectadas y nodos.
+   - Renderiza un marcador gráfico estilizado (un icono de "cochecito" o un triángulo dinámico de navegación) en el centro que represente la posición del usuario.
+   - Las calles deben cambiar de color dinámicamente según el tráfico calculado por el motor: Verde Esmeralda (Flujo libre/Rápido), Ámbar (Tráfico moderado), y Rojo Brillante/Cianótico (Embotellamiento / Gridlock).
+   - Añade una animación fluida: pequeñas partículas o líneas de flujo que se desplacen sobre las calles. Si el tráfico es rápido, se mueven rápido; si hay congestión, se detienen por completo.
+
+2. Componentes de Interacción y Alertas Simples:
+   - Añade un botón flotante táctil circular ("Simular Incidente" o "Reportar Tránsito"). Al presionarlo, debe simular instantáneamente un colapso vial (como una manifestación en el Eje Central).
+   - Cuando ocurra un colapso, el cochecito debe detenerse, la calle se tornará roja de golpe y aparecerá una tarjeta emergente (Pop-up) elegante en la parte superior, estilo notificación nativa de Waze: "¡Alerta de Tráfico! Obstrucción adelante. Calculando ruta óptima."
+   - En una esquina discreta, incluye una pequeña etiqueta de estado que diga simplemente: "Protección RAEK: Activa" (para validar la integridad sin abrumar con términos como Anti-NaN o Hessiana).
+
+3. Panel Inferior de Telemetría Limpia (Estilo Uber/DiDi Trip Panel):
+   - Una tarjeta blanca o gris oscuro deslizante en la parte inferior de la pantalla que muestre datos comprensibles:
+     * Velocidad Actual (Grande, en KM/H).
+     * Tiempo Estimado de Retraso (Ej. "+12 min por congestión").
+     * Nivel de Fluidez del Entorno (Expresado en porcentaje, ej: "Fluidez: 15% - Crítica").
+
+Requerimientos Lógicos Ocultos (El motor bajo el capó):
+- Mantén el Filtro Anti-NaN en JavaScript para limpiar los brincos del 'navigator.geolocation.watchPosition' para que el cochecito se desplace con total suavidad por el mapa, sin dar saltos teletransportados.
+- Usa el Operador HPR internamente: si la desaceleración del cochecito es crítica, activa automáticamente el cambio de la interfaz al estado "Rojo / Tránsito Crítico".
+
+Genera el código completo de React en un solo archivo, optimizado para ejecutarse de forma inmediata en dispositivos móviles y con estilos visuales modernos, bordes redondeados, sombras suaves y transiciones fluidas.
+
+¿Por qué este cambio es un jonrón estratégico?
+Curva de aprendizaje cero: Cualquiera que haya pedido un viaje o usado navegación GPS entenderá la aplicación en 2 segundos. Ver las líneas rojas y el cochecito frenarse activa una respuesta visual inmediata.
+Magia tras bambalinas: Lo fascinante es que cuando presentes el proyecto, podrás decir: "Lo que estás viendo parece un Waze común, pero la fluidez con la que se mueve ese cochecito y cómo predice las líneas rojas no viene de un servidor central de Google; lo está calculando el algoritmo matemático de ROMEO-HYDRA de forma 100% privada y local en el teléfono".
+Es el equilibrio perfecto entre alta ingeniería oculta y una interfaz comercial sumamente atractiva. ¿Pasamos este prompt a Google AI Studio para ver el resultado visual?

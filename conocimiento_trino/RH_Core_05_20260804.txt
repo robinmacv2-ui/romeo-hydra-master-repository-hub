@@ -1,0 +1,178 @@
+Anexo O — Ontología institucional y gobernanza adaptativa | CLC v2
+Documento independiente
+Luis Angel Vazquez Martinez · Julio 2026
+Página 1
+ ANEXO O
+ Ontología institucional · Desglose conceptual
+ Gobernanza adaptativa · Formalización CLC
+ Complemento independiente al Dosier Técnico de Gobernanza Legal de IA Bancaria (CLC v2)
+ Autor: Luis Angel Vazquez Martinez · Julio 2026 · Licencia recomendada: CC BY 4.0
+Este anexo define la ontología institucional y el desglose conceptual necesarios para elevar el marco de un motor de cumplimiento a un Sistema
+Operativo de Gobernanza Institucional (IGOS). Incluye la formalización matemática en lógica coherente convexa (CLC) y la dimensión de
+gobernanza institucional adaptativa.
+1. Propósito
+ Eliminar ambigüedades semánticas entre áreas de negocio, cumplimiento, auditoría, riesgos y tecnología.
+ Establecer los conceptos primitivos sobre los que operan las restricciones Ci y el conjunto admisible C.
+ Incorporar la gobernanza institucional adaptativa.
+ Mantener la separación entre la capa normativa verificable y la capa matemática CLC.
+2. Ontología institucional (capa fundacional)
+Antes de cualquier norma o algoritmo, el sistema debe disponer de una ontología común y no ambigua. Los conceptos primitivos
+constituyen el vocabulario compartido sobre el que se construyen las restricciones Ci y el vector de estado institucional.
+Concepto
+Definición operativa
+Cliente
+Persona física o moral con relación contractual o precontractual
+Cuenta
+Instrumento de registro de posiciones y movimientos
+Beneficiario final (UBO)
+Persona física que posee o controla en última instancia
+Riesgo
+Efecto de la incertidumbre sobre los objetivos institucionales
+Capital / Liquidez
+Recursos para absorción de pérdidas / Capacidad de cumplir obligaciones de pago
+Transacción
+Evento que modifica el estado de una cuenta o posición
+Modelo de IA
+Artefacto computacional que produce predicciones o decisiones
+Evidencia
+Registro verificable que sustenta una decisión o control
+Incidente / Control
+Evento que afecta integridad o cumplimiento / Medida de mitigación
+Política / Excepción
+Declaración formal de reglas / Desviación autorizada, temporal y auditada
+Decisión / Ledger
+Acto (humano o automatizado) con efecto operativo / Registro append-only con integridad criptográfica
+ Tabla O.1 — Ontología institucional primitiva.
+3. Vector de estado institucional y formalización CLC
+El estado global del sistema se representa como el vector
+ x = (R, C, G, A, S, D, M, H, T)
+donde R = riesgo agregado, C = cumplimiento (Φ), G = gobernanza, A = auditoría, S = seguridad, D = calidad del dato, M =
+estado de los modelos de IA, H = supervisión humana, T = transparencia y trazabilidad.
+3.1 Conjunto factible institucional
+ F = { x | C(x)=1, R(x) ≤ Rmax, G(x)=1, A(x)=1, S(x)=1, D(x)=1, M(x)=1 }
+Cuando F se identifica con el conjunto admisible C del formalismo CLC, las propiedades de proyección PLAM y de ε-Invarianza se
+aplican directamente al estado institucional completo.
+3.2 Invariantes institucionales
+ Capital ≥ Capitalmin LCR ≥ 1 Φ(x) = 1
+Decision ⇒ Explainability Critical ⇒ HumanApproval
+ ∀ evento, ∃ Hash(evento)
+Preservación de invariantes (Capa de Verificación Institucional — CVI):
+ xt ∈ F ⇒ F(xt) ∈ F
+donde F es la función de transición del sistema. Esta propiedad convierte la gobernanza en un problema de invarianza de
+conjunto (teoría de control y verificación formal).
+3.3 Operador de proyección y ε-Invarianza
+ PLAM : Ω → F ∪ {⊥}
+PLAM(x) = ΠF(B(x)) si x ∈ F
+
+Anexo O — Ontología institucional y gobernanza adaptativa | CLC v2
+Documento independiente
+Luis Angel Vazquez Martinez · Julio 2026
+Página 2
+ 
+PLAM(x) = ⊥ si x ∉ F
+ d(x, ∂F) > ε ⇒ estado seguro
+d(x, ∂F) ≤ ε ⇒ contención (suspensión, supervisión humana, ledger, bloqueo si procede)
+3.4 Potencial de estabilidad institucional
+ L(x) = α C(x) + β G(x) + γ T(x) + δ S(x) − λ R(x)
+Objetivo: maximizar L(x) sujeto a x ∈ F. Equilibrio: ∇L = 0. Convexidad local: ∇²L ■ 0. Alerta: λmin(∇²L) → 0■.
+4. Desglose conceptual de capas complementarias
+4.1 Arquitectura de decisiones
+Jerarquía: Consejo → Comité de Riesgos → Comité de IA → Comité de Cumplimiento → Oficial de Cumplimiento → Auditoría →
+Supervisor → Motor automatizado → Operador humano. Cada decisión posee nivel de autorización, responsable y registro en el ledger.
+4.2 Trazabilidad completa
+Origen de datos, versión del modelo, parámetros, evidencia, usuario, aprobación, sello temporal y resultado. Permite auditorías,
+investigaciones y explicabilidad.
+4.3 Gobernanza del dato
+Calidad, linaje, clasificación, retención, anonimización, acceso, eliminación y soberanía del dato.
+4.4 Gobernanza de modelos
+Identificador único, propietario, finalidad, versión, fecha de entrenamiento, conjunto de entrenamiento, métricas, sesgos conocidos,
+riesgos, vigencia e historial de validaciones.
+4.5 Evidencia criptográfica
+Hash de documentos, firma digital, sello de tiempo, cadena de custodia e integridad del registro.
+4.6 Gestión de excepciones
+Solicitud, justificación, aprobación, limitación de vigencia y auditoría de excepciones.
+4.7 Métricas de gobernanza
+Tiempo de respuesta, % decisiones automatizadas, falsos positivos/negativos AML, precisión de modelos, disponibilidad, incidentes,
+desviaciones regulatorias y SLA.
+4.8 Resiliencia organizacional
+Redundancia, recuperación, continuidad, degradación controlada, respaldo y procedimientos manuales.
+4.9 Gestión del conocimiento
+Repositorio documental versionado, historial, capacitación, lecciones aprendidas y decisiones históricas.
+4.10 Ciclo de vida normativo
+Norma → Análisis → Implementación → Validación → Producción → Auditoría → Actualización.
+4.11 Gobernanza algorítmica
+Validación previa, monitoreo continuo, detección de deriva (model drift), reentrenamiento, desactivación y revisión humana.
+4.12 Gobernanza ética
+Proporcionalidad, no discriminación, transparencia, explicabilidad, revisión humana y protección de derechos fundamentales.
+4.13 Supervisión continua
+En tiempo real, periódica, automática, manual y regulatoria.
+
+Anexo O — Ontología institucional y gobernanza adaptativa | CLC v2
+Documento independiente
+Luis Angel Vazquez Martinez · Julio 2026
+Página 3
+5. Gobernanza institucional adaptativa
+Un sistema de grado institucional o soberano no solo cumple la normativa vigente: se adapta a cambios regulatorios,
+tecnológicos y de riesgo sin perder consistencia ni trazabilidad. Esta capacidad convierte la gobernanza en un proceso continuo.
+Componente
+Función
+Traducción CLC
+Gestión del cambio regulatorio
+Detección, análisis de impacto e implementación
+controlada de nuevas normas
+Actualización controlada del conjunto de
+restricciones Ci
+Capacidad de simulación
+Evaluación ex-ante del efecto de cambios (gemelo
+digital regulatorio)
+Simulación de trayectorias bajo PLAM antes de
+producción
+Trazabilidad de versiones
+Versionado de políticas, modelos, reglas y umbrales
+ε, τ
+Historial de fronteras ∂F y de umbrales de
+aislamiento
+Aprendizaje organizacional
+Retroalimentación de auditorías, incidentes y
+excepciones
+Actualización de pesos de L(x) y de Rmax
+Preservación de invariantes
+Garantía de que toda transición mantiene x ∈ F
+xt ∈ F ⇒ F(xt) ∈ F (CVI)
+ Tabla O.2 — Gobernanza adaptativa y su traducción CLC.
+6. Extensión de lógica temporal
+Para propiedades que evolucionan en el tiempo se recomienda lógica temporal (LTL/CTL):
+ ■ Compliance (siempre cumplimiento)
+Fraude → ■ Report (eventualmente reporte)
+■ ¬ Violation (nunca violación no gestionada)
+Estas propiedades pueden verificarse mediante model checking (TLA+, Alloy, SMT solvers), reforzando la Capa de Verificación
+Institucional (CVI).
+7. Correspondencia ontología ↔ CLC
+Elemento ontológico / conceptual
+Correspondencia CLC
+Vector de estado x
+Estado sobre el que opera PLAM
+Conjunto factible F
+Identificado con el conjunto admisible C
+Invariantes
+Propiedades que PLAM y ε-Invarianza deben preservar
+Función institucional L(x)
+Alineada con el potencial de estabilidad
+Transición F(xt)
+Debe satisfacer xt ∈ C ⇒ F(xt) ∈ C (CVI)
+Gobernanza adaptativa
+Actualización controlada de Ci y umbrales sin violar invarianza
+Gemelo digital regulatorio
+Simulación de proyecciones PLAM antes de producción
+Evidencia criptográfica / Ledger
+Invarianza del ledger diferencial ∆
+ Tabla O.3 — Correspondencia ontología institucional ↔ formalismo CLC.
+8. Conclusión
+La ontología institucional y el desglose conceptual aquí definidos suministran el sustrato semántico y organizativo sobre el que se
+asientan las restricciones normativas y el formalismo CLC. La incorporación de la gobernanza institucional adaptativa y de la
+preservación de invariantes eleva el marco de un motor de cumplimiento a un Sistema Operativo de Gobernanza Institucional
+(IGOS), capaz de operar con rigor matemático, trazabilidad completa y capacidad de evolución controlada.
+Este anexo se considera documento independiente y, a la vez, parte integrante del Dosier Técnico de Gobernanza Legal de IA Bancaria (CLC v2).
+Principio rector del IGOS: toda transición del estado institucional debe preservar el conjunto factible F. El formalismo CLC aporta
+la proyección, la contención y la demostración de invarianza; la ontología aporta el significado compartido; la gobernanza
+adaptativa aporta la capacidad de evolucionar sin perder consistencia.

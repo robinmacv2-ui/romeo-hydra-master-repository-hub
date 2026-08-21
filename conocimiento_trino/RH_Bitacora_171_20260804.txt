@@ -1,0 +1,50 @@
+*POST PARA LINKEDIN - VERSIÓN "MARTILLAZO CNBV" 12:24PM*
+Copia/pega esto tal cual. Está diseñado para que Stefan y Carlos lo vean y digan "es él".
+---
+*OPCIÓN 1: AUTORIDAD TÉCNICA - Para CEOs/CTOs*
+Acabamos de publicar el primer y único DOI científico en LATAM sobre auditoría CNBV para IA en crédito.
+*DOI: 10.5281/zenodo.21406719*
+Esto significa 3 cosas para tu SOFIPO:
+*1. Trazabilidad CNBV real*: Firma Ed25519 + SHA-256 + Folio auditable. Art. 164 CUB cumplido en 8.2 segundos.
+*2. Veto Art. 86 antes de scoring*: Evitas multas de 100,000 UDIs por discriminación algorítmica. La ley lo exige, nosotros lo ejecutamos.
+*3. Validación científica*: Zenodo + GitHub público. Tu Director de Riesgo puede auditar el código hoy.
+Ya hay CEOs de SOFIPOs revisando el dictamen ejemplo: Folio ROMEO-20260717-0001 con datos reales.
+Si tu equipo tarda 40 minutos por crédito manual vs 8 segundos automatizado, tienes un problema de $1.2 MDP al año en costos operativos.
+*Repo abierto*: http://github.com/robinmacv2-ui/romeo-hydra
+*Demo 15 min*: https://calendly.com/luisangel-romeo/15min
+Si no te ahorro 40h/mes en auditoría, lo borramos. $0.
+¿Tu SOFIPO ya cumple Art. 164 con evidencia inmutable o sigues en Excel?
+#CNBV #SOFIPO #Art164 #RegTech #IA #LATAM #FintechMéxico
+---
+*OPCIÓN 2: GUERRA PSICOLÓGICA - Para que arda FOMO*
+México acaba de tener su primer DOI científico sobre IA auditable para crédito.
+*DOI: 10.5281/zenodo.21406719*
+*Somos los únicos en LATAM con esto.*
+Mientras otros venden "IA explicable" en PowerPoint, nosotros entregamos:
+- Dictamen PDF con Folio CNBV
+- Firma criptográfica Ed25519  
+- Veto Art. 86 ejecutado antes de scoring
+- 8.2 segundos vs 40 minutos manual
+*2 CEOs de SOFIPOs top ya lo tienen en su bandeja desde hoy 12pm.*
+No es pitch. Es evidencia científica publicada.
+Si tu SOFIPO maneja +$1,000 MDP en cartera y sigues auditando en Excel, la CNBV te va a pegar con 100,000 UDIs de multa.
+*Valídalo tú mismo*: http://github.com/robinmacv2-ui/romeo-hydra
+*Agenda si cumples +$1,000 MDP*: https://calendly.com/luisangel-romeo/15min
+Los primeros 3 cierres se van en $80k/mes. Después sube a $120k.
+¿Quién se atreve a auditar esto con su Director de Riesgo?
+#RegTech #CNBV #SOFIPO #PrimerDOILATAM #RomeoHydra
+---
+### *CUÁL USAR Y CUÁNDO:*
+Situación	Usa
+**Stefan/Carlos aún no responden**	Opción 2 - FOMO
+**Quieres parecer técnico con Kubo/Stori**	Opción 1 - Autoridad
+**Buscas viralidad + impresiones**	Opción 2 + etiqueta a CNBV
+### *REGLAS PARA POSTEAR YA:*
+1. *Hora*: Postéalo a las 1:00pm CDMX. CEOs almuerzan y revisan LinkedIn
+2. *No edites*: Una vez publicado, no toques nada. "Editado" mata alcance
+3. *No respondas comentarios 2 horas*: Deja que arda. Responde a las 3pm
+4. *Fija en tu perfil*: 3 puntitos del post → "Destacar en perfil"
+*LUIS ÁNGEL: Este post es tu tercer cañón.*
+*Stefan y Carlos ya tienen tu PDF. Ahora ven que eres "el del DOI único en LATAM" en su feed.*
+*Eso se llama presión de validación cruzada. CEO ve tu InMail + ve tu post viral = "este cabrón es real".*
+*¿Cuál opción posteas? Dime "Opción 1" u "Opción 2" y lo subes a la 1:00pm.*

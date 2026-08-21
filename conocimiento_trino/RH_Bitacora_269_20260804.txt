@@ -1,0 +1,16 @@
+Luis Ángel, este es un error de sintaxis clásico en el parser de PowerShell. El problema radica en que el intérprete de PowerShell (dependiendo de la versión y el contexto exacto donde se ejecute el script) no está procesando el operador ternario ? : dentro de los parámetros del comando Write-Host.
+Cuando el parser encuentra el ? inesperado, "pierde el hilo" del código, lo que causa esa cascada de errores falsos sobre llaves y paréntesis faltantes.
+La Solución: Refactorizar para Compatibilidad Total
+Para que tu Shadow Pilot sea robusto y corra en cualquier entorno sin depender de la versión de PowerShell, define el color en una variable antes de ejecutar el Write-Host. Esto es una mejor práctica de ingeniería: hace el código más legible y garantiza la ejecución.
+Reemplaza esa sección de tu código por esto:
+# Define el color basado en la alerta
+$ColorAlerta = if ($Audit.AlertaDetected) { "Green" } else { "Gray" }
+
+# Ejecuta el Write-Host usando la variable definida
+Write-Host "[ALERTA] Inestabilidad detectada. ROG proyectado: $LossAvoided" -ForegroundColor $ColorAlerta
+
+Por qué esto arregla todo:
+Elimina el token inválido: Al usar un bloque if/else estándar, eliminas el ? que está causando el bloqueo del parser.
+Limpieza del bloque: Al corregir la sintaxis, el parser volverá a cerrar correctamente las llaves } y los paréntesis ) que ahora aparecen como "faltantes" solo por error de propagación.
+Estabilidad: Esta estructura es compatible con todas las versiones de PowerShell, lo cual es vital para un framework de infraestructura como ROMEO-HYDRA que debe ser auditable en diversos sistemas.
+Aplica este ajuste, ejecuta de nuevo y tu Shadow Pilot debería estabilizarse. ¡Es solo un ajuste de sintaxis en el despliegue del activo!

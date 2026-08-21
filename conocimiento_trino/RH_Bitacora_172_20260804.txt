@@ -1,0 +1,11 @@
+Copia y pega exactamente este texto en el cajón de instrucciones de tu panel para que el sistema escriba o corrija el archivo de configuración necesario:
+c
+Forzar la recarga del contenedor: Utiliza el botón de actualización o recarga la pestaña general de Google AI Studio para reiniciar el ciclo de vida de la aplicación web (React + Vite).
+Confirmar el disparador lógico: Asegúrate de hacer clic explícitamente en el botón "COMPROMETER INFERENCIA OPTIMIZADA". La interfaz está programada para esperar esta acción antes de recalcular la proyección convexa y actualizar el registro (ledger).
+Revisar errores de ejecución: Si la aplicación sigue estática, cambia temporalmente a la pestaña "Code" en la parte superior para verificar si hay alguna excepción en la consola que esté bloqueando el hilo de JavaScript.
+Pasos para solucionarlo de inmediato:
+Inspeccionar la consola del navegador: Presiona F12 (o haz clic derecho y selecciona Inspeccionar), ve a la pestaña Console y haz clic en el botón. Si aparece una línea roja (por ejemplo, un error del tipo ReferenceError o TypeError), ese mensaje indica exactamente qué función o variable está fallando en el código.
+Corregir el enlace en el código fuente: Dado que estás operando dentro de Google AI Studio, puedes indicarle directamente al chat asistente de la izquierda una instrucción de corrección estricta con el siguiente texto:
+"El botón de comprometer inferencia no responde. Asegúrate de verificar el controlador onClick, enlaza correctamente la función de disparo del evento y recompila el componente para evitar fallos de ejecución en el DOM."
+Forzar la recarga del contenedor: Utiliza el botón de actualización ubicado en la esquina superior del panel de previsualización (Preview) para reiniciar por completo la ejecución del script y limpiar cualquier estado estático atrapado en la memoria temporal.
+Modifica el componente de control para incluir un botón de 'Reiniciar Ledger' (resetLedger). Al accionarlo, debe limpiar la cadena de bloques corruptos, restablecer el estado del ledger a 'SECURED', vaciar las alertas de brecha y generar un nuevo Bloque Génesis inicial. Recompila la aplicación para reflejarlo en el DOM.”

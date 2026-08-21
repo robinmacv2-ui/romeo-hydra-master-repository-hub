@@ -1,0 +1,7 @@
+# Romeo-Hydra Core — dependencias del motor de razonamiento universal
+# Instalar con: pip install -r requirements-romeo-core.txt
+
+numpy>=1.24
+sympy>=1.12
+biopython>=1.81
+astropy>=5.3

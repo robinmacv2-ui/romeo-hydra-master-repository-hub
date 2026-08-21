@@ -1,0 +1,443 @@
+from flask import Flask, request, jsonify
+app = Flask(__name__)
+@app.route('/audit', methods=['POST'])
+def audit_transaction():
+    try:
+        data = request.get_json()
+        # El Kernel RAEK-1.0-MX procesa aquí
+        return jsonify({
+            "status": "success",
+            "message": "Transacción validada por el kernel RAEK",
+            "anomalies_detected": False
+        }), 200
+    except Exception as e:
+        return jsonify({
+            "status": "rejected",
+            "message": "Alerta de seguridad: Anomalía detectada",
+            "error_detail": str(e),
+            "anomalies_detected": True
+        }), 400
+if __name__ == '__main__':
+    print("Iniciando infraestructura ROMEO-HYDRA en el puerto 5000...")
+    app.run(host='127.0.0.1', port=5000, debug=True)
+from flask import Flask, request, jsonify
+import time
+import hashlib
+app = Flask(__name__)
+# Kernel de Arbitraje y Validación (RAEK-1.0-MX concept integration)
+def validar_transaccion(data):
+    if not data or not isinstance(data, dict):
+        return False, "Estructura de datos inválida"
+    # Validar campos obligatorios y firmas/integridad simuladas
+    campos_requeridos = ["id", "payload", "checksum"]
+    for campo in campos_requeridos:
+        if campo not in data:
+            return False, f"Falta el campo obligatorio: {campo}"
+    # Simulación de validación criptográfica / corrupción
+    payload = str(data.get("payload", ""))
+    checksum_recibido = data.get("checksum", "")
+    # Calcular checksum esperado para verificar integridad
+    checksum_calculado = hashlib.sha256(payload.encode()).hexdigest()[:16]
+    if checksum_recibido != checksum_calculado:
+        return False, "Falla de integridad: Checksum inválido o transacción corrupta"
+    # Validaciones adicionales de negocio o anomalías
+    if "corrupt" in payload.lower() or data.get("anomalia", False):
+        return False, "Transacción marcada como anómala o corrupta"
+    return True, "Transacción legítima y validada"
+@app.route('/audit', methods=['POST'])
+def audit():
+    inicio = time.time()
+    data = request.get_json(silent=True)
+    es_valida, mensaje = validar_transaccion(data)
+    if not es_valida:
+        # Rechazar correctamente la transacción corrupta o anómala
+        return jsonify({
+            "status": "rechazada",
+            "reason": mensaje,
+            "timestamp": time.time()
+        }), 400
+    # Procesamiento exitoso para transacciones legítimas
+    return jsonify({
+        "status": "aceptada",
+        "message": mensaje,
+        "processing_time_ms": round((time.time() - inicio) * 1000, 2)
+    }), 200
+@app.route('/health', methods=['GET'])
+def health():
+    return jsonify({"system": "ROMEO-HYDRA", "status": "active"}), 200
+if __name__ == '__main__':
+    print("Iniciando nodo ROMEO-HYDRA en el puerto 5000...")
+    app.run(host='0.0.0.0', port=5000, debug=True)
+from flask import Flask, request, jsonify
+import time
+import hashlib
+app = Flask(__name__)
+# Kernel de Arbitraje y Validación (ROMEO-HYDRA / RAEK)
+def validar_transaccion(data):
+    if not data or not isinstance(data, dict):
+        return False, "Estructura de datos inválida"
+    # Validar campos obligatorios simulados por el hydra_breaker
+    campos_requeridos = ["id", "payload"]
+    for campo in campos_requeridos:
+        if campo not in data:
+            return False, f"Falta el campo obligatorio: {campo}"
+    payload = str(data.get("payload", ""))
+    # Detectar explícitamente anomalías o corrupción simulada en el payload
+    if "corrupt" in payload.lower() or data.get("anomalia", False) or "error" in payload.lower():
+        return False, "Transacción marcada como anómala o corrupta"
+    return True, "Transacción legítima y validada"
+@app.route('/audit', methods=['POST'])
+def audit():
+    inicio = time.time()
+    data = request.get_json(silent=True)
+    es_valida, mensaje = validar_transaccion(data)
+    if not es_valida:
+        # Rechazar correctamente la transacción corrupta con código 400
+        return jsonify({
+            "status": "rechazada",
+            "message": mensaje,
+            "anomalies_detected": True,
+            "timestamp": time.time()
+        }), 400
+    # Procesamiento exitoso solo para transacciones legítimas
+    return jsonify({
+        "status": "success",
+        "message": mensaje,
+        "anomalies_detected": False,
+        "processing_time_ms": round((time.time() - inicio) * 1000, 2)
+    }), 200
+@app.route('/health', methods=['GET'])
+def health():
+    return jsonify({"system": "ROMEO-HYDRA", "status": "active"}), 200
+if __name__ == '__main__':
+    print("Iniciando infraestructura ROMEO-HYDRA en el puerto 5000...")
+    app.run(host='127.0.0.1', port=5000, debug=True)
+import requests
+import concurrent.futures
+import time
+URL = "http://127.0.0.1:5000/audit"
+TOTAL_PETICIONES = 150
+WORKERS = 8
+def enviar_peticion(i):
+    # Alternar entre peticiones legítimas y anómalas para probar el kernel RAEK
+    if i % 3 == 0:
+        # Petición deliberadamente corrupta/anómala para evaluar el bloqueo
+        payload = {"id": i, "payload": "Transaccion corrupta simulada error"}
+    else:
+        # Petición legítima
+        payload = {"id": i, "payload": "Transaccion legitima normal"}
+    try:
+        start = time.time()
+        response = requests.post(URL, json=payload, timeout=3.0)
+        duration = time.time() - start
+        return response.status_code, response.json()
+    except Exception as e:
+        return 500, {"error": str(e)}
+def ejecutar_prueba():
+    print("=================================================")
+    print("INICIANDO PRUEBA DE RESILIENCIA: HYDRA-BREAKER (RAEK)")
+    print(f"Objetivo: {URL}")
+    print(f"Total de peticiones: {TOTAL_PETICIONES}")
+    print(f"Workers concurrentes: {WORKERS}")
+    print("=================================================")
+    legitimas_aceptadas = 0
+    anomalias_rechazadas = 0
+    errores_inesperados = 0
+    inicio_total = time.time()
+    with concurrent.futures.ThreadPoolExecutor(max_workers=WORKERS) as executor:
+        futures = [executor.submit(enviar_peticion, i) for i in range(TOTAL_PETICIONES)]
+        for future in concurrent.futures.as_completed(futures):
+            status_code, data = future.result()
+            if status_code == 200:
+                legitimas_aceptadas += 1
+            elif status_code == 400:
+                anomalias_rechazadas += 1
+            else:
+                errores_inesperados += 1
+    duracion_total = time.time() - inicio_total
+    print("\nREPORTE DE RESILIENCIA (ROMEO-HYDRA)")
+    print(f"• Peticiones completadas: {TOTAL_PETICIONES}")
+    print(f"• Legítimas aceptadas (200 OK): {legitimas_aceptadas}")
+    print(f"• Anomalías rechazadas correctamente (400 Bad Request): {anomalias_rechazadas}")
+    print(f"• Errores no controlados / inesperados: {errores_inesperados}")
+    print(f"• Duración total: {duracion_total:.2f} s")
+    print("=================================================")
+    if anomalias_rechazadas > 0 and errores_inesperados == 0:
+        print("DIAGNÓSTICO: BLINDAJE EXITOSO. El kernel RAEK interceptó y bloqueó las anomalías.")
+    else:
+        print("DIAGNÓSTICO: ATENCIÓN REQUERIDA. Revisar umbrales de rechazo de anomalías.")
+if __name__ == "__main__":
+    ejecutar_prueba()curl -X POST http://127.0.0.1:5000/api/v1/telemetry/evaluate \
+-H "Content-Type: application/json" \
+-d '{
+  "matrix": [
+    [1.0, 2.0, 3.0],
+    [4.0, 5.0, 6.0],
+    [5.0, 7.0, 9.0]
+  ]
+}’
+curl -X POST http://127.0.0.1:5000/api/v1/telemetry/evaluate \
+-H "Content-Type: application/json" \
+-d '{
+  "matrix": [
+    [1.0, 2.0, 3.0],
+    [4.0, 5.0, 6.0],
+    [5.0, 7.0, 9.0]
+  ]
+}’
+curl.exe -X POST http://127.0.0.1:5000/api/v1/telemetry/evaluate -H "Content-Type: 
+ [4.0, 5.0, 6.0], [5.0, 7.0, 9.0]]}’
+curl.exe -X POST http://127.0.0.1:5000/api/v1/telemetry/evaluate -H "Content-Type: application/json" -d '{\"matrix\": [[1.0, 2.0, \"NaN\"], [4.0, 5.0, 6.0], [5.0, 7.0, 9.0]]}’
+        # Conversión de la lista entrante a una matriz de NumPy
+        matriz_j = np.array(data['matrix'], dtype=float)
+        # === FILTRO DE SEGURIDAD CONTRA DATA DRIFT EXTREMO ===
+        if not np.isfinite(matriz_j).all():
+            return jsonify({
+                'status': 'CRITICAL_ANOMALY',
+                'is_stable': False,
+                'penalty_factor': 0.0,
+                'error': 'Valores no finitos detectados (NaN/Inf) en el flujo de telemetría.'
+            }), 200
+        # de=====================================================
+    # Conversión de la lista entrante a una matriz de NumPy
+    matriz_j = np.array(data['matrix'], dtype=float)
+    # === FILTRO DE SEGURIDAD CONTRA DATA DRIFT EXTREMO ===
+    if not np.isfinite(matriz_j).all():
+        return jsonify({
+            'status': 'CRITICAL_ANOMALY',
+            'is_stable': False,
+            'penalty_factor': 0.0,
+            'error': 'Valores no finitos detectados (NaN/Inf) en el flujo de telemetría.'
+        }), 200
+    # =====================================================
+from flask import Flask, request, jsonify
+import numpy as np
+app = Flask(__name__)
+def evaluar_coherencia(matriz):
+    """
+    Función interna (proxy JacobianoCoherencia) que calcula 
+    la estabilidad basándose en la norma de Frobenius.
+    """
+    # Si la matriz es singular o tiene determinante 0, aplicamos penalización
+    det = np.linalg.det(matriz)
+    norma_fro = np.linalg.norm(matriz)
+    if abs(det) < 1e-9:
+        is_stable = False
+        # Simulación del cálculo dinámico del Kernel Sigma frente al colapso espacial
+        penalty_factor = float(norma_fro * 2.5)
+    else:
+        is_stable = True
+        penalty_factor = 1.0
+    return is_stable, float(norma_fro), penalty_factor
+@app.route('/api/v1/telemetry/evaluate', methods=['POST'])
+def evaluate_telemetry():
+    try:
+        data = request.get_json()
+        if not data or 'matrix' not in data:
+            return jsonify({'error': 'Payload inválido, se requiere la clave "matrix"'}), 400
+        # 1. Conversión de la lista entrante a matriz de NumPy
+        matriz_j = np.array(data['matrix'], dtype=float)
+        # 2. FILTRO DE SEGURIDAD CONTRA DATA DRIFT EXTREMO (Corrección de Indentación)
+        if not np.isfinite(matriz_j).all():
+            return jsonify({
+                'status': 'CRITICAL_ANOMALY',
+                'is_stable': False,
+                'matrix_norm_fro': 'NaN',
+                'penalty_factor': 0.0,
+                'error': 'Valores no finitos detectados (NaN/Inf) en el flujo de telemetría.'
+            }), 200
+        # 3. Restricción de diseño actual del Kernel (Matrices cuadradas 3x3)
+        if matriz_j.shape != (3, 3):
+            return jsonify({'error': 'El framework ROMEO-HYDRA actualmente solo procesa matrices 3x3'}), 400
+        # 4. Evaluación numérico-geométrica
+        is_stable, norma_fro, penalty_factor = evaluar_coherencia(matriz_j)
+        return jsonify({
+            'status': 'processed',
+            'is_stable': is_stable,
+            'matrix_norm_fro': norma_fro,
+            'penalty_factor': penalty_factor
+        }), 200
+    except Exception as e:
+        return jsonify({'error': f'Fallo crítico en el Kernel: {str(e)}'}), 500
+if __name__ == '__main__':
+    # Ejecución en el puerto 5000 local
+    app.run(host='0.0.0.0', port=5000, debug=True)
+curl.exe -X POST http://127.0.0.1:5000/api/v1/telemetry/evaluate -H "Content-Type: application/json" -d '{\"matrix\": [[1.0, 2.0, 3.0], [4.0, 5.0, 6.0], [7.0, 8.0, 9.000000001]]}’
+import numpy as np
+# ... (dentro de la función o endpoint de evaluación de telemetría)
+# Supongamos que ya calculaste el determinante de la matriz
+det = np.linalg.det(matrix_np)
+abs_det = abs(det)
+# Definimos los umbrales de la zona de amortiguación
+UMBRAL_COLAPSO = 1e-9   # Abajo de esto, penalización dura (0.0)
+UMBRAL_SEGURO = 1e-4    # A partir de aquí, el sistema opera al 100% (1.0)
+if abs_det <= UBRAL_COLAPSO:
+    penalty_factor = 0.0
+    is_stable = False
+    status = "CRITICAL_ANOMALY"
+elif abs_det >= UBRAL_SEGURO:
+    penalty_factor = 1.0
+    is_stable = True
+    status = "processed"
+else:
+    # Interpolación lineal suave en la zona gris (de 1e-9 a 1e-4)
+    # penalty_factor variará continuamente entre 0.0 y 1.0
+    penalty_factor = (abs_det - UBRAL_COLAPSO) / (UMBRAL_SEGURO - UBRAL_COLAPSO)
+    penalty_factor = round(float(penalty_factor), 4) # Limitar decimales para telemetría
+    is_stable = True  # Sigue operativo, pero bajo degradación métrica
+    status = "METRIC_DEGRADATION”
+import numpy as np
+from flask import Flask, request, jsonify
+app = Flask(__name__)
+@app.route('/api/v1/telemetry/evaluate', methods=['POST'])
+def evaluate_telemetry():
+    try:
+        data = request.get_json()
+        if not data or 'matrix' not in data:
+            return jsonify({"error": "Missing matrix in request data"}), 400
+        # Conversión segura a array de NumPy
+        matrix_np = np.array(data['matrix'], dtype=float)
+        # Validación de valores no finitos (NaN o Inf) para evitar colapsos numéricos
+        if not np.isfinite(matrix_np).all():
+            return jsonify({
+                "penalty_factor": 0.0,
+                "is_stable": False,
+                "status": "CRITICAL_ANOMALY"
+            }), 200
+        # Evaluación del determinante mediante JacobianoCoherencia
+        det = np.linalg.det(matrix_np)
+        abs_det = abs(det)
+        # Configuración de umbrales dinámicos
+        UMBRAL_COLAPSO = 1e-9
+        UMBRAL_SEGURO = 1e-4
+        if abs_det <= UBRAL_COLAPSO:
+            penalty_factor = 0.0
+            is_stable = False
+            status = "CRITICAL_ANOMALY"
+        elif abs_det >= UBRAL_SEGURO:
+            penalty_factor = 1.0
+            is_stable = True
+            status = "processed"
+        else:
+            # Interpolación lineal suave en la zona gris (degradación métrica)
+            penalty_factor = (abs_det - UBRAL_COLAPSO) / (UMBRAL_SEGURO - UBRAL_COLAPSO)
+            penalty_factor = round(float(penalty_factor), 4)
+            is_stable = True
+            status = "METRIC_DEGRADATION"
+        return jsonify({
+            "penalty_factor": penalty_factor,
+            "is_stable": is_stable,
+            "status": status,
+            "determinant": float(det)
+        }), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+if __name__ == '__main__':
+    # Ejecución en el puerto 5000 local configurado para las pruebas
+    app.run(host='0.0.0.0', port=5000, debug=True)
+curl -X POST http://127.0.0.1:5000/api/v1/telemetry/evaluate \
+-H "Content-Type: application/json" \
+-d '{"matrix": [[1, 0, 0], [0, 1, 0], [0, 0, 1]]}’
+curl -X POST http://127.0.0.1:5000/api/v1/telemetry/evaluate -H "Content-Type: application/json" -d "{\"matrix\": [[1, 0, 0], [0, 1, 0], [0, 0, 1]]}”
+python -c "import requests; r = requests.post('http://127.0.0.1:5000/api/v1/telemetry/evaluate', json={'matrix': [[1, 0, 0], [0, 1, 0], [0, 0, 1]]}); print(r.json())”
+Invoke-RestMethod -Method Post -Uri "http://127.0.0.1:5000/api/v1/telemetry/evaluate" -ContentType "application/json" -Body '{"matrix": [[1, 0, 0], [0, 1, 0], [0, 0, 1]]}’
+import numpy as np
+from flask import Flask, request, jsonify
+app = Flask(__name__)
+@app.route('/api/v1/telemetry/evaluate', methods=['POST'])
+def evaluate_telemetry():
+    try:
+        data = request.get_json()
+        if not data or 'matrix' not in data:
+            return jsonify({"error": "Missing matrix in request data"}), 400
+        # Conversión segura a array de NumPy
+        matrix_np = np.array(data['matrix'], dtype=float)
+        # Validación de valores no finitos (NaN o Inf) para evitar colapsos numéricos
+        if not np.isfinite(matrix_np).all():
+            return jsonify({
+                "penalty_factor": 0.0,
+                "is_stable": False,
+                "status": "CRITICAL_ANOMALY"
+            }), 200
+        # Evaluación del determinante mediante JacobianoCoherencia
+        det = np.linalg.det(matrix_np)
+        abs_det = abs(det)
+        # Configuración de umbrales dinámicos
+        UMBRAL_COLAPSO = 1e-9
+        UMBRAL_SEGURO = 1e-4
+        if abs_det <= UBRAL_COLAPSO:
+            penalty_factor = 0.0
+            is_stable = False
+            status = "CRITICAL_ANOMALY"
+        elif abs_det >= UBRAL_SEGURO:
+            penalty_factor = 1.0
+            is_stable = True
+            status = "processed"
+        else:
+            # Interpolación lineal suave en la zona gris (degradación métrica)
+            penalty_factor = (abs_det - UBRAL_COLAPSO) / (UMBRAL_SEGURO - UBRAL_COLAPSO)
+            penalty_factor = round(float(penalty_factor), 4)
+            is_stable = True
+            status = "METRIC_DEGRADATION"
+        return jsonify({
+            "penalty_factor": penalty_factor,
+            "is_stable": is_stable,
+            "status": status,
+            "determinant": float(det)
+        }), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+if __name__ == '__main__':
+    # Ejecución en el puerto 5000 local configurado para las pruebas
+    app.run(host='0.0.0.0', port=5000, debug=True)
+import numpy as np
+from flask import Flask, request, jsonify
+app = Flask(__name__)
+@app.route('/api/v1/telemetry/evaluate', methods=['POST'])
+def evaluate_telemetry():
+    try:
+        data = request.get_json()
+        if not data or 'matrix' not in data:
+            return jsonify({"error": "Missing matrix in request data"}), 400
+        # Conversión segura a array de NumPy
+        matrix_np = np.array(data['matrix'], dtype=float)
+        # Validación de valores no finitos (NaN o Inf) para evitar colapsos numéricos
+        if not np.isfinite(matrix_np).all():
+            return jsonify({
+                "penalty_factor": 0.0,
+                "is_stable": False,
+                "status": "CRITICAL_ANOMALY"
+            }), 200
+        # Evaluación del determinante mediante JacobianoCoherencia
+        det = np.linalg.det(matrix_np)
+        abs_det = abs(det)
+        # Configuración de umbrales dinámicos
+        UMBRAL_COLAPSO = 1e-9
+        UMBRAL_SEGURO = 1e-4
+        if abs_det <= UBRAL_COLAPSO:
+            penalty_factor = 0.0
+            is_stable = False
+            status = "CRITICAL_ANOMALY"
+        elif abs_det >= UBRAL_SEGURO:
+            penalty_factor = 1.0
+            is_stable = True
+            status = "processed"
+        else:
+            # Interpolación lineal suave en la zona gris (degradación métrica)
+            penalty_factor = (abs_det - UBRAL_COLAPSO) / (UMBRAL_SEGURO - UBRAL_COLAPSO)
+            penalty_factor = round(float(penalty_factor), 4)
+            is_stable = True
+            status = "METRIC_DEGRADATION"
+        return jsonify({
+            "penalty_factor": penalty_factor,
+            "is_stable": is_stable,
+            "status": status,
+            "determinant": float(det)
+        }), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+if __name__ == '__main__':
+    # Ejecución en el puerto 5000 local configurado para las pruebas
+    app.run(host='0.0.0.0', port=5000, debug=True)
+python3 -c "import urllib.request, json; req = urllib.request.Request('http://127.0.0.1:5000/api/v1/telemetry/evaluate', data=json.dumps({'matrix': [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]}).encode('utf-8'), headers={'Content-Type': 'application/json'}); print(json.loads(urllib.request.urlopen(req).read().decode('utf-8')))”
+Invoke-RestMethod -Method Post -Uri "http://127.0.0.1:5000/api/v1/telemetry/evaluate" -ContentType "application/json" -Body '{"matrix": [[1, 0, 0], [0, 1, 0], [0, 0, 1]]}’

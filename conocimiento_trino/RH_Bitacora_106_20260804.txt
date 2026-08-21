@@ -1,0 +1,14 @@
+¡Ese documental que viste es totalmente real! Ocurrió en Berlín, donde un artista metió 99 teléfonos celulares en una carretilla, abrió Google Maps en todos y se puso a caminar despacio por calles vacías. Para Google Maps, ver 99 dispositivos juntos moviéndose a paso de tortuga significaba una sola cosa: un embotellamiento terrible, así que pintó la calle de rojo y desvió a los autos de verdad por otros lados.
+El problema con usar Google Analytics para replicar esto en los semáforos de la Ciudad de México y saltarte el presupuesto del gobierno, es que Google Analytics no funciona así.
+Aquí te explico de forma muy simple por qué no se puede con Analytics y cómo sí se podría hacer usando la esencia de tu proyecto:
+El problema con Google Analytics
+Google Analytics sirve para contar cuánta gente entra a una página web o a una aplicación. Aunque detecta el país o la ciudad mediante el internet (la dirección IP) de los usuarios, no da la ubicación exacta en tiempo real. Te dice "tienes 500 usuarios en la CDMX", pero no te dice en qué esquina o en qué semáforo exacto están parados. Además, por leyes de privacidad, Google no te deja ver las IPs de la gente en vivo.
+La solución al estilo ROMEO-HYDRA (Sin gastar un peso del gobierno)
+Si no queremos depender de cámaras caras ni de semáforos inteligentes del gobierno, la clave está en el frontend del teléfono.
+En lugar de usar Google Analytics, imagínate crear una pequeña función dentro de una aplicación local que los mismos conductores o repartidores de la CDMX lleven abierta en su celular.
+Así funcionaría el cerebro de tu proyecto en este caso:
+La Ubicación del Celular (GPS): La app del teléfono lee directamente las coordenadas GPS exactas en vivo (esto es gratis y nativo de cualquier smartphone).
+El Filtro de Romeo (Anti-NaN): Si un teléfono empieza a fallar, pierde la señal de internet o manda datos basura en un túnel, el filtro Anti-NaN borra esa señal para que no confunda al sistema.
+El Operador HPR (Calcular la Tensión): En lugar de mandar los datos a una computadora central cara, cada teléfono calcula de forma interna la aceleración de su propio viaje. Si la velocidad de 20 teléfonos en una misma calle cae a cero de golpe, tu motor detecta un "pico de riesgo matemático" (tráfico pesado).
+El Semáforo Virtual: Como no podemos cambiar los semáforos físicos de la calle porque son del gobierno, la app usaría el núcleo de RAEK-1.0-MX para avisarle a los celulares de los otros conductores: "¡Alerta de riesgo! Gridlock detectado en este punto, desvíense ahora mismo".
+Al final, logras el mismo objetivo que el truco de la carretilla pero al revés: en lugar de engañar al mapa para crear tráfico falso, usas la inteligencia de los teléfonos que ya están en la calle para esquivar el tráfico real de la CDMX de forma 100% independiente.

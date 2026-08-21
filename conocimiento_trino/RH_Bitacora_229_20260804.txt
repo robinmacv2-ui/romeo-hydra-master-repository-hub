@@ -1,0 +1,15 @@
+Manifiesto ROMEO: Foundations of Information Dynamics
+Estado: Preimpresión Auditada (v1.1-B1) - Transición de marca completada.
+1. Filosofía Científica
+El proyecto ROMEO (Reasoning and Modeling Engine for Observational Reality) se fundamenta en principios de transparencia, reproducibilidad, modularidad y accesibilidad. ROMEO busca superar la fragmentación del conocimiento científico mediante herramientas integradas que permitan convertir fenómenos reales en modelos computacionales auditables.
+2. Núcleo Axiomático
+Axioma I: Separación Geométrico-Dinámica. Distinción rigurosa entre la estructura geométrica del sistema y su flujo dinámico.
+Axioma II: Conservación de la Integridad Gauge. Preservación de las propiedades intrínsecas del sistema bajo transformaciones métricas.
+Axioma III: Falsabilidad Experimental. Todo modelo debe ser sometido a pruebas de estrés y comparación empírica.
+3. Arquitectura del Motor
+El motor ROMEO se compone de:
+Interfaz Universal: Capa de entrada estándar para datos de series temporales.
+Motor de Razonamiento: Núcleo matemático basado en la métrica Hessiana.
+Operador de Reconstrucción (R): Algoritmo para la identificación inversa del potencial estructural desde trayectorias observadas.
+4. Compromiso de Reproducibilidad
+La integridad científica del programa se garantiza mediante documentación pública, código abierto y trazabilidad mediante hashes de ejecución.

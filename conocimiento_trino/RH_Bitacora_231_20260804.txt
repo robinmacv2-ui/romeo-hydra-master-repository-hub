@@ -1,0 +1,2 @@
+Paso 1.a
+cd C:\Users\robin\ROMEO-HYDRA-v3

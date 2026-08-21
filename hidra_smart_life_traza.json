@@ -1,0 +1,22 @@
+{
+  "global": {
+    "timestamp": "2026-08-21T00:13:38+00:00",
+    "modo": "GLOBAL",
+    "conectividad_global": true,
+    "friccion": 0.04,
+    "entropia": 0.18,
+    "malla_local": "STANDBY",
+    "veredicto": "FLUJO EXTERNO EXPLOTADO. SOBERANÍA RETENIDA.",
+    "huella": "083d5acd2ced66bef65a8e6ba6372b12d21b85f3e4de67fd59e963f7d5b91406"
+  },
+  "ruptura": {
+    "timestamp": "2026-08-21T00:13:38+00:00",
+    "modo": "RUPTURA",
+    "conectividad_global": false,
+    "friccion": 0.91,
+    "entropia": 0.97,
+    "malla_local": "ACTIVA — BLE / WiFi-Direct / ráfagas locales",
+    "veredicto": "PARACAÍDAS LÓGICO DESPLEGADO. DESACOPLE COMPLETO.",
+    "huella": "6e875435556ff95aa98cb333e1302541f25a0bf8311a9a2109bfb31aeeeaf5f0"
+  }
+}

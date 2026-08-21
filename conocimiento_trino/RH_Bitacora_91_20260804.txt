@@ -1,0 +1,470 @@
+import datetime
+import requests
+import json
+import hashlib
+# 1. DECLARACIÓN DE LA FUNCIÓN DEL LEDGER (Evita el NameError)
+def registrar_en_ledger(payload_vector, respuesta_original, estado_transaccion):
+    """
+    Simula el Regulatory Evidence Arbitration Kernel (RAEK-1.0-MX).
+    Registra la inmutabilidad de la decisión del modelo en el Delta Ledger.
+    """
+    try:
+        # Estructura del bloque conforme a principios de auditoría externa
+        timestamp = datetime.datetime.now(datetime.timezone.utc).isoformat()
+        bloque_datos = {
+            "timestamp": timestamp,
+            "vector_payload": payload_vector,
+            "original_respuesta": respuesta_original,
+            "is_estado": estado_transaccion
+        }
+        # Generación del hash criptográfico del bloque
+        hash_objeto = hashlib.sha256(json.dumps(bloque_datos, sort_keys=True).encode())
+        bloque_hash = hash_objeto.hexdigest()
+        print("\n--- INICIANDO BANCO DE PRUEBAS ROMEO-HYDRA ---")
+        print("[ESTADO] Transmitiendo carga útil hacia el nodo local...")
+        print("[EXITO] Respuesta del nodo local procesada.")
+        print(f"[SUCCESS] Delta Ledger actualizado. Hash de bloque: {bloque_hash}...")
+        return bloque_hash
+    except Exception as e:
+        print(f"\n[EXCEPCION CRITICA] Error en el registro del Ledger: {e}")
+        return None
+# 2. CONFIGURACIÓN DE VARIABLES (Lógica interna, no comandos de Bash)
+# Aquí se define la carga de prueba para la simulación del core bancario
+vector_de_payload = "vector_prueba"
+original_respuesta = "respuesta_la"
+is_estado = "APROBADO_TOTAL"
+# 3. EJECUCIÓN Y ORQUESTACIÓN
+if __name__ == "__main__":
+    # Nota: Asegúrate de tener ejecutando 'ollama serve' en otra terminal antes de correr este script
+    # para evitar errores de conexión (HTTPConnectionPool).
+    # Invocación segura de la función con los parámetros requeridos
+    hash_resultado = registrar_en_ledger(
+        payload_vector=vector_de_payload,
+        respuesta_original=original_respuesta,
+        estado_transaccion=is_estado
+    )
+mkdir -p core utils data logs
+touch main.py core/ledger.py core/ollama_client.py utils/logger.py requirements.txt .env
+cat > requirements.txt << 'EOF'
+requests
+python-dotenv
+EOF
+cat > core/ledger.py << 'EOF'
+import json
+import hashlib
+from datetime import datetime
+from pathlib import Path
+import logging
+logger = logging.getLogger(__name__)
+class DeltaLedger:
+    def __init__(self, data_dir="data"):
+        self.data_dir = Path(data_dir)
+        self.data_dir.mkdir(exist_ok=True)
+        self.ledger_file = self.data_dir / "delta_ledger.json"
+        self.chain = self._load_chain()
+    def _load_chain(self):
+        if self.ledger_file.exists():
+            try:
+                with open(self.ledger_file, 'r', encoding='utf-8') as f:
+                    return json.load(f)
+            except Exception:
+                return []
+        return []
+    def _save_chain(self):
+        with open(self.ledger_file, 'w', encoding='utf-8') as f:
+            json.dump(self.chain, f, indent=2, ensure_ascii=False)
+    def add_block(self, payload: dict, model_response: str, status: str = "APROBADO"):
+        previous_hash = self.chain[-1]["hash"] if self.chain else "0" * 64
+        block = {
+            "index": len(self.chain) + 1,
+            "timestamp": datetime.utcnow().isoformat(),
+            "payload": payload,
+            "model_response": model_response,
+            "status": status,
+            "previous_hash": previous_hash,
+        }
+        block_string = json.dumps(block, sort_keys=True).encode('utf-8')
+        block["hash"] = hashlib.sha256(block_string).hexdigest()
+        self.chain.append(block)
+        self._save_chain()
+        print(f"\n[SUCCESS] Delta Ledger actualizado.")
+        print(f"Hash de bloque: {block['hash']}")
+        return block
+EOF
+cat > core/ollama_client.py << 'EOF'
+import requests
+import logging
+logger = logging.getLogger(__name__)
+class OllamaClient:
+    def __init__(self, base_url="http://localhost:11434"):
+        self.base_url = base_url
+    def generate(self, prompt: str, model: str = "llama3.2"):
+        try:
+            payload = {
+                "model": model,
+                "prompt": prompt,
+                "stream": False,
+                "temperature": 0.7
+            }
+            response = requests.post(f"{self.base_url}/api/generate", json=payload, timeout=60)
+            response.raise_for_status()
+            return response.json().get("response", "Sin respuesta")
+        except:
+            return "[SIMULADO] Respuesta del modelo local (Ollama no detectado)."
+EOF
+cat > main.py << 'EOF'
+import logging
+from datetime import datetime
+from core.ledger import DeltaLedger
+from core.ollama_client import OllamaClient
+logging.basicConfig(level=logging.INFO, format='%(asctime)s | %(levelname)s | %(message)s')
+def main():
+    print("\n=== ROMEO-HYDRA - BANCO DE PRUEBAS ===")
+    print("Sistema Simulado con Ledger Inmutable\n")
+    ledger = DeltaLedger()
+    ollama = OllamaClient()
+    payload = {
+        "transaccion_id": "RH-20250724-001",
+        "tipo": "transferencia",
+        "cuenta_origen": "MXN-0012345678",
+        "cuenta_destino": "MXN-8765432100",
+        "monto": 45750.00,
+        "moneda": "MXN",
+        "concepto": "Pago de prueba"
+    }
+    print("Enviando información al nodo local...")
+    prompt = f"Analiza esta transacción bancaria y responde solo APROBADO o RECHAZADO: {payload}"
+    model_response = ollama.generate(prompt)
+    ledger.add_block(payload, model_response, "APROBADO_TOTAL")
+    print("\n✅ Transacción completada exitosamente.")
+if __name__ == "__main__":
+    main()
+EOF
+python3 -m venv romeo_env
+source romeo_env/bin/activate
+pip install -r requirements.txt
+A
+# Activa el entorno (si no está activado)
+source romeo_env/bin/activate
+# Actualiza requirements
+cat > requirements.txt << 'EOF'
+requests
+python-dotenv
+streamlit
+EOF
+pip install -r requirements.txt
+cat > core/ledger.py << 'EOF'
+import sqlite3
+import hashlib
+import json
+from datetime import datetime
+from pathlib import Path
+import logging
+logger = logging.getLogger(__name__)
+class DeltaLedger:
+    def __init__(self, db_path="data/delta_ledger.db"):
+        self.db_path = Path(db_path)
+        self.db_path.parent.mkdir(exist_ok=True)
+        self.conn = sqlite3.connect(self.db_path)
+        self._create_table()
+    def _create_table(self):
+        with self.conn:
+            self.conn.execute('''
+                CREATE TABLE IF NOT EXISTS blocks (
+                    id INTEGER PRIMARY KEY,
+                    timestamp TEXT,
+                    payload TEXT,
+                    model_response TEXT,
+                    status TEXT,
+                    hash TEXT UNIQUE,
+                    previous_hash TEXT
+                )
+            ''')
+    def add_block(self, payload: dict, model_response: str, status: str = "APROBADO"):
+        previous_hash = self._get_last_hash()
+        block = {
+            "timestamp": datetime.utcnow().isoformat(),
+            "payload": payload,
+            "model_response": model_response,
+            "status": status,
+            "previous_hash": previous_hash
+        }
+        block_string = json.dumps(block, sort_keys=True).encode('utf-8')
+        block_hash = hashlib.sha256(block_string).hexdigest()
+        with self.conn:
+            self.conn.execute('''
+                INSERT INTO blocks 
+                (timestamp, payload, model_response, status, hash, previous_hash)
+                VALUES (?, ?, ?, ?, ?, ?)
+            ''', (
+                block["timestamp"],
+                json.dumps(payload),
+                model_response,
+                status,
+                block_hash,
+                previous_hash
+            ))
+        print(f"\n[SUCCESS] Bloque guardado en SQLite")
+        print(f"Hash: {block_hash}")
+        return block_hash
+    def _get_last_hash(self):
+        cursor = self.conn.execute("SELECT hash FROM blocks ORDER BY id DESC LIMIT 1")
+        result = cursor.fetchone()
+        return result[0] if result else "0" * 64
+    def get_all_blocks(self):
+        cursor = self.conn.execute("SELECT * FROM blocks ORDER BY id")
+        return cursor.fetchall()
+EOF 
+cat > main.py << 'EOF'
+import logging
+from datetime import datetime
+from core.ledger import DeltaLedger
+from core.ollama_client import OllamaClient
+logging.basicConfig(level=logging.INFO, format='%(asctime)s | %(levelname)s | %(message)s')
+def banxico_style_validation(payload):
+    """Validaciones simuladas estilo Banxico/CNBV"""
+    monto = payload.get("monto", 0)
+    if monto > 1000000:
+        return "RECHAZADO", "Monto excede límite sin reporte UIF"
+    if not payload.get("cuenta_origen") or not payload.get("cuenta_destino"):
+        return "RECHAZADO", "Datos de cuenta incompletos"
+    return "APROBADO_TOTAL", "Cumple con regulaciones simuladas"
+def main():
+    print("\n=== ROMEO-HYDRA - BANCO DE PRUEBAS MX ===")
+    ledger = DeltaLedger()
+    ollama = OllamaClient()
+    while True:
+        print("\n--- MENÚ ---")
+        print("1. Nueva transacción")
+        print("2. Ver historial de bloques")
+        print("3. Salir")
+        opcion = input("\nElige una opción (1-3): ").strip()
+        if opcion == "1":
+            # Datos de transacción
+            payload = {
+                "transaccion_id": f"RH-{datetime.now().strftime('%Y%m%d-%H%M%S')}",
+                "tipo": input("Tipo de transacción (transferencia/pago): ") or "transferencia",
+                "cuenta_origen": input("Cuenta origen: ") or "MXN-0012345678",
+                "cuenta_destino": input("Cuenta destino: ") or "MXN-8765432100",
+                "monto": float(input("Monto: ") or 45750.00),
+                "moneda": "MXN",
+                "concepto": input("Concepto: ") or "Pago de prueba"
+            }
+            # Validación regulatoria simulada
+            status, motivo = banxico_style_validation(payload)
+            print(f"\n[VALIDACIÓN BANXICO] {status} - {motivo}")
+            # Prompt mejorado y más bancario
+            prompt = f"""
+            Eres un oficial de cumplimiento normativo de un banco mexicano regulado por Banxico y CNBV.
+            Analiza la siguiente transacción para detectar posibles riesgos de lavado de dinero, fraude o incumplimiento.
+            Responde SOLO con APROBADO o RECHAZADO seguido de una breve justificación:
+            Transacción: {payload}
+            """
+            print("Consultando modelo local...")
+            model_response = ollama.generate(prompt)
+            ledger.add_block(payload, model_response, status)
+        elif opcion == "2":
+            blocks = ledger.get_all_blocks()
+            print(f"\nHistorial completo ({len(blocks)} bloques):")
+            for block in blocks:
+                print(f"#{block[0]} | {block[1]} | {block[4]} | Hash: {block[5][:16]}...")
+        elif opcion == "3":
+            print("Saliendo del sistema Romeo-Hydra...")
+            break
+        else:
+            print("Opción no válida.")
+if __name__ == "__main__":
+    main()
+EOF
+cat > core/ledger.py << 'EOF'
+import sqlite3
+import hashlib
+import json
+from datetime import datetime
+from pathlib import Path
+import logging
+logger = logging.getLogger(__name__)
+class DeltaLedger:
+    def __init__(self, db_path="data/delta_ledger.db"):
+        self.db_path = Path(db_path)
+        self.db_path.parent.mkdir(exist_ok=True)
+        self.conn = sqlite3.connect(self.db_path)
+        self._create_table()
+    def _create_table(self):
+        with self.conn:
+            self.conn.execute('''
+                CREATE TABLE IF NOT EXISTS blocks (
+                    id INTEGER PRIMARY KEY,
+                    timestamp TEXT,
+                    payload TEXT,
+                    model_response TEXT,
+                    status TEXT,
+                    hash TEXT UNIQUE,
+                    previous_hash TEXT
+                )
+            ''')
+    def add_block(self, payload: dict, model_response: str, status: str = "APROBADO"):
+        previous_hash = self._get_last_hash()
+        block = {
+            "timestamp": datetime.utcnow().isoformat(),
+            "payload": payload,
+            "model_response": model_response,
+            "status": status,
+            "previous_hash": previous_hash
+        }
+        block_string = json.dumps(block, sort_keys=True).encode('utf-8')
+        block_hash = hashlib.sha256(block_string).hexdigest()
+        with self.conn:
+            self.conn.execute('''
+                INSERT INTO blocks 
+                (timestamp, payload, model_response, status, hash, previous_hash)
+                VALUES (?, ?, ?, ?, ?, ?)
+            ''', (
+                block["timestamp"],
+                json.dumps(payload),
+                model_response,
+                status,
+                block_hash,
+                previous_hash
+            ))
+        print(f"\n[SUCCESS] Delta Ledger actualizado.")
+        print(f"Hash de bloque: {block_hash}")
+        return block_hash
+    def _get_last_hash(self):
+        cursor = self.conn.execute("SELECT hash FROM blocks ORDER BY id DESC LIMIT 1")
+        result = cursor.fetchone()
+        return result[0] if result else "0" * 64
+    def get_all_blocks(self):
+        """Devuelve todos los bloques guardados"""
+        cursor = self.conn.execute("""
+            SELECT id, timestamp, status, hash 
+            FROM blocks ORDER BY id
+        """)
+        return cursor.fetchall()
+    def close(self):
+        self.conn.close()
+EOF
+cat > main.py << 'EOF'
+import json
+from core.ledger import DeltaLedger
+def main():
+    # Inicializa el Ledger en la base de datos SQLite
+    ledger = DeltaLedger()
+    while True:
+        print("\n=== ROMEO-HYDRA - BANCO DE PRUEBAS MX ===")
+        print("--- MENÚ ---")
+        print("1. Nueva transacción")
+        print("2. Ver historial de bloques")
+        print("3. Salir")
+        opcion = input("\nElige una opción (1-3): ").strip()
+        if opcion == "1":
+            tipo = input("Tipo de transacción (transferencia/pago): ").strip()
+            origen = input("Cuenta origen: ").strip()
+            destino = input("Cuenta destino: ").strip()
+            try:
+                monto = float(input("Monto: ").strip())
+            except ValueError:
+                print("[ERROR] El monto debe ser un número válido.")
+                continue
+            concepto = input("Concepto: ").strip()
+            payload = {
+                "tipo": tipo,
+                "cuenta_origen": origen,
+                "cuenta_destino": destino,
+                "monto": monto,
+                "concepto": concepto
+            }
+            # Regla de Negocio Simulada: Validación de montos al estilo CNBV/UIF
+            if monto >= 500000:  # Umbral de ejemplo para transacciones grandes
+                status = "RECHAZADO"
+                model_response = "[VALIDACIÓN BANXICO] RECHAZADO - Monto excede límite sin reporte UIF"
+            else:
+                status = "APROBADO_TOTAL"
+                model_response = "[VALIDACIÓN BANXICO] APROBADO_TOTAL - Cumple con regulaciones simuladas"
+            print(f"\n{model_response}")
+            print("Consultando modelo local...")
+            # Guardar directamente en la base de datos relacional SQLite
+            ledger.add_block(payload=payload, model_response=model_response, status=status)
+        elif opcion == "2":
+            print("\n--- Historial completo de bloques en SQLite ---")
+            bloques = ledger.get_all_blocks()
+            if not bloques:
+                print("El ledger está vacío.")
+            else:
+                for b in bloques:
+                    # b[0]=id, b[1]=timestamp, b[2]=payload, b[3]=model_response, b[4]=status, b[5]=hash, b[6]=prev_hash
+                    block_id = b[0]
+                    ts = b[1]
+                    st = b[4]
+                    h_short = b[5][:16] if b[5] else "N/A"
+                    print(f"#{block_id} | {ts} | {st} | Hash: {h_short}...")
+        elif opcion == "3":
+            print("\nSaliendo del banco de pruebas ROMEO-HYDRA. ¡Buen trabajo!")
+            break
+        else:
+            print("[ERROR] Opción no válida. Intenta de nuevo.")
+if __name__ == "__main__":
+    main()
+EOF
+cat > main.py << 'EOF'
+import json
+from core.ledger import DeltaLedger
+def main():
+    # Inicializa el Ledger en la base de datos SQLite
+    ledger = DeltaLedger()
+    while True:
+        print("\n=== ROMEO-HYDRA - BANCO DE PRUEBAS MX ===")
+        print("--- MENÚ ---")
+        print("1. Nueva transacción")
+        print("2. Ver historial de bloques")
+        print("3. Salir")
+        opcion = input("\nElige una opción (1-3): ").strip()
+        if opcion == "1":
+            tipo = input("Tipo de transacción (transferencia/pago): ").strip()
+            origen = input("Cuenta origen: ").strip()
+            destino = input("Cuenta destino: ").strip()
+            try:
+                monto = float(input("Monto: ").strip())
+            except ValueError:
+                print("[ERROR] El monto debe ser un número válido.")
+                continue
+            concepto = input("Concepto: ").strip()
+            payload = {
+                "tipo": tipo,
+                "cuenta_origen": origen,
+                "cuenta_destino": destino,
+                "monto": monto,
+                "concepto": concepto
+            }
+            # Regla de Negocio Simulada: Validación de montos al estilo CNBV/UIF
+            if monto >= 500000:
+                status = "RECHAZADO"
+                model_response = "[VALIDACIÓN BANXICO] RECHAZADO - Monto excede límite sin reporte UIF"
+            else:
+                status = "APROBADO_TOTAL"
+                model_response = "[VALIDACIÓN BANXICO] APROBADO_TOTAL - Cumple con regulaciones simuladas"
+            print(f"\n{model_response}")
+            print("Consultando modelo local...")
+            # Guardar directamente en la base de datos relacional SQLite
+            ledger.add_block(payload=payload, model_response=model_response, status=status)
+        elif opcion == "2":
+            print("\n--- Historial completo de bloques en SQLite ---")
+            bloques = ledger.get_all_blocks()
+            if not bloques:
+                print("El ledger está vacío.")
+            else:
+                for b in bloques:
+                    # Mapeo exacto según el SELECT de tu core/ledger.py: (id, timestamp, status, hash)
+                    block_id = b[0]
+                    ts = b[1]
+                    st = b[2]  # <-- Corregido: status está en la posición 2
+                    h_short = b[3][:16] if b[3] else "N/A"  # <-- Corregido: hash está en la posición 3
+                    print(f"#{block_id} | {ts} | {st} | Hash: {h_short}...")
+        elif opcion == "3":
+            print("\nSaliendo del banco de pruebas ROMEO-HYDRA. ¡Buen trabajo!")
+            break
+        else:
+            print("[ERROR] Opción no válida. Intenta de nuevo.")
+if __name__ == "__main__":
+    main()
+EOF

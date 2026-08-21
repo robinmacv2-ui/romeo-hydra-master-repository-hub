@@ -1,0 +1,6 @@
+{"audit_id": "af05a898ba2b4cd3", "node_id": "agent-alpha-01", "status": "accept", "friction": 0.22, "entropy": 0.18, "conduction": 0.71, "bias_adjustment": 0.0, "ts": 1786070648.7805943}
+{"audit_id": "6cd4a2290fc849cd", "node_id": "agent-beta-07", "status": "mutate", "friction": 0.51, "entropy": 0.44, "conduction": 0.38, "bias_adjustment": -0.025, "ts": 1786070648.7949142}
+{"audit_id": "6f1ada5d54ea8caf", "node_id": "agent-gamma-99", "status": "isolate", "friction": 0.88, "entropy": 0.79, "conduction": 0.19, "bias_adjustment": 0.0, "ts": 1786070648.8033934}
+{"audit_id": "a885222199ba252d", "node_id": "agent-alpha-01", "status": "accept", "friction": 0.22, "entropy": 0.18, "conduction": 0.71, "bias_adjustment": 0.0, "ts": 1787267701.760896}
+{"audit_id": "0d5c136d635cc646", "node_id": "agent-beta-07", "status": "mutate", "friction": 0.51, "entropy": 0.44, "conduction": 0.38, "bias_adjustment": -0.025, "ts": 1787267701.952987}
+{"audit_id": "86552e349e7cacb3", "node_id": "agent-gamma-99", "status": "isolate", "friction": 0.88, "entropy": 0.79, "conduction": 0.19, "bias_adjustment": 0.0, "ts": 1787267702.1293416}

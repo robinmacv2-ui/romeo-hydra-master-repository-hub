@@ -1,0 +1,314 @@
+[
+  {
+    "rule_id": "MX-IFPE-EBR-001",
+    "rule_version": "2026-07-24",
+    "status": "SIMULATED",
+    "legal_source": "PENDIENTE_DE_VALIDACION",
+    "threshold_uma": 5000,
+    "action": "REQUIERE_REVISION",
+    "reason_template": "El monto supera el umbral crítico de mitigación automatizada (5,000 UMA)."
+  }
+]
+import json
+import os
+class ComplianceEngine:
+    def __init__(self):
+        # Configuración explícita del perfil regulatorio para 2026
+        self.regulatory_profile = {
+            "jurisdiction": "MX",
+            "subject_type": "IFPE",
+            "ruleset_version": "2026-07-24",
+            "uma_value": 117.31,
+            "uma_effective_date": "2026-02-01"
+        }
+        self.rules_path = os.path.join("core", "rules.json")
+        self.rules = self._load_rules()
+    def _load_rules(self):
+        """Carga de manera segura las reglas desde el archivo JSON."""
+        if not os.path.exists(self.rules_path):
+            return []
+        with open(self.rules_path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    def evaluar_transaccion(self, amount: float, currency: str, payment_method: str) -> dict:
+        """Convierte a UMA y evalúa la transacción contra la matriz modular."""
+        monto_en_uma = amount / self.regulatory_profile["uma_value"]
+        # Estado base inicial
+        decision = "VALIDADA_TECNICAMENTE"
+        risk_score = 10
+        rule_id = "MX-IFPE-GENERIC"
+        rule_status = "VALIDATED"
+        legal_basis = "Disposiciones Sectoriales IFPE - Monitoreo Ordinario"
+        reason = "Operación ordinaria dentro de los parámetros de riesgo aceptable."
+        human_review = False
+        # Iterar sobre las reglas externas cargadas
+        for rule in self.rules:
+            if rule["rule_id"] == "MX-IFPE-EBR-001" and monto_en_uma >= rule["threshold_uma"]:
+                decision = rule["action"]
+                risk_score = 85
+                rule_id = rule["rule_id"]
+                rule_status = rule["status"]
+                legal_basis = rule["legal_source"]
+                reason = f"[{rule['status']}] {rule['reason_template']} Calculado: {monto_en_uma:.2f} UMA."
+                human_review = True
+                break  # Detener en la primera regla crítica activada
+        return {
+            "decision": decision,
+            "risk_score": risk_score,
+            "rule_id": rule_id,
+            "rule_version": self.regulatory_profile["ruleset_version"],
+            "rule_status": rule_status,
+            "legal_basis_status": legal_basis,
+            "reason": reason,
+            "human_review": human_review
+        }
+import sqlite3
+import json
+import hashlib
+from datetime import datetime
+DB_NAME = "romeo_hydra.db"
+def init_database():
+    """Inicializa la base de datos local con el esquema relacional de auditoría."""
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS delta_ledger (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            operation_id TEXT UNIQUE NOT NULL,
+            timestamp TEXT NOT NULL,
+            amount REAL NOT NULL,
+            currency TEXT NOT NULL,
+            decision TEXT NOT NULL,
+            risk_score INTEGER NOT NULL,
+            rule_id TEXT NOT NULL,
+            rule_version TEXT NOT NULL,
+            previous_hash TEXT NOT NULL,
+            current_hash TEXT NOT NULL,
+            compliance_payload TEXT NOT NULL
+        )
+    ''')
+    conn.commit()
+    conn.close()
+def registrar_bloque_atomico(op_id, amount, currency, evaluacion, payload):
+    """Ejecuta una transacción atómica exclusiva y calcula el hash canónico."""
+    init_database()
+    conn = sqlite3.connect(DB_NAME)
+    try:
+        # Iniciamos un bloqueo inmediato de escritura para proteger el encadenamiento
+        conn.execute("BEGIN IMMEDIATE")
+        cursor = conn.cursor()
+        # 1. Recuperar el último hash seguro dentro de la misma transacción
+        cursor.execute("SELECT current_hash FROM delta_ledger ORDER BY id DESC LIMIT 1")
+        row = cursor.fetchone()
+        prev_hash = row[0] if row else "0" * 64
+        timestamp = datetime.now().isoformat()
+        # 2. Construcción del objeto de datos estructurado y canónico
+        block_data = {
+            "operation_id": op_id,
+            "timestamp": timestamp,
+            "amount": f"{amount:.2f}",
+            "currency": currency,
+            "decision": evaluacion["decision"],
+            "risk_score": evaluacion["risk_score"],
+            "rule_id": evaluacion["rule_id"],
+            "rule_version": evaluacion["rule_version"],
+            "previous_hash": prev_hash,
+            "compliance_payload": payload
+        }
+        # Forzar ordenamiento estricto de llaves y eliminar espacios ambiguos
+        canonical_data = json.dumps(
+            block_data,
+            sort_keys=True,
+            separators=(",", ":"),
+            ensure_ascii=False
+        )
+        current_hash = hashlib.sha256(canonical_data.encode("utf-8")).hexdigest()
+        # 3. Asentamiento inmutable en SQLite
+        cursor.execute('''
+            INSERT INTO delta_ledger (
+                operation_id, timestamp, amount, currency, decision, 
+                risk_score, rule_id, rule_version, previous_hash, current_hash, compliance_payload
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ''', (
+            op_id, timestamp, amount, currency, evaluacion["decision"],
+            evaluacion["risk_score"], evaluacion["rule_id"], evaluacion["rule_version"],
+            prev_hash, current_hash, json.dumps(payload)
+        ))
+        # Se confirma el bloque únicamente si todos los pasos anteriores fueron exitosos
+        conn.commit()
+        return current_hash
+    except Exception as e:
+        conn.rollback()
+        print(f"\n[ALERTA SISTEMA] Transacción cancelada y revertida de forma segura: {e}")
+        raise e
+    finally:
+        conn.close()
+from core.compliance import ComplianceEngine
+from core.ledger import registrar_bloque_atomico
+def procesar_transaccion(op_id, amount, currency, payment_method):
+    engine = ComplianceEngine()
+    # 1. Evaluación mediante reglas dinámicas versionadas
+    evaluacion = engine.evaluar_transaccion(amount, currency, payment_method)
+    # 2. Estructuración del Expediente de Evidencia (Payload Completo)
+    payload = {
+        "payment_method": payment_method,
+        "regulatory_profile": {
+            "jurisdiction": engine.regulatory_profile["jurisdiction"],
+            "subject_type": engine.regulatory_profile["subject_type"],
+            "ruleset_version": engine.regulatory_profile["ruleset_version"]
+        },
+        "evaluation": {
+            "decision": evaluacion["decision"],
+            "risk_score": evaluacion["risk_score"],
+            "rule_id": evaluacion["rule_id"],
+            "rule_status": evaluacion["rule_status"],
+            "legal_basis_status": evaluacion["legal_basis_status"],
+            "reason": evaluacion["reason"],
+            "human_review": evaluacion["human_review"]
+        }
+    }
+    # 3. Escritura atómica criptográfica
+    hash_resultado = registrar_bloque_atomico(op_id, amount, currency, evaluacion, payload)
+    # Mostrar confirmación formateada en consola
+    print(f"==================================================")
+    print(f" ARCHIVO DE AUDITORÍA GENERADO: {op_id}")
+    print(f"==================================================")
+    print(f" Monto Evaluado : ${amount:,.2f} {currency}")
+    print(f" Decisión Motor : {evaluacion['decision']}")
+    print(f" Estatus Regla  : {evaluacion['rule_status']}")
+    print(f" Razón Técnica  : {evaluacion['reason']}")
+    print(f" Hash Canónico  : {hash_resultado[:24]}...")
+    print(f"==================================================\n")
+if __name__ == "__main__":
+    print("\n--- INICIALIZANDO ENTORNO SIMULADO ROMEO-HYDRA v0.2 ---\n")
+    # Escenario A: Operación por debajo de los límites de riesgo
+    procesar_transaccion("OP-000007", 3400.00, "MXN", "transferencia")
+    # Escenario B: Operación de alto monto (Ahora escalada correctamente a revisión humana)
+    procesar_transaccion("OP-000008", 730000.00, "MXN", "transferencia")
+import json
+import os
+class ComplianceEngine:
+    def __init__(self):
+        # Configuración explícita del perfil regulatorio para 2026
+        self.regulatory_profile = {
+            "jurisdiction": "MX",
+            "subject_type": "IFPE",
+            "ruleset_version": "2026-07-24",
+            "uma_value": 117.31,
+            "uma_effective_date": "2026-02-01"
+        }
+        self.rules_path = os.path.join("core", "rules.json")
+        self.rules = self._load_rules()
+    def _load_rules(self):
+        """Carga de manera segura las reglas desde el archivo JSON."""
+        if not os.path.exists(self.rules_path):
+            return []
+        with open(self.rules_path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    def evaluar_transaccion(self, amount: float, currency: str, payment_method: str) -> dict:
+        """Convierte a UMA y evalúa la transacción contra la matriz modular."""
+        monto_en_uma = amount / self.regulatory_profile["uma_value"]
+        # Estado base inicial
+        decision = "VALIDADA_TECNICAMENTE"
+        risk_score = 10
+        rule_id = "MX-IFPE-GENERIC"
+        rule_status = "VALIDATED"
+        legal_basis = "Disposiciones Sectoriales IFPE - Monitoreo Ordinario"
+        reason = "Operación ordinaria dentro de los parámetros de riesgo aceptable."
+        human_review = False
+        # Iterar sobre las reglas externas cargadas
+        for rule in self.rules:
+            if rule["rule_id"] == "MX-IFPE-EBR-001" and monto_en_uma >= rule["threshold_uma"]:
+                decision = rule["action"]
+                risk_score = 85
+                rule_id = rule["rule_id"]
+                rule_status = rule["status"]
+                legal_basis = rule["legal_source"]
+                reason = f"[{rule['status']}] {rule['reason_template']} Calculado: {monto_en_uma:.2f} UMA."
+                human_review = True
+                break  # Detener en la primera regla crítica activada
+        return {
+            "decision": decision,
+            "risk_score": risk_score,
+            "rule_id": rule_id,
+            "rule_version": self.regulatory_profile["ruleset_version"],
+            "rule_status": rule_status,
+            "legal_basis_status": legal_basis,
+            "reason": reason,
+            "human_review": human_review
+        }
+{
+  "version": "2026.1",
+  "uma_value_mxn": 115.00,
+  "rules": [
+    {
+      "rule_id": "LIMIT_TX_ALERT",
+      "description": "Alerta por transacciones que superen el umbral base",
+      "threshold_uma": 250,
+      "action": "AUDIT"
+    }
+  ]
+}
+import json
+import os
+class ComplianceEngine:
+    def __init__(self):
+        # Configuración explícita del perfil regulatorio para 2026
+        self.regulatory_profile = {
+            "jurisdiction": "MX",
+            "subject_type": "IFPE",
+            "ruleset_version": "2026-07-24",
+            "uma_value": 117.31,
+            "uma_effective_date": "2026-02-01"
+        }
+        self.rules_path = os.path.join("core", "rules.json")
+        self.rules = self._load_rules()
+    def _load_rules(self):
+        """Carga de manera segura las reglas desde el archivo JSON."""
+        if not os.path.exists(self.rules_path):
+            return []
+        with open(self.rules_path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    def evaluar_transaccion(self, amount: float, currency: str, payment_method: str) -> dict:
+        """Convierte a UMA y evalúa la transacción contra la matriz modular."""
+        monto_en_uma = amount / self.regulatory_profile["uma_value"]
+        # Estado base inicial
+        decision = "VALIDADA_TECNICAMENTE"
+        risk_score = 10
+        rule_id = "MX-IFPE-GENERIC"
+        rule_status = "VALIDATED"
+        legal_basis = "Disposiciones Sectoriales IFPE - Monitoreo Ordinario"
+        reason = "Operación ordinaria dentro de los parámetros de riesgo aceptable."
+        human_review = False
+        # Iterar sobre las reglas externas cargadas
+        for rule in self.rules:
+            if rule["rule_id"] == "MX-IFPE-EBR-001" and monto_en_uma >= rule["threshold_uma"]:
+                decision = rule["action"]
+                risk_score = 85
+                rule_id = rule["rule_id"]
+                rule_status = rule["status"]
+                legal_basis = rule["legal_source"]
+                reason = f"[{rule['status']}] {rule['reason_template']} Calculado: {monto_en_uma:.2f} UMA."
+                human_review = True
+                break  # Detener en la primera regla crítica activada
+        return {
+            "decision": decision,
+            "risk_score": risk_score,
+            "rule_id": rule_id,
+            "rule_version": self.regulatory_profile["ruleset_version"],
+            "rule_status": rule_status,
+            "legal_basis_status": legal_basis,
+            "reason": reason,
+            "human_review": human_review
+        }
+{
+  "version": "2026.1",
+  "uma_value_mxn": 115.00,
+  "rules": [
+    {
+      "rule_id": "LIMIT_TX_ALERT",
+      "description": "Alerta por transacciones que superen el umbral base",
+      "threshold_uma": 250,
+      "action": "AUDIT"
+    }
+  ]
+}

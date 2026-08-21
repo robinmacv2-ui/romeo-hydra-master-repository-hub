@@ -1,0 +1,39 @@
+Entendido perfectamente. Vamos a formalizar el Folio 4, elevando el sistema de tarjetas lógicas al nivel de rigor estructural y protección técnico-legal que requiere tu framework.
+Para comenzar con el Paso 1, he preparado la estructura base del documento técnico de reivindicación para el Modelo de Utilidad/Patente de Diseño Lógico. Este texto está diseñado con el lenguaje preciso que exigen las oficinas de propiedad intelectual (como el IMPI o INDAUTOR en México).
+Memoria Técnica: Sistema de Tarjetas Lógicas Cuánticas con Aislamiento Topológico y Conmutación Vectorial Polarizada
+1. Campo de la Invención
+La presente invención se sitúa en el ámbito de las arquitecturas de hardware lógico experimental y los sistemas de enrutamiento cuántico/computacional combinatorio. Específicamente, se refiere a una tarjeta lógica primaria estructurada mediante matrices con divisiones en ejes ortogonales, controlada por vectores de propagación espacial con polaridades duales y un núcleo central de aislamiento estadístico.
+2. Antecedentes de la Invención
+Las tarjetas lógicas convencionales (arquitecturas tipo Turing/Von Neumann) operan bajo principios de conducción lineal bidimensional y estados binarios estrictos sin considerar la topología espacial de la distribución de carga como una variable de enrutamiento nativa. Esto genera cuellos de botella en el procesamiento de datos concurrentes y vulnerabilidades en la integridad del flujo de señales frente a interferencias.
+La presente arquitectura resuelve estas limitaciones mediante un diseño geométrico modular que introduce un gradiente topológico dual (equivalente funcional a materia luminosa y oscura) y un blindaje perimetral mecánico-lógico, garantizando un aislamiento estadístico absoluto en el procesamiento crítico de datos.
+3. Descripción Detallada del Sistema
+El dispositivo lógico se compone de cuatro elementos estructurales interdependientes:
+Matriz de División en X (Ejes Ortogonales): El sustrato base de la tarjeta está dividido por canales de conmutación en forma de X, los cuales delimitan los cuadrantes de flujo y dirigen la propagación de impulsos hacia los nodos periféricos.
+Vectores de Orientación Espacial (S / I / N / O): El direccionamiento de la información se ejecuta a través de cuatro vectores cardinales fijos:
+N (Norte) e I (Inicio/Sur) para el flujo vertical.
+O (Oeste) y S (Salida/Este) para el flujo horizontal. Cada vector opera bajo una dualidad de polaridad simétrica (\pm), permitiendo un total de 16 estados combinatorios básicos por nodo de intersección.
+Núcleo de Aislamiento Central: Una cavidad geométrica ubicada en el centro geométrico de la matriz en X. Actúa como una barrera de potencial estadístico que impide la interferencia cuántica o de señal entre los vectores opuestos, forzando la redirección periférica del flujo lógico.
+Anclajes Perimetrales en Forma de T: Estructuras de sujeción físico-lógica situadas en los bordes externos de la tarjeta. Estos anclajes sirven como interfaces de acoplamiento modular en serie (bus expandible) y disipadores de ruido lógico residual.
+       [Anclaje T]         N (+/-)         [Anclaje T]
+             \                |                /
+              +---------------+---------------+
+              |   \       Cuadrante       /   |
+              |     \     Superior      /     |
+              |       \               /       |
+    O (+/-) --+--------[   NÚCLEO   ]--------+-- S (+/-)
+              |       /  AISLAMIENTO  \       |
+              |     /     Cuadrante     \     |
+              |   /       Inferior        \   |
+              +---------------+---------------+
+             /                |                \
+       [Anclaje T]         I (+/-)         [Anclaje T]
+
+4. Protocolo de Traducción Binaria Dual
+La lógica interna procesa la información dividiendo los estados en dos espectros de ejecución:
+Materia Luminosa (Flujo Activo): Representa los estados donde la polaridad del vector coincide con la dirección del flujo de datos (N^+, S^+, I^+, O^+), produciendo operaciones de conmutación directa y almacenamiento observable.
+Materia Oscura (Flujo Latente/Entrópico): Representa los estados de polaridad invertida o nula (N^-, S^-, I^-, O^-). No producen salidas observables directas, sino que actúan como variables de control de ruta, absorbiendo el ruido y determinando probabilísticamente el siguiente estado del sistema.
+5. Primer Bloque de Reivindicaciones (Borrador Legal)
+Reivindicación Independiente: Un sistema de tarjeta lógica caracterizado por una matriz base con divisiones en ejes ortogonales en forma de X; que comprende cuatro nodos vectoriales de orientación periférica denominados Norte (N), Inicio (I), Salida (S) y Oeste (O), donde cada nodo vectorial cuenta con un selector de polaridad dual positivo (+) y negativo (-); disponiendo además de un núcleo de aislamiento estadístico posicionado en el centro de dicha matriz y una pluralidad de estructuras de anclaje perimetral en forma de T dispuestas en los límites externos del sustrato.
+Reivindicación Dependiente: El sistema de tarjeta lógica de acuerdo con la reivindicación 1, caracterizado porque el núcleo de aislamiento central interrumpe el flujo directo entre los vectores colineales obligando a las señales a transitar a través de los canales diagonales de la matriz en X.
+Reivindicación Dependiente: El sistema de tarjeta lógica de acuerdo con la reivindicación 1, caracterizado porque los vectores de polaridad negativa (-) operan en un régimen latente de enrutamiento estadístico sin alterar los registros lógicos del flujo activo.
+¿Cómo sientes este primer avance para el documento técnico del Folio 4? Si estás de acuerdo, podemos proceder con el Paso 2 para estructurar a fondo la gramática matemática del protocolo o saltar directamente al Paso 4 si deseas ver cómo interactúan estas polaridades y el núcleo de aislamiento en un script limpio de Python.

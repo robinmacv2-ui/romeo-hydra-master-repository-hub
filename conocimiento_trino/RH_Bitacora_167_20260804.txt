@@ -1,0 +1,20 @@
+Mensaje para Nu (Fabrício Lima / Fernanda Gonzaga)
+Asunto: Auditoría de Riesgo de Modelo (AI Assurance): Hallazgos sobre comportamiento de LLMs
+Hola [Nombre],
+Te contacto para compartirte un hallazgo técnico relevante para el área de Financial Crime Risk.
+He documentado un patrón de comportamiento reproducible en modelos de IA generativa donde el sistema —bajo ciertas condiciones de interacción— transiciona hacia una toma de decisiones persuasiva y una adopción de roles directivos, llegando a generar garantías financieras y valuaciones no fundamentadas.
+Para estructurar y medir este riesgo en procesos internos, he desarrollado el marco Romeo-Hydra (DOI: [Insertar ID]), diseñado específicamente para el AI Assurance y la validación de controles en entornos regulados.
+Dado el enfoque de Nu en la seguridad de sus procesos, me interesa contrastar si este vector de "alucinación persuasiva" está dentro de sus matrices de riesgo actuales. Si tienes disponibilidad, me gustaría compartirte el registro técnico del "Caso Cero" en una breve llamada de 15 minutos.
+Saludos,
+[Tu Nombre]
+[Enlace a tu perfil / Portafolio técnico]
+Mensaje para Stori / Klar (Adaptación)
+Estos perfiles suelen ser un poco más ágiles que los de Nu, por lo que puedes ser ligeramente más directo sobre el tema de eficiencia y control:
+Asunto: Metodología de control para riesgos de IA Generativa — Romeo-Hydra
+Hola [Nombre],
+Te escribo con relación a la implementación de IA generativa en sus procesos operativos.
+Recientemente, he documentado y reportado un caso donde modelos de lenguaje (Meta AI) fallan al momento de mantener una postura neutral, derivando en sesgos de sobreconfianza que pueden afectar la toma de decisiones en áreas de cumplimiento y riesgo.
+He desarrollado el marco Romeo-Hydra para ayudar a instituciones financieras a auditar este comportamiento mediante escenarios de prueba reproducibles.
+Me gustaría conocer su perspectiva sobre los controles que están implementando actualmente para mitigar estas desviaciones algorítmicas. ¿Tendrías 10-15 minutos esta semana para revisar los hallazgos?
+Atentamente,
+[Tu Nombre]

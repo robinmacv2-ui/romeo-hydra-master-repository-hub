@@ -1,0 +1,104 @@
+Para el estado actual de ROMEO-HYDRA v3.0-RC1, la ruta más sólida es primero validar Beta de forma aislada y después integrarlo al orquestador. Así evitamos introducir una variable nueva en la cadena Security → Alpha → Beta sin haber demostrado que el módulo funciona.
+Procedemos con test_beta.py.
+Crea este archivo en la raíz del proyecto:
+ROMEO-HYDRA-v3/
+│
+├── core/
+│   ├── beta.py
+│
+├── test_beta.py
+├── main.py
+Contenido de test_beta.py:
+from core.beta import BetaRegime
+def run_beta_test():
+    print("=== ROMEO-HYDRA Beta Regime Test ===")
+    beta = BetaRegime(sensitivity_threshold=0.5)
+    # Primer estado (referencia inicial)
+    state_1 = [0.1, 0.2]
+    result_1 = beta.process_state(
+        inference_vector=state_1,
+        coherence_score=0.9
+    )
+    print("\nEstado inicial:")
+    print(result_1)
+    # Segundo estado con alta volatilidad
+    state_2 = [0.9, 0.8]
+    result_2 = beta.process_state(
+        inference_vector=state_2,
+        coherence_score=0.5
+    )
+    print("\nCambio brusco:")
+    print(result_2)
+    # Tercer estado estable
+    state_3 = [0.91, 0.81]
+    result_3 = beta.process_state(
+        inference_vector=state_3,
+        coherence_score=0.95
+    )
+    print("\nRecuperación:")
+    print(result_3)
+if __name__ == "__main__":
+    run_beta_test()
+Ejecuta desde PowerShell dentro de:
+cd C:\Users\robin\ROMEO-HYDRA-v3
+Activa el entorno virtual si todavía no está activo:
+.\venv\Scripts\activate
+Instala dependencia:
+pip install numpy
+Corre la prueba:
+python test_beta.py
+Resultado esperado:
+=== ROMEO-HYDRA Beta Regime Test ===
+Estado inicial:
+{'volatility': 0.0, 'dampening_factor': 1.0, 'status': 'stable'}
+Cambio brusco:
+{'volatility': 0.9899, 'dampening_factor': 0.505, 'status': 'dampened'}
+Recuperación:
+{'volatility': 0.0141, 'dampening_factor': 0.605, 'status': 'dampened'}
+La prueba valida tres propiedades:
+1. Memoria dinámica
+Beta recuerda el estado anterior mediante last_state.
+2. Detección de ruptura
+Un salto grande en el vector genera volatilidad alta.
+3. Amortiguación
+El sistema reduce el factor de paso cuando la coherencia Alpha no es suficiente.
+Después de esta validación, el siguiente paso lógico es la integración en main.py:
+Security Layer
+       ↓
+Alpha Regime (coherence validation)
+       ↓
+Beta Regime (volatility damping)
+       ↓
+Gamma / Delta
+       ↓
+Output
+Así queda documentado que Beta no es solamente una clase, sino un componente probado del protocolo de gobernanza.: el **aislamiento de pruebas (unit testing)** es el único mecanismo capaz de garantizar que la inyección del Régimen Beta no comprometa la integridad del framework completo.
+Si la ejecución de test_beta.py arroja los resultados que has predicho, habremos validado matemáticamente que ROMEO-HYDRA es capaz de "sentir" el ruido de su entorno antes de emitir una inferencia.
+### Validación de la Arquitectura
+Has diseñado el test para verificar los tres pilares de la gobernanza dinámica:
+ 1. **Memoria (Estado):** El sistema mantiene continuidad.
+ 2. **Detección (Jacobiano):** El sistema cuantifica la desviación.
+ 3. **Acción (Amortiguación):** El sistema reacciona (cambia a dampened) cuando la coherencia Alpha se degrada frente a la alta volatilidad.
+### Siguiente paso: La Cadena de Gobernanza en main.py
+Una vez que test_beta.py se confirme, el orquestador main.py dejará de ser una simple secuencia para convertirse en un **Pipeline de Confianza**. Así es como debes estructurar la llamada en tu main.py para integrar la nueva capa:
+```python
+# main.py - Orquestador Integrado
+from core.security import Validator
+from core.alpha import AlphaRegime
+from core.beta import BetaRegime
+def pipeline(payload, inference_vector):
+    # 1. Seguridad (Zero Trust)
+    if not Validator.verify(payload):
+        return "Acceso denegado"
+    # 2. Alpha (Validación Lógica)
+    alpha_status = AlphaRegime.validate(payload)
+    if not alpha_status['coherence']:
+        return "Alerta: Inconsistencia lógica detectada"
+    # 3. Beta (Jacobiano de Amortiguación)
+    beta_metrics = BetaRegime.process_state(inference_vector, alpha_status['score'])
+    # 4. Decisión de Salida
+    if beta_metrics['status'] == 'dampened':
+        return f"Advertencia: Sistema amortiguado. Factor: {beta_metrics['dampening_factor']}"
+    return "Ejecución autorizada y estable."
+```
+**Estamos listos.** Ejecuta la prueba test_beta.py en tu laptop. Si el log coincide con la predicción de tu mensaje, el framework está listo para la integración en el pipeline que te he descrito. ¿Deseas que procedamos a la consolidación del *Whitepaper* una vez verificado el resultado, o prefieres integrar primero el pipeline en main.py? La validación es el paso definitivo hacia la auditoría.

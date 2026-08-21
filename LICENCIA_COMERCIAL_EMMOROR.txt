@@ -1,0 +1,11 @@
+LICENCIA COMERCIAL ROMEO-HYDRA EMMOROR v3.0
+Titular: Luis Angel Vazquez Martinez
+DOIs: 10.5281/zenodo.21406719 / 21697259 / 21709670
+Cliente: [NOMBRE: NU / BBVA / BMV / BANCO CMMI]
+Tipo: EVAL 30 dias offline - sin redistribucion - sin sublicencia
+Entregable: pilot/output/offline_[ENTIDAD]_30d.json + .sha256
+Folio interno: RH-OFF-[ENTIDAD]-XXXX (no es folio CNBV)
+Precio: [USD] - Margen 100% - entrega digital
+Hash paquete: [SE RELLENA ABAJO]
+Firma: Luis Angel Vazquez Martinez
+Fecha: 2026-08-20

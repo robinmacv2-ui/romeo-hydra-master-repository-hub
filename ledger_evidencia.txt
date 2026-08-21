@@ -1,0 +1,22 @@
+{
+  "pilot": "offline_audit",
+  "version": "0.1.3",
+  "entity": "EVAL",
+  "days": 30,
+  "arch": "aarch64",
+  "platform": "Android-16-aarch64-64bit",
+  "timestamp_utc": "2026-08-20T03:39:07.210709+00:00",
+  "ledger_tip_sha256": "749325aab9e506cb40ac5b93b555f60df2e0000f619e1ded58522080e6758f08",
+  "folio_interno": "RH-OFF-EVAL-749325AAB9",
+  "folio_note": "Folio INTERNO \u2014 no es folio CNBV",
+  "tfhe": false,
+  "offline_proof": {
+    "stdlib_only": true,
+    "no_network_imports": true,
+    "note": "Script uses only Python stdlib. Run with network disabled to prove offline execution."
+  },
+  "author": "Luis Angel Vazquez Martinez",
+  "output": "pilot/output/offline_EVAL_30d.json",
+  "sha256_file": "pilot/output/offline_EVAL_30d.json.sha256",
+  "content_sha256": "331e39c329f9748645002705682da5adb27ef03423b620cffde6635e9d568606"
+}

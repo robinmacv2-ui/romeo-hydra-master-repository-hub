@@ -1,0 +1,12 @@
+# ROMEO-HYDRA — Core is pure Python 3.11 stdlib.
+# No forced third-party dependencies for the fail-closed gate + ledger.
+#
+# Optional laboratory only (NOT required for core evaluation):
+#   pip install numpy          # scientific experiments
+#   pip install cryptography   # optional RSA/Paillier helpers
+#   pip install pytest         # test suite
+#
+# Clean jury install:
+#   python3 -m venv .venv && source .venv/bin/activate
+#   pip install -e .
+#   python main.py

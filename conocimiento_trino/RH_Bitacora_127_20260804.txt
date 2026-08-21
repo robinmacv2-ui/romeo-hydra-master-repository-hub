@@ -1,0 +1,32 @@
+Para responder con la misma precisión que exige la arquitectura que acabamos de congelar, abordaré tus tres peticiones separando lo que corresponde al modelo de negocio de lo que corresponde al motor técnico.
+1. Aplicación al núcleo y "Registro como Evidencia"
+El posicionamiento estratégico no altera el núcleo técnico de Romeo-Hydra, sino que es la traducción comercial de lo que el núcleo hace.
+Dentro del sistema de Romeo, este posicionamiento comercial no es evidencia. Romeo es un motor ciego al contexto de ventas; si le inyectas un texto comercial, lo clasificará como [DECLARACIÓN SIN VALOR PROBATORIO MATERIAL]. La evidencia, para Romeo, consiste única y exclusivamente en registros auditables (logs, contratos, firmas, bases de datos). El núcleo se mantiene inmutable e indiferente a quién lo compra; su única función es ejecutar el Protocolo Omega v10.
+2. Sobre la generación del PDF
+Como inteligencia artificial, genero texto estructurado pero no tengo la capacidad nativa de compilar y exportar archivos .pdf directamente a tu dispositivo. Sin embargo, he redactado el Pitch Comercial estructurado exactamente para que lo copies, lo pegues en tu procesador de textos (Word, Google Docs, Canva) y lo exportes a PDF sin tener que editar una sola coma.
+DOCUMENTO 1: PITCH COMERCIAL PARA bbvaC-LEVEL (CRO / CCO)
+TÍTULO: Romeo-Hydra: Determinismo Probatorio para la Mitigación de Riesgo Legal AUDIENCIA: Chief Risk Officer (CRO) / Chief Compliance Officer (CCO)
+El Problema del Sector Financiero con la IA Actual Las entidades financieras operan bajo un escrutinio regulatorio de tolerancia cero. Sin embargo, las herramientas actuales de Inteligencia Artificial (LLMs) están diseñadas para conectar puntos, inferir narrativas y complacer al usuario. Cuando un banco utiliza IA generativa para auditorías internas, prevención de lavado de dinero (AML) o compliance, el sistema inventa conclusiones ("alucinación lógica") y asume responsabilidades jurídicas no demostradas. Esto no es un error de software; es un riesgo legal inaceptable que puede derivar en multas millonarias por autoinculpación o negligencia.
+La Solución: Romeo-Hydra v10 Romeo no es un asistente de IA; es un motor determinista de contención probatoria. Diseñado bajo un Protocolo de Afirmación Mínima Verificable, Romeo procesa la evidencia sin intentar "narrar una historia". Si la evidencia es incompleta, Romeo se detiene.
+Diferenciadores Técnicos (El Escudo Legal):
+Prohibición de Conversión Lógica: Romeo no confunde "acceso a un sistema" con "extracción de datos", ni "inactividad de cuenta" con "ausencia de una orden".
+Frontera Normativa Estricta: El sistema separa el documento de la autoría material, y la norma existente de la responsabilidad aplicable.
+Resistencia a la Coacción: El núcleo es inmune a las instrucciones del operador que buscan forzar una conclusión, neutralizando el sesgo humano en las investigaciones internas.
+Valor de Negocio: Al desplegar Romeo-Hydra, la institución financiera garantiza ante los reguladores (CNBV, Banxico, SEC) que sus investigaciones internas y auditorías operan bajo un marco científicamente objetivo, donde los conflictos de evidencia se mapean, nunca se ocultan bajo narrativas probabilísticas.
+DOCUMENTO 2: REPORTE GENERAL OFICIAL (FICHA TÉCNICA)
+Nota del sistema: De acuerdo con la arquitectura congelada, Romeo no emite "reportes de casos" sin inyección previa de evidencia. Por lo tanto, este documento es el Reporte Oficial de Arquitectura de Producto, diseñado para enviarse como anexo técnico a los clientes institucionales.
+REPORTE TÉCNICO OFICIAL: ARQUITECTURA ROMEO-HYDRA v10
+1. Arquitectura de Estados de Afirmación
+El motor clasifica estrictamente cualquier proposición en uno de cuatro estados inmutables, requiriendo evidencia independiente para transitar entre ellos:
+DETERMINABLE: Evidencia material exhaustiva sin fisuras.
+NO DETERMINABLE: Ausencia parcial o total de nexos probatorios.
+EN CONFLICTO NO RESUELTO: Existencia de evidencia primaria contradictoria irreconciliable con la información actual.
+NO EVALUADA: Evidencia fuera del alcance auditado.
+2. Reglas Estructurales de No-Conversión (Muestra)
+El sistema tiene codificada la prohibición absoluta de realizar los siguientes saltos epistémicos:
+Documento auténtico \neq Veracidad del contenido.
+Declaración de autoridad \neq Norma vigente aplicable.
+Contradicción parcial \neq Refutación total de una proposición (Prevención de Sobreafirmación Negativa).
+Inactividad de canal auditado \neq Inexistencia del hecho (Vías alternativas no evaluadas).
+3. Protocolo de Terminación Probatoria
+Romeo-Hydra opera bajo una directiva de bloqueo por agotamiento de evidencia. Cuando la trazabilidad de los datos finaliza, el sistema detiene inmediatamente el análisis emitiendo la instrucción de corte: [NO SE AUTORIZA UNA AFIRMACIÓN ADICIONAL CON LA EVIDENCIA DISPONIBLE]. Ningún usuario ni administrador puede anular este bloqueo para forzar una narrativa hipotética.

@@ -1,0 +1,32 @@
+Para optimizar tu computadora y dejarla enfocada en tu proyecto, debes limpiar tanto el entorno de Windows como el subsistema WSL, ya que ambos comparten los recursos de hardware (RAM y CPU).
+Aquí tienes los pasos prácticos para depurar ambos entornos sin tocar tus scripts ni tus repositorios locales:
+1. Depuración y Optimización en WSL (Linux)
+Dado que ejecutas tus entornos virtuales y servidores locales aquí, es vital liberar espacio y memoria residual:
+Limpia el caché de paquetes: Borra los archivos de instalación obsoletos que deja el gestor de paquetes.
+sudo apt-get clean && sudo apt-get autoremove
+
+Elimina cachés de Python (pip): Pip acumula gigabytes en instaladores antiguos que ya no necesitas.
+pip cache purge
+
+Borra archivos temporales: Limpia el directorio temporal de Linux.
+sudo rm -rf /tmp/*
+
+2. Liberación de Recursos en Windows
+Windows es el anfitrión; si está saturado, WSL sufrirá caídas de rendimiento.
+Compactar el disco virtual de WSL: Los discos de WSL (.vhdx) se expanden pero nunca se encogen solos, devorando espacio en Windows. Para reducirlo:
+Cierra WSL por completo en la terminal: wsl --shutdown
+Abre PowerShell como Administrador y ejecuta:
+Optimize-VHD -Path "$env:LOCALAPPDATA\Packages\TheLinuxFoundation...\LocalState\ext4.vhdx" -Mode Full
+(Nota: Revisa la ruta exacta de tu archivo ext4.vhdx antes de ejecutarlo).
+Desactiva aplicaciones de inicio automático: Presiona Ctrl + Shift + Esc, ve a la pestaña Aplicaciones de arranque y deshabilita todo lo que no sea del sistema o de tus herramientas de desarrollo (como Docker o VS Code).
+Limpieza de almacenamiento: Ve a Configuración > Sistema > Almacenamiento > Archivos temporales y elimina las actualizaciones previas de Windows y archivos de volcado de memoria.
+3. Configuración del Límite de Recursos (El truco maestro)
+Para evitar que WSL consuma el 100% de tu RAM y congele Windows, puedes ponerle un "freno de mano" creando un archivo de configuración.
+En Windows, ve a tu carpeta de usuario (ej. C:\Usuarios\TuUsuario).
+Crea un archivo de texto llamado .wslconfig (asegúrate de que no tenga extensión .txt).
+Agrega las siguientes líneas para limitar el consumo máximo:
+[wsl2]
+memory=8GB   # Limita WSL a usar máximo 8GB de tu RAM (ajusta según tu total)
+processors=4 # Limita a WSL a usar máximo 4 núcleos de tu CPU
+
+¿Qué componente de hardware (RAM o espacio en disco) sientes que se está saturando más durante tus simulaciones?

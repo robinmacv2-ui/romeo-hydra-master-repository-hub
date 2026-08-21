@@ -1,0 +1,35 @@
+ROMEO-HYDRA: Régimen Beta — Especificación Formal v1.0
+Autor: Luis Ángel Vázquez Martínez
+Estado: Release Candidate (v3.0-RC1) - Fase de Especificación
+Módulo Objetivo: core/beta.py
+1. Propósito del Régimen Beta
+El objetivo del Régimen Beta es introducir un mecanismo dinámico de amortiguación en ROMEO-HYDRA. Este componente está diseñado para reducir la propagación de inestabilidad sistémica cuando la variación del estado interno excede los umbrales definidos por los axiomas Alpha, garantizando que el sistema no comprometa la integridad de sus inferencias ante entornos volátiles.
+2. Modelo Conceptual
+El Régimen Beta evalúa la fricción computacional entre el estado actual y el previo. Se basa en el cálculo del Jacobiano de Sensibilidad para medir la respuesta del sistema ante perturbaciones.
+3. Regla de Activación
+El sistema opera bajo un umbral de estabilidad configurado (θ). La activación del modo Dampened se rige por la norma del Jacobiano:
+Estado NORMAL: Si ||J|| ≤ θ
+Estado DAMPENED: Si ||J|| > θ
+4. Función de Amortiguación
+Cuando el sistema entra en estado Dampened, la confianza de la inferencia (Ct) se recalcula mediante un factor de reducción α (0 < α < 1):
+C't = Ct · α
+
+Ejemplo de operación: Con una confianza inicial de 0.95 y un factor beta de 0.70, la confianza ajustada resulta en 0.665, mitigando el impacto de la inferencia potencialmente inestable.
+5. Protocolo de Auditoría
+Cada transición de estado Beta debe registrarse para garantizar la reconstrucción post-operativa del razonamiento del sistema.
+{
+  "timestamp": "ISO-8601",
+  "state_previous": "hash_or_id",
+  "state_current": "hash_or_id",
+  "jacobian_norm": 0.82,
+  "threshold": 0.60,
+  "action": "DAMPENED",
+  "confidence_before": 0.95,
+  "confidence_after": 0.665
+}
+
+6. Roadmap de Implementación (Fase 2)
+Tras la congelación de este documento, la implementación en core/beta.py se estructurará bajo la clase BetaRegulator, cubriendo tres responsabilidades:
+calculate_jacobian(): Computación de la sensibilidad.
+evaluate_stability(): Comparación contra θ.
+apply_damping(): Ajuste de confianza.

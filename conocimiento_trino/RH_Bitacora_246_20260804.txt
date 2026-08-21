@@ -1,0 +1,267 @@
+Para asegurar la máxima estabilidad de ROMEO-HYDRA, el orden lógico es:
+Primero Opción 2 → después Opción 1.
+La razón es arquitectónica: antes de materializar core/beta.py, el Régimen Beta debe quedar definido como un contrato técnico verificable. Así evitamos que el código se convierta en una implementación arbitraria de una idea todavía no fijada.
+El flujo recomendado sería:
+Fase 1 — Especificación del Régimen Beta (Whitepaper)
+Definir:
+1. Propósito del Régimen Beta
+Objetivo: Introducir un mecanismo dinámico de amortiguación que reduzca la propagación de inestabilidad cuando la variación del estado interno del sistema supera los límites definidos por los axiomas Alpha.
+2. Modelo conceptual
+Estado del sistema:
+S_t
+Estado previo:
+S_{t-1}
+Variación:
+\Delta S = S_t - S_{t-1}
+Jacobiano de sensibilidad:
+J = \frac{\partial F(S)}{\partial S}
+Donde:
+ representa la transformación de inferencia.
+ mide la sensibilidad del sistema ante perturbaciones.
+Una magnitud elevada indica mayor riesgo de inestabilidad.
+3. Regla de activación
+Definir un umbral:
+||J|| > \theta
+donde:
+ = magnitud del Jacobiano.
+ = límite de estabilidad configurado.
+Si:
+||J|| \leq \theta
+Estado:
+NORMAL
+Si:
+||J|| > \theta
+Estado:
+DAMPENED
+4. Función de amortiguación
+La confianza de inferencia pasa de:
+C_t
+a:
+C'_t = C_t \cdot \alpha
+donde:
+0 < \alpha < 1
+representa el factor de reducción.
+Ejemplo:
+confianza inicial: 0.95
+factor beta: 0.70
+confianza amortiguada: 0.665
+5. Registro de auditoría
+Cada evento Beta debe generar:
+{
+ "timestamp": "...",
+ "state_previous": "...",
+ "state_current": "...",
+ "jacobian_norm": 0.82,
+ "threshold": 0.60,
+ "action": "DAMPENED",
+ "confidence_before": 0.95,
+ "confidence_after": 0.665
+}
+Esto permite reconstrucción posterior del razonamiento operativo.
+---
+Fase 2 — Implementación
+Después de aprobar esta especificación, se crea:
+ROMEO-HYDRA-v3/
+│
+├── core/
+│   ├── alpha.py
+│   ├── beta.py   <-- nuevo módulo
+│   ├── gamma.py
+│   └── delta.py
+│
+├── logs/
+│   └── beta_events.json
+│
+├── tests/
+│   └── test_beta.py
+│
+└── docs/
+    └── regime_beta.md
+beta.py debería implementar tres responsabilidades:
+class BetaRegulator:
+    def calculate_jacobian():
+        pass
+    def evaluate_stability():
+        pass
+    def apply_damping():
+        pass
+---
+Mi recomendación para un proyecto que aspira a auditoría externa es:
+No escribir todavía código. Primero congelar el documento:
+docs/regime_beta_specification.md
+y después generar la implementación exactamente contra esa especificación.
+El siguiente paso sería redactar el documento técnico completo "Régimen Beta — Especificación Formal v1.0" para integrarlo al Whitepaper de ROMEO-HYDRA v3.0-RC1.
+ROMEO-HYDRA: Régimen Beta — Especificación Formal v1.0
+Autor: Luis Ángel Vázquez Martínez
+Estado: Release Candidate (v3.0-RC1) - Fase de Especificación
+Módulo Objetivo: core/beta.py
+1. Propósito del Régimen Beta
+El objetivo del Régimen Beta es introducir un mecanismo dinámico de amortiguación en ROMEO-HYDRA. Este componente está diseñado para reducir la propagación de inestabilidad sistémica cuando la variación del estado interno excede los umbrales definidos por los axiomas Alpha, garantizando que el sistema no comprometa la integridad de sus inferencias ante entornos volátiles.
+2. Modelo Conceptual
+El Régimen Beta evalúa la fricción computacional entre el estado actual y el previo. Se basa en el cálculo del Jacobiano de Sensibilidad para medir la respuesta del sistema ante perturbaciones.
+Variable
+Descripción
+St
+Estado del sistema en el paso temporal t.
+St-1
+Estado previo del sistema.
+ΔS
+Variación detectada (St - St-1).
+J
+Jacobiano de sensibilidad: J = ∂F(S) / ∂S
+3. Regla de Activación
+El sistema opera bajo un umbral de estabilidad configurado (θ). La activación del modo Dampened se rige por la norma del Jacobiano:
+Estado NORMAL: Si ||J|| ≤ θ
+Estado DAMPENED: Si ||J|| > θ
+4. Función de Amortiguación
+Cuando el sistema entra en estado Dampened, la confianza de la inferencia (Ct) se recalcula mediante un factor de reducción α (0 < α < 1):
+C't = Ct · α
+Ejemplo de operación: Con una confianza inicial de 0.95 y un factor beta de 0.70, la confianza ajustada resulta en 0.665, mitigando el impacto de la inferencia potencialmente inestable.
+5. Protocolo de Auditoría
+Cada transición de estado Beta debe registrarse para garantizar la reconstrucción post-operativa del razonamiento del sistema.
+{
+  "timestamp": "ISO-8601",
+  "state_previous": "hash_or_id",
+  "state_current": "hash_or_id",
+  "jacobian_norm": 0.82,
+  "threshold": 0.60,
+  "action": "DAMPENED",
+  "confidence_before": 0.95,
+  "confidence_after": 0.665
+}
+6. Roadmap de Implementación (Fase 2)
+Tras la congelación de este documento, la implementación en core/beta.py se estructurará bajo la clase BetaRegulator, cubriendo tres responsabilidades:
+calculate_jacobian(): Computación de la sensibilidad.
+evaluate_stability(): Comparación contra θ.
+apply_damping(): Ajuste de confianza.
+Sí. Para ROMEO-HYDRA v3.0-RC1, la estructura de logs de delta.py debe diseñarse como un registro de evidencia operacional, no como un simple archivo de depuración. La idea es que cada ciclo del pipeline pueda reconstruirse: qué entró, qué validaciones ocurrieron, qué decisiones tomó el sistema y bajo qué condiciones.
+Propongo una arquitectura de log con cinco capas:
+---
+Estructura de Registro Delta (delta.py)
+1. Cabecera de Evento (Identidad del ciclo)
+Cada ejecución genera un identificador único:
+{
+  "event_id": "uuid-v4",
+  "timestamp_utc": "2026-07-16T18:00:00Z",
+  "romeo_version": "v3.0-RC1",
+  "pipeline_cycle": 10482
+}
+Objetivo: permitir localizar un evento específico dentro del historial.
+---
+2. Contexto de Seguridad
+Integración con security.py:
+{
+  "security_context": {
+    "operator_id": "hash_operador",
+    "signature_algorithm": "Ed25519",
+    "signature": "firma_evento",
+    "key_reference": "vault_key_id",
+    "verification_status": "VALID"
+  }
+}
+Objetivo: demostrar que el evento fue generado por una identidad autorizada y no alterado posteriormente.
+---
+3. Estado del Pipeline
+Registro de la transición entre módulos:
+{
+  "pipeline_state": {
+    "alpha": {
+      "stability_score": 0.98,
+      "status": "PASS"
+    },
+    "beta": {
+      "sensitivity_index": 0.12,
+      "damping_factor": 0.85,
+      "status": "PASS"
+    },
+    "gamma": {
+      "uncertainty_level": 0.08,
+      "confidence": 0.92,
+      "status": "PASS"
+    }
+  }
+}
+Objetivo: conservar la evidencia matemática de por qué el sistema aceptó o rechazó una transición.
+---
+4. Estado Delta (Memoria del sistema)
+Aquí está la función principal de delta.py:
+{
+  "delta_state": {
+    "previous_hash": "hash_evento_anterior",
+    "current_hash": "hash_evento_actual",
+    "state_transition": {
+      "from": "STABLE",
+      "to": "STABLE_CONFIRMED"
+    },
+    "integrity_check": true
+  }
+}
+Esto crea una cadena:
+Evento 001
+   |
+   hash
+   |
+Evento 002
+   |
+   hash
+   |
+Evento 003
+Si alguien modifica un registro intermedio, la cadena deja de coincidir.
+---
+5. Resultado Operativo
+Cierre del ciclo:
+{
+  "final_result": {
+    "decision": "ACCEPT",
+    "confidence_score": 0.94,
+    "execution_time_ms": 37,
+    "audit_required": false
+  }
+}
+---
+Flujo completo en main.py
+La arquitectura quedaría:
+INPUT
+                  |
+                  v
+          security.py
+        Identidad + firma
+                  |
+                  v
+             alpha.py
+        Estabilidad estructural
+                  |
+                  v
+              beta.py
+       Sensibilidad + amortiguación
+                  |
+                  v
+             gamma.py
+        Incertidumbre + confianza
+                  |
+                  v
+             delta.py
+       Memoria + hash + auditoría
+                  |
+                  v
+             OUTPUT
+---
+Recomendación adicional para RC1
+Para una revisión académica, delta.py debería usar tres archivos separados:
+/logs
+ ├── operational_events.jsonl
+ ├── security_audit.jsonl
+ └── state_chain.jsonl
+operational_events.jsonl
+eventos normales del pipeline.
+security_audit.jsonl
+firmas Ed25519, validaciones y accesos.
+state_chain.jsonl
+continuidad criptográfica de estados.
+---
+El punto clave de diseño es este:
+Alpha demuestra estabilidad.
+Beta demuestra control dinámico.
+Gamma demuestra gobernanza de incertidumbre.
+Delta demuestra memoria verificable.
+Con esta integración, ROMEO-HYDRA deja de ser solamente un sistema que calcula una salida y pasa a ser un sistema que puede explicar históricamente por qué llegó a esa salida.

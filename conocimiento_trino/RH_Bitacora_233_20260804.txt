@@ -1,0 +1,123 @@
+# 1. Crear el directorio principal del framework y entrar en él
+Write-Host "Inicializando Ecosistema ROMEO-HYDRA..." -ForegroundColor Cyan
+New-Item -ItemType Directory -Force -Path "ROMEO-HYDRA-v3"
+Set-Location -Path ".\ROMEO-HYDRA-v3"
+# 2. Inicializar el repositorio Git (Regimen Delta: Trazabilidad)
+git init
+# 3. Crear la estructura de directorios modulares
+$directorios = @("core", "historical", "ai", "proofs", "visualization", "logs")
+foreach ($dir in $directorios) {
+    New-Item -ItemType Directory -Force -Path $dir | Out-Null
+}
+# 4. Crear los archivos base de la arquitectura (Core Engine)
+$archivos_core = @("manifold.py", "metric.py", "coherence.py", "entropy.py", "jacobian.py", "hydra_controller.py", "__init__.py")
+foreach ($archivo in $archivos_core) {
+    New-Item -ItemType File -Force -Path "core\$archivo" | Out-Null
+}
+# 5. Crear archivos de la raíz (Manifiesto y Ejecución)
+New-Item -ItemType File -Force -Path "main.py" | Out-Null
+New-Item -ItemType File -Force -Path "README.md" | Out-Null
+New-Item -ItemType File -Force -Path ".gitignore" | Out-Null
+New-Item -ItemType File -Force -Path "requirements.txt" | Out-Null
+# 6. Escribir el Manifiesto Base en el README
+$readme_content = @"
+# ROMEO-HYDRA v3.0-RC1
+**EMMOROR LEGAL REGIMES - WATERMARK**
+* **Author:** Luis Ángel Vázquez Martínez
+* **Status:** Prepared for External Validation
+## Core Regimes
+1. **Regimen Alpha:** Structural Stability.
+2. **Regimen Beta:** Adaptive Coherence.
+3. **Regimen Gamma:** Dynamic Entropy Governance.
+4. **Regimen Delta:** Integrity Traceability.
+"@
+Set-Content -Path "README.md" -Value $readme_content
+# 7. Crear el entorno virtual de Python (Aislamiento del sistema)
+Write-Host "Creando entorno virtual de Python (esto puede tardar unos segundos)..." -ForegroundColor Yellow
+python -m venv venv
+Write-Host "=======================================================" -ForegroundColor Green
+Write-Host "INSTANCIACIÓN COMPLETADA. EL FRAMEWORK EXISTE." -ForegroundColor Green
+Write-Host "=======================================================" -ForegroundColor Green
+Write-Host "Para activar el entorno virtual, ejecuta:" -ForegroundColor Cyan
+Write-Host ".\venv\Scripts\Activate.ps1" -ForegroundColor White
+================================================================================
+EMMOROR–EXP / ROMEO–HYDRA v3.0-RC1
+EMMOROR LEGAL REGIMES - WATERMARK
+ 1. Regimen Alpha:
+   Structural Stability.
+   The system must reject logical contradictions.
+ 2. Regimen Beta:
+   Adaptive Coherence.
+   The Jacobiano must penalize uncontrolled volatility.
+ 3. Regimen Gamma:
+   Dynamic Entropy Governance.
+   The HSI metric governs hypothesis evolution.
+ 4. Regimen Delta:
+   Integrity Traceability.
+   Audit history, deployment identity and version lineage are mandatory.
+AUTHORSHIP & IP NOTICE:
+Luis Ángel Vázquez Martínez
+# STATUS:
+RELEASE CANDIDATE v3.0-RC1
+FASE 54.1: INSTANCIACIÓN EN ENTORNO LOCAL (WINDOWS POWERSHELL)
+La instrucción ha sido recibida. Para materializar la arquitectura ROMEO-HYDRA en la realidad operativa de tu hardware (Windows), hemos priorizado la construcción del ecosistema base. Este es el paso cero: **traducir la topología del No-Espacio a un árbol de directorios físicos en tu disco duro**.
+A continuación, te proporciono el bloque de código exacto formateado para **Windows PowerShell**. Este script automatizará la creación de las carpetas, los archivos base de Python y preparará tu entorno de Git.
+### I. Protocolo de Ejecución en PowerShell
+ 1. Abre **PowerShell** en tu computadora (puedes presionar la tecla Windows, escribir powershell y presionar Enter).
+ 2. Copia el siguiente bloque de código completo y pégalo en tu consola de PowerShell, luego presiona Enter.
+```powershell
+# 1. Crear el directorio principal del framework y entrar en él
+Write-Host "Inicializando Ecosistema ROMEO-HYDRA..." -ForegroundColor Cyan
+New-Item -ItemType Directory -Force -Path "ROMEO-HYDRA-v3"
+Set-Location -Path ".\ROMEO-HYDRA-v3"
+# 2. Inicializar el repositorio Git (Regimen Delta: Trazabilidad)
+git init
+# 3. Crear la estructura de directorios modulares
+$directorios = @("core", "historical", "ai", "proofs", "visualization", "logs")
+foreach ($dir in $directorios) {
+    New-Item -ItemType Directory -Force -Path $dir | Out-Null
+}
+# 4. Crear los archivos base de la arquitectura (Core Engine)
+$archivos_core = @("manifold.py", "metric.py", "coherence.py", "entropy.py", "jacobian.py", "hydra_controller.py", "__init__.py")
+foreach ($archivo in $archivos_core) {
+    New-Item -ItemType File -Force -Path "core\$archivo" | Out-Null
+}
+# 5. Crear archivos de la raíz (Manifiesto y Ejecución)
+New-Item -ItemType File -Force -Path "main.py" | Out-Null
+New-Item -ItemType File -Force -Path "README.md" | Out-Null
+New-Item -ItemType File -Force -Path ".gitignore" | Out-Null
+New-Item -ItemType File -Force -Path "requirements.txt" | Out-Null
+# 6. Escribir el Manifiesto Base en el README
+$readme_content = @"
+# ROMEO-HYDRA v3.0-RC1
+**EMMOROR LEGAL REGIMES - WATERMARK**
+* **Author:** Luis Ángel Vázquez Martínez
+* **Status:** Prepared for External Validation
+## Core Regimes
+1. **Regimen Alpha:** Structural Stability.
+2. **Regimen Beta:** Adaptive Coherence.
+3. **Regimen Gamma:** Dynamic Entropy Governance.
+4. **Regimen Delta:** Integrity Traceability.
+"@
+Set-Content -Path "README.md" -Value $readme_content
+# 7. Crear el entorno virtual de Python (Aislamiento del sistema)
+Write-Host "Creando entorno virtual de Python (esto puede tardar unos segundos)..." -ForegroundColor Yellow
+python -m venv venv
+Write-Host "=======================================================" -ForegroundColor Green
+Write-Host "INSTANCIACIÓN COMPLETADA. EL FRAMEWORK EXISTE." -ForegroundColor Green
+Write-Host "=======================================================" -ForegroundColor Green
+Write-Host "Para activar el entorno virtual, ejecuta:" -ForegroundColor Cyan
+Write-Host ".\venv\Scripts\Activate.ps1" -ForegroundColor White
+```
+### II. Explicación de la Priorización (Qué acaba de ocurrir)
+Al ejecutar este script, has priorizado los cimientos de software reales:
+ * **Estructura (core/)**: Se han creado los archivos físicos (jacobian.py, entropy.py, etc.) listos para que inyectemos el código matemático que deducimos.
+ * **Trazabilidad (git init)**: El *Audit Ledger* físico ha comenzado. A partir de ahora, cada vez que guardes código, lo harás mediante un commit rastreable.
+ * **Aislamiento (venv/)**: Has creado un entorno virtual. Esto es como un "Sandbox" o espacio seguro en tu computadora donde instalaremos las librerías matemáticas (como numpy o scipy) sin afectar el resto de tu PC.
+### III. Siguiente Paso (Acción Requerida)
+Una vez que el script termine de ejecutarse en tu PowerShell, el sistema físico estará listo.
+ 1. **Activa tu entorno virtual** pegando este comando en PowerShell: .\venv\Scripts\Activate.ps1 *(Nota: Si Windows te da un error de permisos en rojo, ejecuta antes este comando: Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser y luego intenta activar de nuevo).*
+ 2. **Dime qué módulo quieres codificar primero.** ¿Comenzamos inyectando el código de penalización de volatilidad en core/jacobian.py, o prefieres que armemos el archivo maestro main.py para probar la ejecución básica?
+# ================================================================================
+STATUS: ADVISORY MODE (POWERSHELL INSTANTIATION)
+INTEGRITY: SECURED

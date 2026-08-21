@@ -1,0 +1,139 @@
+python3 -c "import numpy as np; from core.beta import JacobianoCoherencia; cob = JacobianoCoherencia(); me = np.array([[0.1, 0.2], [0.3, 0.1]]); mi = np.array([[0.8, 0.5], [0.6, 0.9]]); print('--- Resultados ---'); print('Estable:', cob.evaluar_estabilidad(me)); print('Inestable:', cob.evaluar_estabilidad(mi))”
+python3 -c "import numpy as np; from core.beta import JacobianoCoherencia; cob = JacobianoCoherencia(); me = np.array([[0.1, 0.2], [0.3, 0.1]]); mi = np.array([[0.8, 0.5], [0.6, 0.9]]); print('--- Resultados ---'); print('Estable:', cob.evaluar_estabilidad(me)); print('Inestable:', cob.evaluar_estabilidad(mi))”
+cat << 'EOF' > test_convex.py
+import numpy as np
+from core.beta import JacobianoCoherencia
+cob = JacobianoCoherencia()
+me = np.array([[0.1, 0.2], [0.3, 0.1]])
+mi = np.array([[0.8, 0.5], [0.6, 0.9]])
+print("\n--- Resultados del Kernel ---")
+print("Estable (Matriz M_E):  ", cob.evaluar_estabilidad(me))
+print("Inestable (Matriz M_I):", cob.evaluar_estabilidad(mi))
+EOF
+python3 test_convex.py
+rm test_convex.py
+echo "=== CONTENIDO DE COMPLIANCE.PY ==="
+cat core/compliance.py
+echo -e "\n===================================\n"
+echo "=== CONTENIDO DE SERVIDOR.PY ==="
+cat servidor.py
+cat << 'EOF' > servidor.py
+import numpy as np
+from flask import Flask, request, jsonify
+from core.beta import JacobianoCoherencia
+app = Flask(__name__)
+# Inicializamos el motor matemático
+coherencia_motor = JacobianoCoherencia()
+@app.route('/audit', methods=['POST'])
+def audit_transaction():
+    try:
+        data = request.get_json()
+        # Extraemos la matriz enviada en la transacción
+        # Si no envían una, usamos una matriz vacía o por defecto
+        matrix_data = data.get('matrix', [[0.1, 0.2], [0.3, 0.1]])
+        matriz = np.array(matrix_data)
+        # Evaluamos la estabilidad usando el Jacobiano
+        inestable, factor_penalizacion = coherencia_motor.evaluar_estabilidad(matriz)
+        if inestable:
+            return jsonify({
+                "status": "rejected",
+                "message": "Alerta de seguridad: Inestabilidad detectada en la métrica convexa.",
+                "factor_penalizacion": float(factor_penalizacion),
+                "anomalies_detected": True
+            }), 400
+        else:
+            return jsonify({
+                "status": "success",
+                "message": "Transacción validada y aprobada por el motor matemático.",
+                "factor_penalizacion": float(factor_penalizacion),
+                "anomalies_detected": False
+            }), 200
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "message": "Error al procesar la matriz en el servidor.",
+            "error_detail": str(e),
+            "anomalies_detected": True
+        }), 500
+if __name__ == '__main__':
+    print("Iniciando infraestructura ROMEO-HYDRA en el puerto 5000...")
+    app.run(host='127.0.0.1', port=5000, debug=True)
+EOF
+python3 -m venv venv_nuevo
+source venv_nuevo/bin/activate
+cd ~
+mkdir hydra-tests
+cd hydra-tests
+cp /mnt/c/Users/robin/Downloads/romeo-hydra-main.zip ~/hydra-tests/
+from flask import Flask, request, jsonify
+import numpy as np
+from core.beta import JacobianoCoherencia
+app = Flask(__name__)
+# Instanciamos el evaluador con los parámetros por defecto (threshold=0.85)
+evaluador = JacobianoCoherencia()
+@app.route('/api/v1/telemetry/evaluate', methods=['POST'])
+def evaluate_matrix():
+    data = request.get_json()
+    if not data or 'matrix' not in data:
+        return jsonify({'error': 'Payload inválido, se requiere el campo "matrix"'}), 400
+    try:
+        # Conversión de la lista entrante a una matriz de NumPy
+        matriz_j = np.array(data['matrix'], dtype=float)
+        # Validamos que sea una matriz cuadrada (ej. 3x3) para mantener consistencia con el core
+        if matriz_j.shape != (3, 3):
+            return jsonify({'error': 'La dimensión de la matriz debe ser estrictamente 3x3'}), 400
+        # Ejecución de la lógica del Jacobiano
+        alerta, factor = evaluador.evaluar_estabilidad(matriz_j)
+        return jsonify({
+            'status': 'processed',
+            'is_stable': not alerta,
+            'penalty_factor': factor,
+            'matrix_norm_fro': float(np.linalg.norm(matriz_j, ord='fro'))
+        }), 200
+    except Exception as e:
+        return jsonify({'error': f'Error interno al procesar los datos: {str(e)}'}), 500
+if __name__ == '__main__':
+    # Usamos el puerto de pruebas por defecto, habilitando el modo debug controlado
+    app.run(host='127.0.0.1', port=5000, debug=True)
+sudo lsof -t -i:5000 | xargs -r kill -9
+$body = @{
+    matrix = @(
+        @(0.1, 0.1, 0.1),
+        @(0.1, 0.1, 0.1),
+        @(0.1, 0.1, 0.1)
+    )
+} | ConvertTo-Json -Depth 3
+Invoke-RestMethod -Uri "http://127.0.0.1:5000/api/v1/telemetry/evaluate" -Method Post -Body $body -ContentType "application/json”
+$body = @{
+    matrix = @(
+        @(5.5, -2.3, 8.1),
+        @(-1.8, 9.4, 3.6),
+        @(4.2, 0.7, -6.9)
+    )
+} | ConvertTo-Json -Depth 3
+Invoke-RestMethod -Uri "http://127.0.0.1:5000/api/v1/telemetry/evaluate" -Method Post -Body $body -ContentType "application/json" | Format-List
+# Configurar el payload caótico
+$body = @{
+    matrix = @(
+        @(5.5, -2.3, 8.1),
+        @(-1.8, 9.4, 3.6),
+        @(4.2, 0.7, -6.9)
+     )
+} | ConvertTo-Json -Depth 3
+# Enviar la petición al servidor en WSL
+$uri = "http://127.0.0.1:5000/api/v1/telemetry/evaluate"
+$response = Invoke-RestMethod -Uri $uri -Method Post -Body $body -ContentType "application/json"
+# Estructurar la línea del Log
+$timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+$logLine = "[$timestamp] Status: $($response.status) | Stable: $($response.is_stable) | Norm: $($response.matrix_norm_fro) | Penalty: $($response.penalty_factor)"
+# Guardar en un archivo de texto en tu máquina Windows
+$logLine | Out-File -FilePath ".\hydra_telemetry_log.txt" -Append
+# Mostrar el resultado inmediato en consola
+Write-Host "--- CHECKPOINT GUARDADO ---" -ForegroundColor Green
+$response | Format-List
+git config --global user.email "robinmac.v2@gmail.com"
+git config --global user.name "robinmacv2-ui”
+git commit -m "Checkpoint: Infraestructura Flask y core matemático validados mediante PowerShell”
+git remote add origin https://github.com/robinmacv2-ui/-clean
+git remote set-url origin https:/
+git commit -m "Checkpoint: Infraestructura Flask y core matemático validados mediante PowerShell”

@@ -1,0 +1,25 @@
+Git y pyton
+¡Perfecto! 🎉
+La foto confirma que Git ya quedó instalado correctamente.
+Veo en PowerShell:
+git version 2.55.0.windows.2
+✅ Git ya funciona.
+Ahora vamos con Python
+En esa misma ventana de PowerShell escribe:
+python --version
+Y dime qué ocurre:
+Si aparece algo como:
+Python 3.13.14
+entonces Python ya está instalado.
+Si aparece:
+No se encontró Python...
+entonces todavía falta instalarlo.
+📸 Envíame una foto del resultado de python --version.
+Una vez que Python funcione, continuaremos con:
+cd C:\Users\robin\ROMEO-HYDRA-v3\ROMEO-HYDRA-v3
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+Ya superaste el primer obstáculo. Solo falta dejar Python funcionando para poder ejecutar ROMEO-HYDRA.
+cd C:\Users\robin\ROMEO-HYDRA-v3\ROMEO-HYDRA-v3
+cd C:\Users\robin\ROMEO-HYDRA-v3
+.\venv\Scripts\Activate.ps1

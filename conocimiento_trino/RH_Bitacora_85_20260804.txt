@@ -1,0 +1,56 @@
+Actúa como un ingeniero de software experto en desarrollo Frontend y especialista en la Web Audio API. 
+Tu objetivo es diseñar y escribir el código base para una "Looper Station" web avanzada, fuertemente inspirada en el flujo de trabajo que utiliza Ariana Grande en sus sesiones en vivo (similar a una Boss RC-505). La aplicación debe permitir la grabación vocal multipista en tiempo real, superposición de capas (overdubbing) y gestión de pistas base.
+Por favor, diseña la arquitectura de la aplicación y proporciona el código (preferiblemente usando React.js para la interfaz y Web Audio API pura para el ruteo de sonido) cumpliendo estrictamente con los siguientes 4 módulos principales:
+1. MÓDULO DE LOOPER MULTI-CANAL (El Core)
+- Debe tener al menos 4 canales/pistas de loop independientes.
+- Cada canal debe tener controles de: Record (Grabar), Play/Pause (Reproducir), Overdub (Grabar sobre la capa existente) y Clear (Borrar).
+- Sincronización: Los loops deben mantener el tempo para que las armonías vocales no se desfasen.
+2. MÓDULO DE CAPTURA DE AUDIO (Micrófono)
+- Interfaz para solicitar acceso al micrófono del usuario mediante `getUserMedia`.
+- Debe capturar el audio con la menor latencia posible.
+3. MÓDULO DE MONITORIZACIÓN EN TIEMPO REAL
+- Implementar un ruteo en el `AudioContext` para que el usuario pueda escuchar su propia 
+voz en tiempo real a través de sus audífonos mientras graba.
+- Debe incluir un control de volumen (GainNode) independiente exclusivamente para el monitoreo, para evitar acoples (feedback) si no se usan audífonos.
+4. MÓDULO DE PISTA DE ACOMPAÑAMIENTO (Backing Track)
+- Un reproductor de audio independiente integrado en la misma interfaz.
+- Permite cargar y reproducir una pista base (instrumental) que suene de fondo mientras el usuario graba sus loops vocales en los otros canales.
+- Esta pista base NO debe ser grabada de nuevo por el looper de voz (ruteo de audio separado).
+ENTREGABLES ESPERADOS:
+1. Una explicación breve de cómo estructurarás el árbol de nodos de la Web Audio API (Source -> Gain -> Destination, etc.).
+2. El código del componente principal en React que renderiza la interfaz.
+3. La lógica de control de estado para manejar las grabaciones (MediaRecorder o AudioBuffers) y la reproducción de los loops.
+Asegúrate de que la interfaz de usuario sea intuitiva, similar a un tablero de pedales o consola de hardware, utilizando botones grandes o indicadores visuales de estado (ej. Rojo para grabando, Verde para reproduciendo).
+  capas (overdubbing) y gestión de pistas base.
+REQUISITO CRÍTICO: FUNCIONAMIENTO OFFLINE
+La aplicación debe estar diseñada para funcionar 100% sin conexión a internet. Toda la lógica debe ejecutarse localmente en el navegador (Client-Side). Si se requieren librerías, deben poder empaquetarse localmente. Por favor, incluye la estructura básica de un Service Worker para convertir la aplicación en una PWA (Progressive Web App) de manera que se pueda instalar y usar sin red.
+Por favor, diseña la arquitectura de la aplicación y proporciona el código (preferiblemente usando React.js para la interfaz y Web Audio API pura para el ruteo de sonido) cumpliendo estrictamente con los siguientes 4 módulos principales:
+1. MÓDULO DE LOOPER MULTI-CANAL (El Core)
+- Debe tener al menos 4 canales/pistas de loop independientes.
+- Cada canal debe tener controles de: Record (Grabar), Play/Pause (Reproducir), Overdub (Grabar sobre la capa existente) y Clear (Borrar).
+- Sincronización: Los loops deben mantener el tempo para que las armonías vocales no se desfasen.
+2. MÓDULO DE CAPTURA DE AUDIO (Micrófono)
+- Interfaz para solicitar acceso al micrófono del usuario mediante `getUserMedia`.
+- Debe capturar el audio con la menor latencia posible para procesamiento local.
+3. MÓDULO DE MONITORIZACIÓN EN TIEMPO REAL
+- Implementar un ruteo en el `AudioContext` para que el usuario pueda escuchar su propia voz en tiempo real a través de sus audífonos mientras graba.
+- Debe incluir un control de volumen (GainNode) independiente exclusivamente para el monitoreo, para evitar acoples (feedback) si no se usan audífonos.
+4. MÓDULO DE PISTA DE ACOMPAÑAMIENTO (Backing Track)
+- Un reproductor de audio independiente integrado en la misma interfaz.
+- Permite cargar (desde un archivo local del dispositivo) y reproduir una pista base (instrumental) que suene de fondo mientras el usuario graba sus loops vocales en los otros canales.
+- Esta pista base NO debe ser grabada de nuevo por el looper de voz (ruteo de audio separado).
+ENTREGABLES ESPERADOS:
+1. Una explicación breve de cómo estructurarás el árbol de nodos de la Web Audio API para procesamiento estrictamente local (Source -> Gain -> Destination, etc.).
+2. El código del componente principal en React que renderiza la interfaz.
+3. La lógica de control de estado para manejar las grabaciones en la memoria local del navegador (AudioBuffers) y la reproducción de los loops.
+4. El código base del Service Worker (o la configuración de Vite/Webpack) necesario para que la app corra sin internet.
+Asegúrate de que la interfaz de usuario sea intuitiva, similar a un tablero de pedales o consola de hardware, utilizando botones grandes o indicadores visuales de estado (ej. Rojo para grabando, Verde para reproduciendo).
+Por favor, genera únicamente el código necesario para meter la esencia matemática y los protocolos de seguridad de mi framework ROMEO-HYDRA (el núcleo simplificado de RAEK-1.0-MX) dentro de la aplicación de la Loop Station que tenemos activa en esta sesión. 
+No me des explicaciones largas, solo necesito el código estructurado en dos partes:
+1. Un archivo modular en JavaScript puro (romeoKernel.js) 100% offline para el teléfono que contenga:
+- El Filtro Anti-NaN: Que revise el array de floats de audio en tiempo real y rechace la señal si detecta datos corruptos o vacíos.
+- El Operador HPR Discreto: Que calcule la aceleración (segunda derivada) de la onda para detectar picos críticos de ruido estocástico o acople destructivo.
+- El Auditor de Sincronización: Que compare el tiempo de reproducción del loop contra la pista base y alerte si hay un desvío mayor a 50 milisegundos.
+2. El fragmento de código exacto en React para importar este kernel, conectar el AnalyserNode de la Web Audio API mediante getFloatTimeDomainData en la reproducción de los canales, y la lógica para que la interfaz atenúe el GainNode del volumen si el kernel detecta un riesgo.
+Dame solo los bloques de código listos para implementar de forma local y offline en el dispositivo.
+https://aistudio.google.com/apps/6fbd7ff0-e249-4806-b6fc-c5429381a97e?showAssistant=true&showPreview=true

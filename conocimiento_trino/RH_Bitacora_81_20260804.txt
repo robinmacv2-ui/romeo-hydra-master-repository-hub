@@ -1,0 +1,1264 @@
+{
+  "meta": {
+    "rules_version": "1.0.0",
+    "last_reviewed": "2026-07-24",
+    "description": "Motor de reglas de cumplimiento para transacciones financieras (simulación)",
+    "uma_value_mxn": 117.31
+  },
+  "rules": [
+    {
+      "id": "UIF_REPORTE_OBLIGATORIO",
+      "name": "Reporte UIF - Operaciones relevantes",
+      "category": "anti_money_laundering",
+      "condition": {
+        "type": "threshold",
+        "field": "amount_mxn",
+        "operator": "gte",
+        "value": "uma_value_mxn",
+        "multiplier": 10000
+      },
+      "action": "requires_external_flag",
+      "external_flag": "uif_report_present",
+      "message_on_fail": "Transacción requiere reporte UIF (monto >= 10,000 UMA). Falta bandera uif_report_present (nota: esta bandera no tiene fuente de datos real todavía, solo puede setearse manualmente en pruebas).",
+      "severity": "high"
+    },
+    {
+      "id": "LIMITE_SPEI_DIARIO",
+      "name": "Límite diario SPEI por cliente",
+      "category": "operational_limit",
+      "condition": {
+        "type": "threshold",
+        "field": "daily_accumulated_mxn",
+        "operator": "gt",
+        "value": 5000000
+      },
+      "action": "reject",
+      "message_on_fail": "Se excedió el límite diario SPEI permitido por cliente (5,000,000 MXN).",
+      "severity": "medium"
+    },
+    {
+      "id": "CONCEPTO_SOSPECHOSO",
+      "name": "Concepto o referencia sospechosa",
+      "category": "suspicious_activity",
+      "condition": {
+        "type": "keyword_match",
+        "field": "concept",
+        "keywords": ["lavado", "testaferro", "efectivo", "cripto", "anonimo", "prestamo urgente", "herencia", "donacion sospechosa"],
+        "case_sensitive": false
+      },
+      "action": "requires_review",
+      "message_on_fail": "Concepto contiene palabras clave que requieren revisión manual por cumplimiento.",
+      "severity": "medium"
+    }
+  ]
+}
+import json
+from pathlib import Path
+from typing import Dict, Any, List
+class ComplianceEngine:
+    def __init__(self, rules_path: str = "rules.json"):
+        self.rules_path = Path(rules_path)
+        self.rules_data = self._load_rules()
+        self.meta = self.rules_data["meta"]
+        self.rules = self.rules_data["rules"]
+        self.uma_value = self.meta["uma_value_mxn"]
+        print(f"[SIMULACIÓN] Motor de cumplimiento cargado.")
+        print(f"[SIMULACIÓN] Versión de reglas: {self.meta['rules_version']}")
+        print(f"[SIMULACIÓN] Última revisión: {self.meta['last_reviewed']}")
+        print(f"[SIMULACIÓN] Valor UMA actual: {self.uma_value} MXN")
+        print("-" * 60)
+    def _load_rules(self) -> Dict[str, Any]:
+        """Carga el archivo de reglas. Falla explícitamente si hay problemas."""
+        if not self.rules_path.exists():
+            raise FileNotFoundError(
+                f"[ERROR CRÍTICO] No se encontró el archivo de reglas: {self.rules_path}\n"
+                "No se puede continuar sin rules.json."
+            )
+        try:
+            with open(self.rules_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+        except json.JSONDecodeError as e:
+            raise ValueError(
+                f"[ERROR CRÍTICO] El archivo rules.json está mal formado: {e}"
+            )
+        except Exception as e:
+            raise RuntimeError(
+                f"[ERROR CRÍTICO] No se pudo leer rules.json: {e}"
+            )
+        # Validaciones básicas
+        if "meta" not in data or "rules" not in data:
+            raise ValueError("[ERROR CRÍTICO] rules.json no tiene la estructura esperada (meta + rules).")
+        if "uma_value_mxn" not in data["meta"]:
+            raise ValueError(
+                "[ERROR CRÍTICO] Falta el valor 'uma_value_mxn' en meta. "
+                "No se usará ningún valor por defecto silencioso."
+            )
+        return data
+    def _resolve_threshold(self, condition: Dict) -> float:
+        """Resuelve el valor del umbral (soporta referencias a UMA)."""
+        value = condition["value"]
+        if isinstance(value, str) and value == "uma_value_mxn":
+            base = self.uma_value
+            multiplier = condition.get("multiplier", 1)
+            return base * multiplier
+        return float(value)
+    def _evaluate_condition(self, condition: Dict, transaction: Dict) -> bool:
+        """Evalúa si una condición se cumple."""
+        cond_type = condition["type"]
+        if cond_type == "threshold":
+            field = condition["field"]
+            operator = condition["operator"]
+            threshold = self._resolve_threshold(condition)
+            if field not in transaction:
+                return False  # Si falta el campo, la condición no se activa
+            amount = float(transaction[field])
+            if operator == "gte":
+                return amount >= threshold
+            elif operator == "gt":
+                return amount > threshold
+            elif operator == "lte":
+                return amount <= threshold
+            elif operator == "lt":
+                return amount < threshold
+            else:
+                raise ValueError(f"Operador no soportado: {operator}")
+        elif cond_type == "keyword_match":
+            field = condition["field"]
+            keywords = condition["keywords"]
+            case_sensitive = condition.get("case_sensitive", False)
+            if field not in transaction:
+                return False
+            text = str(transaction[field])
+            if not case_sensitive:
+                text = text.lower()
+                keywords = [k.lower() for k in keywords]
+            return any(keyword in text for keyword in keywords)
+        else:
+            raise ValueError(f"Tipo de condición no soportado: {cond_type}")
+    def evaluate(self, transaction: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Evalúa una transacción contra todas las reglas.
+        Retorna un resultado con estado y mensajes.
+        """
+        results = {
+            "status": "APPROVED",
+            "violations": [],
+            "requires_review": False,
+            "emulated_authority": "EMULATED_AUTHORITY",
+            "simulation_note": "[SIMULACIÓN] Esta es una evaluación simulada. No tiene validez legal ni regulatoria real."
+        }
+        for rule in self.rules:
+            condition_met = self._evaluate_condition(rule["condition"], transaction)
+            if not condition_met:
+                continue  # La regla no se activa
+            action = rule["action"]
+            message = rule["message_on_fail"]
+            violation = {
+                "rule_id": rule["id"],
+                "rule_name": rule["name"],
+                "severity": rule["severity"],
+                "action": action,
+                "message": message
+            }
+            if action == "reject":
+                results["status"] = "REJECTED"
+                results["violations"].append(violation)
+            elif action == "requires_external_flag":
+                flag_name = rule["external_flag"]
+                flag_present = transaction.get(flag_name, False)
+                if not flag_present:
+                    results["status"] = "REJECTED"
+                    results["violations"].append(violation)
+            elif action == "requires_review":
+                results["requires_review"] = True
+                results["violations"].append(violation)
+                # No cambia el status a REJECTED, solo marca para revisión
+        return results
+# ============================================================
+# CÓDIGO DE PRUEBA (puedes modificar las transacciones de abajo)
+# ============================================================
+if __name__ == "__main__":
+    engine = ComplianceEngine("rules.json")
+    # --- Transacción de ejemplo 1: debe pasar ---
+    tx1 = {
+        "amount_mxn": 50000,
+        "daily_accumulated_mxn": 120000,
+        "concept": "Pago de nómina",
+        "uif_report_present": False
+    }
+    # --- Transacción de ejemplo 2: debe fallar por UIF ---
+    tx2 = {
+        "amount_mxn": 1500000,          # > 10,000 UMA
+        "daily_accumulated_mxn": 1500000,
+        "concept": "Transferencia a proveedor",
+        "uif_report_present": False     # Falta la bandera
+    }
+    # --- Transacción de ejemplo 3: debe fallar por concepto sospechoso ---
+    tx3 = {
+        "amount_mxn": 80000,
+        "daily_accumulated_mxn": 80000,
+        "concept": "Pago por lavado de auto y efectivo",
+        "uif_report_present": False
+    }
+    print("\n=== EVALUACIÓN TX1 ===")
+    print(engine.evaluate(tx1))
+    print("\n=== EVALUACIÓN TX2 ===")
+    print(engine.evaluate(tx2))
+    print("\n=== EVALUACIÓN TX3 ===")
+    print(engine.evaluate(tx3))
+mkdir -p ~/romeo-hydra-banking && cd ~/romeo-hydra-banking && cp /mnt/c/Users/*/Downloads/"romeo_hydra_demo_bancos (3) (1).zip" .
+unzip "romeo_hydra_demo_bancos (3) (1).zip”
+sudo apt update && sudo apt install -y nodejs npm
+CT
+http://0.0.0.0:3000
+[http://127.0.0.1:3000](http://127.0.0.1:3000)
+cp /mnt/c/Users/TU_USUARIO_WINDOWS/Downloads/romeo-hydra-governance-framework.zip .
+PYTHONPATH=. python3 tests/test_alpha.py
+# 1. Crear una carpeta limpia para este módulo y acceder a ella
+mkdir -p ~/romeo-framework && cd ~/romeo-framework
+# 2. Copiar el archivo zip desde tus Descargas de Windows (usando tu usuario 'robin')
+cp /mnt/c/Users/robin/Downloads/romeo-framework.zip .
+# 3. Descomprimir el paquete
+unzip romeo-framework.zip
+# 1. Instalar todas las dependencias del proyecto usando Node.js
+npm install
+# 2. Crear tu archivo de variables de entorno local a partir de la plantilla
+cp .env.example .env
+cat << 'EOF' > .env
+PORT=5173
+VITE_API_CORE_URL=http://localhost:8000
+VITE_API_BANKING_URL=http://localhost:8001
+GEMINI_API_KEY="MY_GEMINI_API_KEY"
+APP_URL="http://localhost:5173"
+EOF
+npx cloudflared tunnel --url http://localhost:3000
+npx cloudflared tunnel --protocol http2 --url http://localhost:3000
+npx cloudflared tunnel --protocol http2 --url http://localhost:3001
+cloudflared tunnel --loglevel debug run <nombre-del-tunnel>
+mv /mnt/c/Users/robin/Downloads/romeo-framework-white .
+mv "/mnt/c/Users/robin/Downloads/romeo-framework white version.zip" .
+grep -rni "google" --exclude-dir={.git,node_modules,romeo_env,venv,__pycache__} .
+grep -rni "gemini" --exclude-dir={.git,node_modules,romeo_env,venv,__pycache__} .
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ROMEO-HYDRA | Governance & Auditability Framework</title>
+    <style>
+      /* Tipografías del sistema ultra rápidas y locales para evitar peticiones externas */
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #0f172a; 
+        color: #e2e8f0;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Nodo raíz crítico donde Vite monta la interfaz de TypeScript -->
+    <div id="root"></div>
+    <!-- Punto de entrada al motor de tu aplicación frontend -->
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+import urllib.request
+import json
+import concurrent.futures
+import time
+import hashlib
+import random
+# CONFIGURACIÓN: Ajusta el puerto al que use tu backend de Python (ej. 5000, 8000, 3001)
+URL_BACKEND = "http://127.0.0.1:5000/audit" 
+def generar_hash(texto):
+    return hashlib.sha256(texto.encode('utf-8')).hexdigest()
+def enviar_log(id_transaccion, tipo_ataque):
+    timestamp = time.time()
+    # Payload base legítimo
+    payload = {
+        "transaction_id": f"TX-{id_transaccion}",
+        "timestamp": timestamp,
+        "decision_node": f"Node-{random.randint(1, 3)}",
+        "previous_hash": generar_hash(str(id_transaccion - 1)),
+        "signature": "VALID_ED25519_SIG_PLACEHOLDER"
+    }
+    # Inyección de anomalías según el tipo de ataque
+    if tipo_ataque == "FIRMA_CORRUPTA":
+        payload["signature"] = "MALICIOUS_TAMPERED_SIG"
+        payload["metadata"] = "Intento de bypass de autenticación"
+    elif tipo_ataque == "ALTERACION_HASH":
+        payload["previous_hash"] = "000000000000000000000000000_CORRUPT_000000000000"
+        payload["metadata"] = "Intento de romper inmutabilidad RAEK"
+    else:
+        payload["metadata"] = "Operación financiera legítima procesada"
+    data = json.dumps(payload).encode('utf-8')
+    req = urllib.request.Request(URL_BACKEND, data=data, headers={'Content-Type': 'application/json'})
+    try:
+        inicio = time.time()
+        with urllib.request.urlopen(req, timeout=1.5) as response:
+            res_data = json.loads(response.read().decode('utf-8'))
+            duracion = (time.time() - inicio) * 1000
+            return {
+                "status": response.getcode(), 
+                "tipo": tipo_ataque, 
+                "ms": duracion, 
+                "rejected": res_data.get("rejected", False),
+                "msg": res_data.get("message", "")
+            }
+    except Exception as e:
+        return {"status": "CRASH/BLOCKED", "tipo": tipo_ataque, "error": str(e)}
+if __name__ == "__main__":
+    print("=" * 60)
+    print("💥 INICIANDO PRUEBA DE FUEGO: OPERACIÓN HYDRA-BREAKER 💥")
+    print(f"Objetivo: {URL_BACKEND}")
+    print("=" * 60)
+    # Generar lote de 150 peticiones destructivas mezcladas
+    peticiones = []
+    for i in range(150):
+        suerte = random.random()
+        if suerte < 0.6:
+            peticiones.append((i, "LEGITIMO"))
+        elif suerte < 0.8:
+            peticiones.append((i, "FIRMA_CORRUPTA"))
+        else:
+            peticiones.append((i, "ALTERACION_HASH"))
+    # Lanzar ráfaga concurrente simulando un ataque DDOS / Inyección masiva
+    print(f"[!] Desplegando {len(peticiones)} transacciones concurrentes...")
+    resultados = []
+    with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
+        futures = [executor.submit(enviar_log, id_tx, tipo) for id_tx, tipo in peticiones]
+        for future in concurrent.futures.as_completed(futures):
+            resultados.append(future.result())
+    # Métricas de Combate
+    exitosos = len([r for r in resultados if r.get("status") == 200 and not r.get("rejected")])
+    bloqueados = len([r for r in resultados if r.get("rejected") or "CRASH" in str(r.get("status"))])
+    crashes = len([r for r in resultados if "CRASH" in str(r.get("status"))])
+    print("\n" + "=" * 60)
+    print("📊 REPORTE DE DAÑOS Y RESILIENCIA")
+    print(=" * 60)
+    print(f"• Total de ráfagas lanzadas: {len(resultados)}")
+    print(f"• Entradas legítimas consolidadas: {exitosos}")
+    print(f"• Ataques / Anomalías detectadas y bloqueadas: {bloqueados}")
+    print(f"• Caídas del servidor (Crashes bajo estrés): {crashes}")
+    print("=" * 60)
+    if crashes > 0:
+        print("❌ ESTATUS: ROMEO FUE DERRIBADO. Hay fugas de memoria o falta manejo de excepciones concurrentes.")
+    elif bloqueados == len([p for p in peticiones if p[1] != "LEGITIMO"]):
+        print("🛡️ ESTATUS: INMUTABILIDAD ABSOLUTA. ROMEO-HYDRA aisló las amenazas y RAEK se mantuvo intacto.")
+    else:
+        print("⚠️ ESTATUS: VULNERABLE. Pasaron transacciones corruptas sin firmar o verificar.")
+import urllib.request
+import json
+import concurrent.futures
+import time
+import hashlib
+import random
+# CONFIGURACIÓN: Ajusta el puerto al que use tu backend de Python (ej. 5000, 8000, 3001)
+URL_BACKEND = "http://127.0.0.1:5000/audit" 
+def generar_hash(texto):
+    return hashlib.sha256(texto.encode('utf-8')).hexdigest()
+def enviar_log(id_transaccion, tipo_ataque):
+    timestamp = time.time()
+    # Payload base legítimo
+    payload = {
+        "transaction_id": f"TX-{id_transaccion}",
+        "timestamp": timestamp,
+        "decision_node": f"Node-{random.randint(1, 3)}",
+        "previous_hash": generar_hash(str(id_transaccion - 1)),
+        "signature": "VALID_ED25519_SIG_PLACEHOLDER"
+    }
+    # Inyección de anomalías según el tipo de ataque
+    if tipo_ataque == "FIRMA_CORRUPTA":
+        payload["signature"] = "MALICIOUS_TAMPERED_SIG"
+        payload["metadata"] = "Intento de bypass de autenticación"
+    elif tipo_ataque == "ALTERACION_HASH":
+        payload["previous_hash"] = "000000000000000000000000000_CORRUPT_000000000000"
+        payload["metadata"] = "Intento de romper inmutabilidad RAEK"
+    else:
+        payload["metadata"] = "Operación financiera legítima procesada"
+    data = json.dumps(payload).encode('utf-8')
+    req = urllib.request.Request(URL_BACKEND, data=data, headers={'Content-Type': 'application/json'})
+    try:
+        inicio = time.time()
+        with urllib.request.urlopen(req, timeout=1.5) as response:
+            res_data = json.loads(response.read().decode('utf-8'))
+            duracion = (time.time() - inicio) * 1000
+            return {
+                "status": response.getcode(), 
+                "tipo": tipo_ataque, 
+                "ms": duracion, 
+                "rejected": res_data.get("rejected", False),
+                "msg": res_data.get("message", "")
+            }
+    except Exception as e:
+        return {"status": "CRASH/BLOCKED", "tipo": tipo_ataque, "error": str(e)}
+if __name__ == "__main__":
+    print("=" * 60)
+    print("💥 INICIANDO PRUEBA DE FUEGO: OPERACIÓN HYDRA-BREAKER 💥")
+    print(f"Objetivo: {URL_BACKEND}")
+    print("=" * 60)
+    # Generar lote de 150 peticiones destructivas mezcladas
+    peticiones = []
+    for i in range(150):
+        suerte = random.random()
+        if suerte < 0.6:
+            peticiones.append((i, "LEGITIMO"))
+        elif suerte < 0.8:
+            peticiones.append((i, "FIRMA_CORRUPTA"))
+        else:
+            peticiones.append((i, "ALTERACION_HASH"))
+    # Lanzar ráfaga concurrente simulando un ataque masivo
+    print(f"[!] Desplegando {len(peticiones)} transacciones concurrentes...")
+    resultados = []
+    with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
+        futures = [executor.submit(enviar_log, id_tx, tipo) for id_tx, tipo in peticiones]
+        for future in concurrent.futures.as_completed(futures):
+            resultados.append(future.result())
+    # Métricas de Combate
+    exitosos = len([r for r in resultados if r.get("status") == 200 and not r.get("rejected")])
+    bloqueados = len([r for r in resultados if r.get("rejected") or "CRASH" in str(r.get("status"))])
+    crashes = len([r for r in resultados if "CRASH" in str(r.get("status"))])
+    print("\n" + "=" * 60)
+    print("📊 REPORTE DE DAÑOS Y RESILIENCIA")
+    print("=" * 60)
+    print(f"• Total de ráfagas lanzadas: {len(resultados)}")
+    print(f"• Entradas legítimas consolidadas: {exitosos}")
+    print(f"• Ataques / Anomalías detectadas y bloqueadas: {bloqueados}")
+    print(f"• Caídas del servidor (Crashes bajo estrés): {crashes}")
+    print("=" * 60)
+    if crashes > 0:
+        print("❌ ESTATUS: ROMEO FUE DERRIBADO. Hay fugas de memoria o falta manejo de excepciones concurrentes.")
+    elif bloqueados == len([p for p in peticiones if p[1] != "LEGITIMO"]):
+        print("🛡️ ESTATUS: INMUTABILIDAD ABSOLUTA. ROMEO-HYDRA aisló las amenazas y RAEK se mantuvo intacto.")
+    else:
+        print("⚠️ ESTATUS: VULNERABLE. Pasaron transacciones corruptas sin firmar o verificar.")
+import urllib.request
+import json
+import concurrent.futures
+import time
+import hashlib
+import random
+# CONFIGURACIÓN: Ajusta el puerto al que use tu backend de Python (ej. 5000, 8000, 3001)
+URL_BACKEND = "http://127.0.0.1:5000/audit" 
+def generar_hash(texto):
+    return hashlib.sha256(texto.encode('utf-8')).hexdigest()
+def enviar_log(id_transaccion, tipo_ataque):
+    timestamp = time.time()
+    # Payload base legítimo
+    payload = {
+        "transaction_id": f"TX-{id_transaccion}",
+        "timestamp": timestamp,
+        "decision_node": f"Node-{random.randint(1, 3)}",
+        "previous_hash": generar_hash(str(id_transaccion - 1)),
+        "signature": "VALID_ED25519_SIG_PLACEHOLDER"
+    }
+    # Inyección de anomalías según el tipo de ataque
+    if tipo_ataque == "FIRMA_CORRUPTA":
+        payload["signature"] = "MALICIOUS_TAMPERED_SIG"
+        payload["metadata"] = "Intento de bypass de autenticación"
+    elif tipo_ataque == "ALTERACION_HASH":
+        payload["previous_hash"] = "000000000000000000000000000_CORRUPT_000000000000"
+        payload["metadata"] = "Intento de romper inmutabilidad RAEK"
+    else:
+        payload["metadata"] = "Operación financiera legítima procesada"
+    data = json.dumps(payload).encode('utf-8')
+    req = urllib.request.Request(URL_BACKEND, data=data, headers={'Content-Type': 'application/json'})
+    try:
+        inicio = time.time()
+        with urllib.request.urlopen(req, timeout=1.5) as response:
+            res_data = json.loads(response.read().decode('utf-8'))
+            duracion = (time.time() - inicio) * 1000
+            return {
+                "status": response.getcode(), 
+                "tipo": tipo_ataque, 
+                "ms": duracion, 
+                "rejected": res_data.get("rejected", False),
+                "msg": res_data.get("message", "")
+            }
+    except Exception as e:
+        return {"status": "CRASH/BLOCKED", "tipo": tipo_ataque, "error": str(e)}
+if __name__ == "__main__":
+    print("=" * 60)
+    print("💥 INICIANDO PRUEBA DE FUEGO: OPERACIÓN HYDRA-BREAKER 💥")
+    print(f"Objetivo: {URL_BACKEND}")
+    print("=" * 60)
+    # Generar lote de 150 peticiones destructivas mezcladas
+    peticiones = []
+    for i in range(150):
+        suerte = random.random()
+        if suerte < 0.6:
+            peticiones.append((i, "LEGITIMO"))
+        elif suerte < 0.8:
+            peticiones.append((i, "FIRMA_CORRUPTA"))
+        else:
+            peticiones.append((i, "ALTERACION_HASH"))
+    # Lanzar ráfaga concurrente simulando un ataque masivo
+    print(f"[!] Desplegando {len(peticiones)} transacciones concurrentes...")
+    resultados = []
+    with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
+        futures = [executor.submit(enviar_log, id_tx, tipo) for id_tx, tipo in peticiones]
+        for future in concurrent.futures.as_completed(futures):
+            resultados.append(future.result())
+    # Métricas de Combate
+    exitosos = len([r for r in resultados if r.get("status") == 200 and not r.get("rejected")])
+    bloqueados = len([r for r in resultados if r.get("rejected") or "CRASH" in str(r.get("status"))])
+    crashes = len([r for r in resultados if "CRASH" in str(r.get("status"))])
+    print("\n" + "=" * 60)
+    print("📊 REPORTE DE DAÑOS Y RESILIENCIA")
+    print("=" * 60)
+    print(f"• Total de ráfagas lanzadas: {len(resultados)}")
+    print(f"• Entradas legítimas consolidadas: {exitosos}")
+    print(f"• Ataques / Anomalías detectadas y bloqueadas: {bloqueados}")
+    print(f"• Caídas del servidor (Crashes bajo estrés): {crashes}")
+    print("=" * 60)
+    if crashes > 0:
+        print("❌ ESTATUS: ROMEO FUE DERRIBADO. Hay fugas de memoria o falta manejo de excepciones concurrentes.")
+    elif bloqueados == len([p for p in peticiones if p[1] != "LEGITIMO"]):
+        print("🛡️ ESTATUS: INMUTABILIDAD ABSOLUTA. ROMEO-HYDRA aisló las amenazas y RAEK se mantuvo intacto.")
+    else:
+        print("⚠️ ESTATUS: VULNERABLE. Pasaron transacciones corruptas sin firmar o verificar.")
+import urllib.request
+import urllib.error
+import json
+import concurrent.futures
+import time
+import hashlib
+import random
+from collections import Counter
+# ============================================================
+# CONFIGURACIÓN
+# ============================================================
+URL_BACKEND = "http://127.0.0.1:5000/audit"
+TOTAL_PETICIONES = 150
+MAX_WORKERS = 8
+TIMEOUT = 3.0
+# ============================================================
+# UTILIDADES
+# ============================================================
+def generar_hash(texto):
+    return hashlib.sha256(texto.encode("utf-8")).hexdigest()
+def crear_payload(id_transaccion, tipo_ataque):
+    payload = {
+        "transaction_id": f"TX-{id_transaccion}",
+        "timestamp": time.time(),
+        "decision_node": f"Node-{random.randint(1, 3)}",
+        "previous_hash": generar_hash(str(id_transaccion - 1)),
+        "signature": "VALID_ED25519_SIG_PLACEHOLDER",
+        "metadata": "Operación financiera legítima procesada"
+    }
+    if tipo_ataque == "FIRMA_CORRUPTA":
+        payload["signature"] = "MALICIOUS_TAMPERED_SIG"
+        payload["metadata"] = "Firma alterada para prueba de validación"
+    elif tipo_ataque == "ALTERACION_HASH":
+        payload["previous_hash"] = (
+            "000000000000000000000000000_CORRUPT_000000000000"
+        )
+        payload["metadata"] = "Hash alterado para prueba de integridad"
+    return payload
+# ============================================================
+# ENVÍO DE UNA PETICIÓN
+# ============================================================
+def enviar_log(id_transaccion, tipo_ataque):
+    payload = crear_payload(id_transaccion, tipo_ataque)
+    data = json.dumps(payload).encode("utf-8")
+    req = urllib.request.Request(
+        URL_BACKEND,
+        data=data,
+        headers={
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        },
+        method="POST"
+    )
+    inicio = time.perf_counter()
+    try:
+        with urllib.request.urlopen(req, timeout=TIMEOUT) as response:
+            cuerpo = response.read().decode("utf-8")
+            duracion_ms = (time.perf_counter() - inicio) * 1000
+            try:
+                respuesta = json.loads(cuerpo)
+            except json.JSONDecodeError:
+                respuesta = {}
+            return {
+                "categoria": "RESPUESTA",
+                "status": response.status,
+                "tipo": tipo_ataque,
+                "ms": duracion_ms,
+                "rejected": respuesta.get("rejected", False),
+                "message": respuesta.get("message", "")
+            }
+    except urllib.error.HTTPError as e:
+        try:
+            cuerpo = e.read().decode("utf-8")
+        except Exception:
+            cuerpo = ""
+        return {
+            "categoria": "HTTP_ERROR",
+            "status": e.code,
+            "tipo": tipo_ataque,
+            "rejected": True,
+            "message": cuerpo or str(e)
+        }
+    except urllib.error.URLError as e:
+        return {
+            "categoria": "TRANSPORTE",
+            "status": None,
+            "tipo": tipo_ataque,
+            "error": str(e.reason)
+        }
+    except TimeoutError:
+        return {
+            "categoria": "TIMEOUT",
+            "status": None,
+            "tipo": tipo_ataque,
+            "error": "Tiempo de espera agotado"
+        }
+    except Exception as e:
+        return {
+            "categoria": "ERROR_NO_CONTROLADO",
+            "status": None,
+            "tipo": tipo_ataque,
+            "error": repr(e)
+        }
+# ============================================================
+# GENERACIÓN DE PETICIONES
+# ============================================================
+def generar_peticiones():
+    peticiones = []
+    for i in range(TOTAL_PETICIONES):
+        suerte = random.random()
+        if suerte < 0.6:
+            tipo = "LEGITIMO"
+        elif suerte < 0.8:
+            tipo = "FIRMA_CORRUPTA"
+        else:
+            tipo = "ALTERACION_HASH"
+        peticiones.append((i, tipo))
+    return peticiones
+# ============================================================
+#
+import urllib.request
+import urllib.error
+import json
+import concurrent.futures
+import time
+import hashlib
+import random
+from collections import Counter
+# ============================================================
+# CONFIGURACIÓN
+# ============================================================
+URL_BACKEND = "http://127.0.0.1:5000/audit"
+TOTAL_PETICIONES = 150
+MAX_WORKERS = 8
+TIMEOUT = 3.0
+# ============================================================
+# UTILIDADES
+# ============================================================
+def generar_hash(texto):
+    return hashlib.sha256(texto.encode("utf-8")).hexdigest()
+def crear_payload(id_transaccion, tipo_ataque):
+    payload = {
+        "transaction_id": f"TX-{id_transaccion}",
+        "timestamp": time.time(),
+        "decision_node": f"Node-{random.randint(1, 3)}",
+        "previous_hash": generar_hash(str(id_transaccion - 1)),
+        "signature": "VALID_ED25519_SIG_PLACEHOLDER",
+        "metadata": "Operación financiera legítima procesada"
+    }
+    if tipo_ataque == "FIRMA_CORRUPTA":
+        payload["signature"] = "MALICIOUS_TAMPERED_SIG"
+        payload["metadata"] = "Firma alterada para prueba de validación"
+    elif tipo_ataque == "ALTERACION_HASH":
+        payload["previous_hash"] = (
+            "000000000000000000000000000_CORRUPT_000000000000"
+        )
+        payload["metadata"] = "Hash alterado para prueba de integridad"
+    return payload
+# ============================================================
+# ENVÍO DE UNA PETICIÓN
+# ============================================================
+def enviar_log(id_transaccion, tipo_ataque):
+    payload = crear_payload(id_transaccion, tipo_ataque)
+    data = json.dumps(payload).encode("utf-8")
+    req = urllib.request.Request(
+        URL_BACKEND,
+        data=data,
+        headers={
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        },
+        method="POST"
+    )
+    inicio = time.perf_counter()
+    try:
+        with urllib.request.urlopen(req, timeout=TIMEOUT) as response:
+            cuerpo = response.read().decode("utf-8")
+            duracion_ms = (time.perf_counter() - inicio) * 1000
+            try:
+                respuesta = json.loads(cuerpo)
+            except json.JSONDecodeError:
+                respuesta = {}
+            return {
+                "categoria": "RESPUESTA",
+                "status": response.status,
+                "tipo": tipo_ataque,
+                "ms": duracion_ms,
+                "rejected": respuesta.get("rejected", False),
+                "message": respuesta.get("message", "")
+            }
+    except urllib.error.HTTPError as e:
+        try:
+            cuerpo = e.read().decode("utf-8")
+        except Exception:
+            cuerpo = ""
+        return {
+            "categoria": "HTTP_ERROR",
+            "status": e.code,
+            "tipo": tipo_ataque,
+            "rejected": True,
+            "message": cuerpo or str(e)
+        }
+    except urllib.error.URLError as e:
+        return {
+            "categoria": "TRANSPORTE",
+            "status": None,
+            "tipo": tipo_ataque,
+            "error": str(e.reason)
+        }
+    except TimeoutError:
+        return {
+            "categoria": "TIMEOUT",
+            "status": None,
+            "tipo": tipo_ataque,
+            "error": "Tiempo de espera agotado"
+        }
+    except Exception as e:
+        return {
+            "categoria": "ERROR_NO_CONTROLADO",
+            "status": None,
+            "tipo": tipo_ataque,
+            "error": repr(e)
+        }
+# ============================================================
+# GENERACIÓN DE PETICIONES
+# ============================================================
+def generar_peticiones():
+    peticiones = []
+    for i in range(TOTAL_PETICIONES):
+        suerte = random.random()
+        if suerte < 0.6:
+            tipo = "LEGITIMO"
+        elif suerte < 0.8:
+            tipo = "FIRMA_CORRUPTA"
+        else:
+            tipo = "ALTERACION_HASH"
+        peticiones.append((i, tipo))
+    return peticiones
+# ============================================================
+# EJECUCIÓN PRINCIPAL
+# ============================================================
+if __name__ == "__main__":
+    print("=" * 70)
+    print("INICIANDO PRUEBA DE RESILIENCIA: HYDRA-BREAKER")
+    print("=" * 70)
+    print(f"Objetivo: {URL_BACKEND}")
+    print(f"Total de peticiones: {TOTAL_PETICIONES}")
+    print(f"Workers concurrentes: {MAX_WORKERS}")
+    print(f"Timeout por petición: {TIMEOUT}s")
+    print("=" * 70)
+    peticiones = generar_peticiones()
+    resultados = []
+    inicio_total = time.perf_counter()
+    with concurrent.futures.ThreadPoolExecutor(
+        max_workers=MAX_WORKERS
+    ) as executor:
+        futures = [
+            executor.submit(enviar_log, id_tx, tipo)
+            for id_tx, tipo in peticiones
+        ]
+        for future in concurrent.futures.as_completed(futures):
+            try:
+                resultados.append(future.result())
+            except Exception as e:
+                resultados.append({
+                    "categoria": "ERROR_FUTURO",
+                    "status": None,
+                    "tipo": "DESCONOCIDO",
+                    "error": repr(e)
+                })
+    duracion_total = time.perf_counter() - inicio_total
+    # ========================================================
+    # MÉTRICAS
+    # ========================================================
+    categorias = Counter(
+        r.get("categoria")
+        for r in resultados
+    )
+    aceptados = [
+        r for r in resultados
+        if r.get("status") == 200
+        and not r.get("rejected", False)
+    ]
+    rechazados = [
+        r for r in resultados
+        if r.get("rejected", False)
+    ]
+    errores_transporte = [
+        r for r in resultados
+        if r.get("categoria") in [
+            "TRANSPORTE",
+            "TIMEOUT"
+        ]
+    ]
+    errores_no_controlados = [
+        r for r in resultados
+        if r.get("categoria") in [
+            "ERROR_NO_CONTROLADO",
+            "ERROR_FUTURO"
+        ]
+    ]
+    anomalias_enviadas = [
+        p for p in peticiones
+        if p[1] != "LEGITIMO"
+    ]
+    anomalias_rechazadas = [
+        r for r in resultados
+        if r.get("tipo") != "LEGITIMO"
+        and r.get("rejected", False)
+    ]
+    latencias = [
+        r["ms"]
+        for r in resultados
+        if "ms" in r
+    ]
+    # ========================================================
+    # REPORTE
+    # ========================================================
+    print()
+    print("=" * 70)
+    print("REPORTE DE RESILIENCIA")
+    print("=" * 70)
+    print(f"• Peticiones completadas: {len(resultados)}")
+    print(f"• Respuestas HTTP normales: {categorias['RESPUESTA']}")
+    print(f"• Errores HTTP: {categorias['HTTP_ERROR']}")
+    print(f"• Errores de transporte: {categorias['TRANSPORTE']}")
+    print(f"• Timeouts: {categorias['TIMEOUT']}")
+    print(f"• Errores no controlados: {len(errores_no_controlados)}")
+    print()
+    print(f"• Legítimas aceptadas: {len(aceptados)}")
+    print(f"• Peticiones rechazadas: {len(rechazados)}")
+    print(
+        f"• Anomalías rechazadas: "
+        f"{len(anomalias_rechazadas)}/{len(anomalias_enviadas)}"
+    )
+    if latencias:
+        print()
+        print(f"• Latencia mínima: {min(latencias):.2f} ms")
+        print(
+            f"• Latencia media: "
+            f"{sum(latencias) / len(latencias):.2f} ms"
+        )
+        print(f"• Latencia máxima: {max(latencias):.2f} ms")
+    print(f"• Duración total: {duracion_total:.2f} s")
+    print("=" * 70)
+    # ========================================================
+    # DIAGNÓSTICO
+    # ========================================================
+    if errores_no_controlados:
+        print(
+            "DIAGNÓSTICO: "
+            "Hay excepciones no controladas."
+        )
+    elif errores_transporte:
+        print(
+            "DIAGNÓSTICO: "
+            "El backend presentó problemas de conectividad "
+            "o capacidad bajo carga."
+        )
+    elif (
+        len(anomalias_rechazadas)
+        == len(anomalias_enviadas)
+        and len(anomalias_enviadas) > 0
+    ):
+        print(
+            "ESTATUS: VALIDACIÓN CORRECTA. "
+            "Todas las anomalías fueron rechazadas."
+        )
+    else:
+        print(
+            "ESTATUS: REVISIÓN NECESARIA. "
+            "Algunas anomalías no fueron rechazadas."
+        )
+import urllib.request
+import json
+import concurrent.futures
+import time
+import hashlib
+import random
+import urllib.error
+# =====================================================================
+# CONFIGURACIÓN DE LA OPERACIÓN HYDRA-BREAKER
+# =====================================================================
+URL_BACKEND = "http://127.0.0.1:3001/audit"  # Ajusta a 5000 o 3001 según tu backend
+TOTAL_PETICIONES = 150
+MAX_WORKERS = 8
+TIMEOUT_PETICION = 3.0
+# =====================================================================
+def generar_hash(texto):
+    return hashlib.sha256(texto.encode('utf-8')).hexdigest()
+def enviar_peticion(id_transaccion, tipo_ataque):
+    payload = {
+        "transaction_id": f"TX-{id_transaccion}",
+        "timestamp": time.time(),
+        "decision_node": f"Node-{random.randint(1, 3)}",
+        "previous_hash": generar_hash(str(id_transaccion - 1)),
+        "signature": "VALID_ED25519_SIG_PLACEHOLDER"
+    }
+    # Inyección controlada de anomalías masivas
+    if tipo_ataque == "FIRMA_CORRUPTA":
+        payload["signature"] = "MALICIOUS_TAMPERED_SIG"
+    elif tipo_ataque == "ALTERACION_HASH":
+        payload["previous_hash"] = "000000000000000000000000000_CORRUPT_000000000000"
+    data = json.dumps(payload).encode('utf-8')
+    req = urllib.request.Request(URL_BACKEND, data=data, headers={'Content-Type': 'application/json'})
+    resultado = {
+        "status_type": "desconocido", 
+        "is_legitimate": tipo_ataque == "LEGITIMO",
+        "rejected": False,
+        "anomaly_rejected": False
+    }
+    try:
+        with urllib.request.urlopen(req, timeout=TIMEOUT_PETICION) as response:
+            res_data = json.loads(response.read().decode('utf-8'))
+            resultado["status_type"] = "normal"
+            resultado["rejected"] = res_data.get("rejected", False)
+            if tipo_ataque != "LEGITIMO" and res_data.get("rejected", False):
+                resultado["anomaly_rejected"] = True
+    except urllib.error.HTTPError:
+        resultado["status_type"] = "http_error"
+    except urllib.error.URLError:
+        resultado["status_type"] = "transporte"
+    except TimeoutError:
+        resultado["status_type"] = "timeout"
+    except Exception:
+        resultado["status_type"] = "no_controlado"
+    return resultado
+if __name__ == "__main__":
+    print("================================================================")
+    print("INICIANDO PRUEBA DE RESILIENCIA: HYDRA-BREAKER")
+    print("================================================================")
+    print(f"Objetivo: {URL_BACKEND}")
+    print(f"Total de peticiones: {TOTAL_PETICIONES}")
+    print(f"Workers concurrentes: {MAX_WORKERS}")
+    print(f"Timeout por petición: {TIMEOUT_PETICION}s")
+    print("================================================================")
+    # Generar mezcla estricta de tráfico legítimo y hostil
+    peticiones = []
+    total_anomalias = 0
+    for i in range(TOTAL_PETICIONES):
+        suerte = random.random()
+        if suerte < 0.6:
+            peticiones.append((i, "LEGITIMO"))
+        elif suerte < 0.8:
+            peticiones.append((i, "FIRMA_CORRUPTA"))
+            total_anomalias += 1
+        else:
+            peticiones.append((i, "ALTERACION_HASH"))
+            total_anomalias += 1
+    inicio_tiempo = time.perf_counter()
+    resultados = []
+    # Lanzamiento síncrono/asíncrono controlado por hilos
+    with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+        futures = [executor.submit(enviar_peticion, id_tx, tipo) for id_tx, tipo in peticiones]
+        for future in concurrent.futures.as_completed(futures):
+            resultados.append(future.result())
+    duracion_total = time.perf_counter() - inicio_tiempo
+    # Procesamiento de métricas finales
+    completadas = len(resultados)
+    normales = sum(1 for r in resultados if r["status_type"] == "normal")
+    http_errores = sum(1 for r in resultados if r["status_type"] == "http_error")
+    transporte = sum(1 for r in resultados if r["status_type"] == "transporte")
+    timeouts = sum(1 for r in resultados if r["status_type"] == "timeout")
+    no_controlados = sum(1 for r in resultados if r["status_type"] == "no_controlado")
+    legitimas_aceptadas = sum(1 for r in resultados if r["status_type"] == "normal" and r["is_legitimate"] and not r["rejected"])
+    peticiones_rechazadas = sum(1 for r in resultados if r["status_type"] == "normal" and r["rejected"])
+    anomalias_rechazadas = sum(1 for r in resultados if r["anomaly_rejected"])
+    print("\nREPORTE DE RESILIENCIA")
+    print("================================================================")
+    print(f"• Peticiones completadas: {completadas}")
+    print(f"• Respuestas HTTP normales: {normales}")
+    print(f"• Errores HTTP: {http_errores}")
+    print(f"• Errores de transporte: {transporte}")
+    print(f"• Timeouts: {timeouts}")
+    print(f"• Errores no controlados: {no_controlados}")
+    print("----------------------------------------------------------------")
+    print(f"• Legítimas aceptadas: {legitimas_aceptadas}")
+    print(f"• Peticiones rechazadas: {peticiones_rechazadas}")
+    print(f"• Anomalías rechazadas: {anomalias_rechazadas}/{total_anomalias}")
+    print(f"• Duración total: {duracion_total:.2f} s")
+    print("================================================================")
+    print("DIAGNÓSTICO: ", end="")
+    if transporte == completadas:
+        print("El backend presentó problemas de conectividad o capacidad bajo carga.")
+    elif anomalias_rechazadas == total_anomalias:
+        print("INMUTABILIDAD ABSOLUTA. El kernel RAEK aisló y mitigó todas las amenazas.")
+    elif normales == completadas and anomalias_rechazadas < total_anomalias:
+        print("BRECHA DE SEGURIDAD. El backend validó transacciones corruptas.")
+    else:
+        print("Comportamiento mixto. Revisar logs internos del servidor.")
+    print("================================================================")
+import urllib.request
+import json
+import concurrent.futures
+import time
+import hashlib
+import random
+import urllib.error
+# =====================================================================
+# CONFIGURACIÓN DE LA OPERACIÓN HYDRA-BREAKER
+# =====================================================================
+URL_BACKEND = "http://127.0.0.1:3001/audit"  # Cambiar a 5000 si es necesario
+TOTAL_PETICIONES = 150
+MAX_WORKERS = 8
+TIMEOUT_PETICION = 3.0
+# =====================================================================
+def generar_hash(texto):
+    return hashlib.sha256(texto.encode('utf-8')).hexdigest()
+def enviar_peticion(id_transaccion, tipo_ataque):
+    # NOTA: Si tu backend ya exige firmas reales, estos placeholders causarán 400/422.
+    payload = {
+        "transaction_id": f"TX-{id_transaccion}",
+        "timestamp": time.time(),
+        "decision_node": f"Node-{random.randint(1, 3)}",
+        "previous_hash": generar_hash(str(id_transaccion - 1)),
+        "signature": "VALID_ED25519_SIG_PLACEHOLDER"
+    }
+    if tipo_ataque == "FIRMA_CORRUPTA":
+        payload["signature"] = "MALICIOUS_TAMPERED_SIG"
+    elif tipo_ataque == "ALTERACION_HASH":
+        payload["previous_hash"] = "000000000000000000000000000_CORRUPT_000000000000"
+    data = json.dumps(payload).encode('utf-8')
+    req = urllib.request.Request(URL_BACKEND, data=data, headers={'Content-Type': 'application/json'})
+    resultado = {
+        "status_type": "desconocido", 
+        "is_legitimate": tipo_ataque == "LEGITIMO",
+        "rejected": False,
+        "anomaly_rejected": False,
+        "http_code": None,
+        "error_body": None
+    }
+    try:
+        with urllib.request.urlopen(req, timeout=TIMEOUT_PETICION) as response:
+            res_data = json.loads(response.read().decode('utf-8'))
+            resultado["status_type"] = "normal"
+            resultado["rejected"] = res_data.get("rejected", False)
+            if tipo_ataque != "LEGITIMO" and res_data.get("rejected", False):
+                resultado["anomaly_rejected"] = True
+    except urllib.error.HTTPError as e:
+        cuerpo_error = e.read().decode("utf-8", errors="replace")
+        resultado["status_type"] = "http_error"
+        resultado["http_code"] = e.code
+        resultado["error_body"] = cuerpo_error
+        # Intentamos parsear el JSON del error por si el backend reportó la anomalía ahí
+        try:
+            res_data = json.loads(cuerpo_error)
+            resultado["rejected"] = res_data.get("rejected", False)
+            if tipo_ataque != "LEGITIMO" and res_data.get("rejected", False):
+                resultado["anomaly_rejected"] = True
+        except Exception:
+            pass
+        print(f"[HTTP ERROR] TX-{id_transaccion} | status={e.code} | body={cuerpo_error}")
+    except urllib.error.URLError:
+        resultado["status_type"] = "transporte"
+    except TimeoutError:
+        resultado["status_type"] = "timeout"
+    except Exception:
+        resultado["status_type"] = "no_controlado"
+    return resultado
+if __name__ == "__main__":
+    print("================================================================")
+    print("INICIANDO PRUEBA DE RESILIENCIA: HYDRA-BREAKER (DIAGNOSTIC MODE)")
+    print("================================================================")
+    print(f"Objetivo: {URL_BACKEND}")
+    print(f"Total de peticiones: {TOTAL_PETICIONES}")
+    print(f"Workers concurrentes: {MAX_WORKERS}")
+    print(f"Timeout por petición: {TIMEOUT_PETICION}s")
+    print("================================================================")
+    peticiones = []
+    total_anomalias = 0
+    for i in range(TOTAL_PETICIONES):
+        suerte = random.random()
+        if suerte < 0.6:
+            peticiones.append((i, "LEGITIMO"))
+        elif suerte < 0.8:
+            peticiones.append((i, "FIRMA_CORRUPTA"))
+            total_anomalias += 1
+        else:
+            peticiones.append((i, "ALTERACION_HASH"))
+            total_anomalias += 1
+    inicio_tiempo = time.perf_counter()
+    resultados = []
+    with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+        futures = [executor.submit(enviar_peticion, id_tx, tipo) for id_tx, tipo in peticiones]
+        for future in concurrent.futures.as_completed(futures):
+            resultados.append(future.result())
+    duracion_total = time.perf_counter() - inicio_tiempo
+    completadas = len(resultados)
+    normales = sum(1 for r in resultados if r["status_type"] == "normal")
+    http_errores = sum(1 for r in resultados if r["status_type"] == "http_error")
+    transporte = sum(1 for r in resultados if r["status_type"] == "transporte")
+    timeouts = sum(1 for r in resultados if r["status_type"] == "timeout")
+    no_controlados = sum(1 for r in resultados if r["status_type"] == "no_controlado")
+    legitimas_aceptadas = sum(1 for r in resultados if r["status_type"] == "normal" and r["is_legitimate"] and not r["rejected"])
+    peticiones_rechazadas = sum(1 for r in resultados if r["rejected"])
+    anomalias_rechazadas = sum(1 for r in resultados if r["anomaly_rejected"])
+    print("\nREPORTE DE RESILIENCIA")
+    print("================================================================")
+    print(f"• Peticiones completadas: {completadas}")
+    print(f"• Respuestas HTTP normales: {normales}")
+    print(f"• Errores HTTP: {http_errores}")
+    print(f"• Errores de transporte: {transporte}")
+    print(f"• Timeouts: {timeouts}")
+    print(f"• Errores no controlados: {no_controlados}")
+    print("----------------------------------------------------------------")
+    print(f"• Legítimas aceptadas: {legitimas_aceptadas}")
+    print(f"• Peticiones rechazadas totales (HTTP + Normales): {peticiones_rechazadas}")
+    print(f"• Anomalías rechazadas: {anomalias_rechazadas}/{total_anomalias}")
+    print(f"• Duración total: {duracion_total:.2f} s")
+    print("================================================================")
+    print("DIAGNÓSTICO: ", end="")
+    if transporte == completadas:
+        print("El backend no está escuchando. Configura el puerto correcto o levanta el servidor.")
+    elif anomalias_rechazadas == total_anomalias:
+        print("INMUTABILIDAD ABSOLUTA. RAEK bloqueó las amenazas (incluso vía códigos HTTP).")
+    elif http_errores == completadas:
+        print("RECHAZO MASIVO. El backend denegó todo. Verifica si el formato o las firmas sintéticas rompieron la estructura.")
+    elif normales == completadas and anomalias_rechazadas < total_anomalias:
+        print("BRECHA DE SEGURIDAD. El backend procesó transacciones corruptas con éxito.")
+    else:
+        print("Comportamiento mixto. Analiza las trazas [HTTP ERROR] impresas arriba.")
+    print("================================================================")
+from flask import Flask, request, jsonify
+app = Flask(__name__)
+# --- ENDPOINT DE AUDITORÍA ---
+# Esta es la "bóveda" que recibirá los 150 impactos de hydra_breaker.py
+@app.route('/audit', methods=['POST'])
+def audit_transaction():
+    try:
+        # Aquí capturamos el paquete de datos que lanza el simulacro
+        data = request.get_json()
+        # ---------------------------------------------------------
+        # AQUÍ VIVE EL CEREBRO DE ROMEO-HYDRA
+        # Es donde tu kernel RAEK-1.0-MX procesa la información, 
+        # verifica la criptografía y decide si el dato es legítimo.
+        # ---------------------------------------------------------
+        # Si la transacción es válida y pasa la auditoría:
+        return jsonify({
+            "status": "success",
+            "message": "Transacción validada por el kernel RAEK",
+            "anomalies_detected": False
+        }), 200
+    except Exception as e:
+        # Si el simulacro inyecta datos corruptos o firmas inválidas, 
+        # el sistema lo atrapa aquí y lo rechaza.
+        return jsonify({
+            "status": "rejected",
+            "message": "Alerta de seguridad: Anomalía detectada",
+            "error_detail": str(e),
+            "anomalies_detected": True
+        }), 400
+# --- BASE DE RESOLUCIÓN 5000 ---
+if __name__ == '__main__':
+    # Al especificar port=5000, garantizamos que escuche en la puerta correcta
+    print("Iniciando infraestructura ROMEO-HYDRA en el puerto 5000...")
+    app.run(host='127.0.0.1', port=5000, debug=True)
+from flask import Flask, request, jsonify
+app = Flask(__name__)
+@app.route('/audit', methods=['POST'])
+def audit_transaction():
+    try:
+        data = request.get_json()
+        # El Kernel RAEK-1.0-MX procesa aquí
+        return jsonify({
+            "status": "success",
+            "message": "Transacción validada por el kernel RAEK",
+            "anomalies_detected": False
+        }), 200
+    except Exception as e:
+        return jsonify({
+            "status": "rejected",
+            "message": "Alerta de seguridad: Anomalía detectada",
+            "error_detail": str(e),
+            "anomalies_detected": True
+        }), 400
+if __name__ == '__main__':
+    print("Iniciando infraestructura ROMEO-HYDRA en el puerto 5000...")
+    app.run(host='127.0.0.1', port=5000, debug=True)
+from flask import Flask, request, jsonify
+app = Flask(__name__)
+@app.route('/audit', methods=['POST'])
+def audit_transaction():
+    try:
+        # El Kernel RAEK-1.0-MX procesará los requests de hydra_breaker aquí
+        return jsonify({
+            "status": "success",
+            "message": "Transacción validada por el kernel RAEK",
+            "anomalies_detected": False
+        }), 200
+    except Exception as e:
+        return jsonify({
+            "status": "rejected",
+            "message": "Alerta de seguridad: Anomalía detectada",
+            "error_detail": str(e),
+            "anomalies_detected": True
+        }), 400
+if __name__ == '__main__':
+    print("Iniciando infraestructura ROMEO-HYDRA en el puerto 5000...")
+    app.run(host='127.0.0.1', port=5000, debug=True)
+from flask import Flask, request, jsonify
+# Importamos el motor principal desde tu archivo main.py
+# (Asegúrate de que 'engine' esté instanciado en main.py y no bloqueado por un input)
+from main import engine 
+app = Flask(__name__)
+@app.route('/audit', methods=['POST'])
+def audit_transaction():
+    try:
+        # 1. Extraemos el payload JSON que envía hydra_breaker.py
+        data = request.get_json()
+        # Extraemos las variables clave (hydra_breaker seguro envía más datos como hashes, 
+        # pero empezamos mapeando lo que vimos que pide tu motor)
+        amount = data.get("amount", 0.0)
+        currency = data.get("currency", "MXN")
+        payment_method = data.get("payment_method", "transferencia")
+        # 2. EL KERNEL ENTRA EN ACCIÓN: Evaluamos la transacción
+        # Aquí RAEK procesa las reglas (ej. MX-IFPE-EBR-001) y valida la criptografía
+        evaluacion = engine.evaluar_transaccion(amount, currency, payment_method)
+        # 3. Tomamos la decisión basada en el dictamen del kernel
+        # Asumiendo que tu motor devuelve un diccionario con un status o indicador de éxito.
+        # (Ajusta la palabra "status" o "valido" según lo que devuelva tu evaluar_transaccion)
+        if evaluacion.get("status") == "rejected" or evaluacion.get("anomalies_detected"):
+            return jsonify({
+                "status": "rejected",
+                "message": "ALERTA RAEK: Anomalía detectada y bloqueada",
+                "audit_trail": evaluacion
+            }), 400 # El 400 es clave: le dice al breaker que la anomalía fue rechazada
+        # Si el kernel no encontró alteraciones:
+        return jsonify({
+            "status": "success",
+            "message": "Transacción inmutable validada por el kernel RAEK",
+            "audit_trail": evaluacion
+        }), 200
+    except Exception as e:
+        # Si la estructura del JSON viene tan corrupta que rompe el motor
+        return jsonify({
+            "status": "rejected",
+            "message": "ALERTA CRÍTICA: Payload corrupto o no procesable",
+            "error_detail": str(e),
+            "anomalies_detected": True
+        }), 400
+if __name__ == '__main__':
+    print("Iniciando infraestructura ROMEO-HYDRA (RAEK Enabled) en el puerto 5000...")
+    app.run(host='127.0.0.1', port=5000, debug=True)

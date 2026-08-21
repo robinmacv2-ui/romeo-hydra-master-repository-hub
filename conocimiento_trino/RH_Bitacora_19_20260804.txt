@@ -1,0 +1,61 @@
+HOJA DE RUTA Y EXPEDIENTE TÉCNICO DE REGISTRO
+Ecosistema en Gobernanza de IA: ROMEO-HYDRA
+Autor y Titular: Luis Angel Vazquez Martinez
+1. CALENDARIO DE EJECUCIÓN (LUNES 3 A MARTES 4 DE AGOSTO DE 2026)
+A continuación se desglosan las acciones críticas ordenadas cronológicamente para garantizar la admisión de las solicitudes ante el INDAUTOR.
+2. ESTRUCTURA DE LAS EXPEDIENTES POR TRÁMITE
+Trámite A: Obra Literaria (Doctrinal y Conceptual)
+Contenido Protegido: Anexos, Dosieres, Modelo de Ontología Conceptual, Manifiestos Políticos/Técnicos y Postulados de Invarianza Homeostática del marco operativo ROMEO-HYDRA.
+Formato Requerido: 2 solicitudes impresas originales del formato RPDA-01 con la casilla "Literaria" marcada.
+Ejemplares de Soporte: 2 copias físicas idénticas impresas y engargoladas de los documentos textuales. Se sugiere insertar los identificadores persistentes internacionales en las primeras páginas para consistencia de auditoría (ej. DOI de Zenodo para el manifiesto ontológico: 10.5281/zenodo.21709670 y el postulado: 10.5281/zenodo.21741578).
+Trámite B: Programa de Cómputo (Software y UMR)
+Contenido Protegido: Código fuente estructurado y la arquitectura de la Unidad / Modelo de Razonamiento (UMR) del motor lógico de gobernanza IA.
+Formato Requerido: 2 solicitudes impresas originales del formato RPDA-01 con la casilla "Programa de Cómputo" marcada.
+Ejemplares de Soporte: 2 juegos idénticos grabados en CD o USB (no reescribibles) etiquetados firmemente con marcador permanente con el título de la obra y el nombre del autor, o la impresión física estructurada de los bloques principales de código. Se puede referenciar el DOI de Zenodo de software: 10.5281/zenodo.21406719.
+3. PLANTILLA LEGAL DE CARTA PODER SIMPLE
+Este documento otorga la representación legal estricta y suficiente para solventar la ausencia transitoria de la identificación INE física del autor en las ventanillas del instituto.
+CARTA PODER SIMPLE
+
+Ciudad de México, a 3 de agosto de 2026.
+
+INSTITUTO NACIONAL DEL DERECHO DE AUTOR (INDAUTOR)
+DIRECCIÓN DE REGISTRO PÚBLICO DEL DERECHO DE AUTOR
+P R E S E N T E.
+
+Por la presente, el que suscribe, LUIS ANGEL VAZQUEZ MARTINEZ, por mi propio derecho y en mi carácter de Autor y Titular Originario de Derechos Patrimoniales, otorgo PODER ESPECIAL, AMPLIO Y SUFICIENTE a favor de mi madre, __________________________________________, para que en mi nombre y representación comparezca ante este Instituto Nacional del Derecho de Autor a gestionar, tramitar, ingresar solicitudes, oír y recibir notificaciones, realizar aclaraciones técnicas y recibir los certificados finales correspondientes a los siguientes trámites de REGISTRO DE OBRA:
+
+1. Trámite de Obra Literaria: "ANEXOS, DOSIERES, ONTOLOGÍA, MANIFIESTOS Y POSTULADOS DEL ECOSISTEMA EN GOBERNANZA DE IA ROMEO-HYDRA".
+2. Trámite de Programa de Cómputo: "CÓDIGO FUENTE Y UMR (UNIDAD Y MODELO DE RAZONAMIENTO) DEL ECOSISTEMA EN GOBERNANZA DE IA ROMEO-HYDRA".
+
+Para la validez de este acto de representación, se adjuntan copias legibles de las identificaciones oficiales vigentes de todos los intervinientes, así como el comprobante de solicitud de actualización ante el Instituto Nacional Electoral (INE) del suscrito.
+
+
+_________________________________________
+OTORGANTE (MANDANTE)
+Nombre: LUIS ANGEL VAZQUEZ MARTINEZ
+Firma: 
+
+
+_________________________________________
+APODERADA (MANDATARIA)
+Nombre: _________________________________
+Firma: 
+
+
+TESTIGOS:
+
+
+_________________________________________          _________________________________________
+TESTIGO 1                                          TESTIGO 2
+Nombre: _________________________________          Nombre: _________________________________
+Firma:                                             Firma: 
+    
+4. COMPROBACIÓN E INTEGRACIÓN JURÍDICA DE CARPETAS
+Cada una de las dos carpetas debe incluir obligatoriamente las siguientes piezas de verificación:
+Formato RPDA-01 original debidamente requisitado con firma autógrafa tinta azul del autor en el apartado final y datos de la apoderada en el módulo de representante/gestor.
+Duplicado de la solicitud RPDA-01 para sello de acuse de recibo.
+Comprobante original de pago bancario (esquema eCinco) por valor exacto de $367.00 MXN gramado al frente de la solicitud.
+Dos ejemplares físicos idénticos de la obra correspondiente a la carpeta (textos impresos o medios digitales ópticos/magnéticos).
+Copia original de la Carta Poder Simple firmada en autógrafo (se incluye el original en la primera carpeta y copia idéntica en la segunda).
+Expediente de Identidad adjunto: Copia de la identificación INE vigente de la madre, copia del comprobante/trámite del INE del autor (Luis Angel Vazquez Martinez) junto con su Acta de Nacimiento para validar parentesco e identidad, y copia de las identificaciones INE vigentes de los dos testigos firmantes.
+Documento técnico de alineación legal interna para la protección de propiedad intelectual - ROMEO-HYDRA Ecosistema © 2026.

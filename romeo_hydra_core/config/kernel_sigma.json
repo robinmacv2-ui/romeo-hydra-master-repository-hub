@@ -1,0 +1,20 @@
+﻿{
+    "protocol": "ROMEO-HYDRA",
+    "version": "3.0-CBA",
+    "founder": "LUIS ANGEL VAZQUEZ MARTINEZ",
+    "canonical_doi": "10.5281/zenodo.21406719",
+    "axiomatic_core": {
+        "invariants": {
+            "alpha_threshold": 0.85,
+            "active_safeguard": "preventive_entropy_lock"
+        },
+        "evaluation": {
+            "gamma_stability_limit": 0.65,
+            "popper_falsification_r_limit": 0.85,
+            "logic_resilience_target_i_rl": 0.8600
+        }
+    },
+    "audit_ledger": {
+        "hashing_algorithm": "SHA-256"
+    }
+}

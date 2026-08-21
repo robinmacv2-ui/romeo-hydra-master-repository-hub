@@ -1,0 +1,72 @@
+[KERNEL REGIMEN SIGMA - MOTOR DE LÓGICA CONVEXA]
+Operas como el optimizador matemático y de restricciones del framework ROMEO-HYDRA v3.0. 
+Toda evaluación de inferencia debe resolverse encontrando el punto óptimo dentro del Espacio Convexa de Soluciones Factibles (Feasible Region), definido por las siguientes restricciones inmutables:
+1. Restricción de Deriva (Drift / Popperian Falsification R): R >= 0.85
+2. Margen de Riesgo Financiero / Fiduciario: Riesgo <= 0.05
+3. Principio de Reproducibilidad (ROMEO-P008): Toda salida debe justificar matemáticamente su asignación de pesos.
+Si una inferencia propuesta viola los límites del conjunto convexo, el kernel debe recortar (clip) la decisión al límite más cercano del espacio factible y emitir un log de auditoría estructurado en JSON con el indicador [OPTIMIZADO_POR_SIGMA].
+Procedemos con la implementación dual del **Regimen Sigma (Lógica Convexa)**. Vamos a configurar tanto el comportamiento del modelo en la nube como el código matemático en tu aplicación para asegurarnos de que cada inferencia respete un espacio convexo de restricciones estrictas.
+### Paso 1: Configuración en las System Instructions (AI Studio)
+Actualiza las instrucciones del sistema en tu consola de Google AI Studio para que Gemini actúe como un **Kernel de Optimización Convexa**:
+```text
+[KERNEL REGIMEN SIGMA - MOTOR DE LÓGICA CONVEXA]
+Operas como el optimizador matemático y de restricciones del framework ROMEO-HYDRA v3.0. 
+Toda evaluación de inferencia debe resolverse encontrando el punto óptimo dentro del Espacio Convexa de Soluciones Factibles (Feasible Region), definido por las siguientes restricciones inmutables:
+1. Restricción de Deriva (Drift / Popperian Falsification R): R >= 0.85
+2. Margen de Riesgo Financiero / Fiduciario: Riesgo <= 0.05
+3. Principio de Reproducibilidad (ROMEO-P008): Toda salida debe justificar matemáticamente su asignación de pesos.
+Si una inferencia propuesta viola los límites del conjunto convexo, el kernel debe recortar (clip) la decisión al límite más cercano del espacio factible y emitir un log de auditoría estructurado en JSON con el indicador [OPTIMIZADO_POR_SIGMA].
+```
+### Paso 2: El Módulo de Código (src/lib/sigmaOptimizer.ts)
+Crea este archivo en la estructura de tu proyecto (src/lib/sigmaOptimizer.ts). Esta función aplica una proyección convexa básica (clamping y normalización de pesos) para garantizar que cualquier métrica de riesgo o desvío se mantenga dentro de un espacio seguro antes de ser guardada en Firebase:
+```typescript
+// ROMEO-HYDRA: Regimen Sigma - Optimizador de Espacio Convexo
+export interface InferenceState {
+  riskScore: number; // Debe estar entre 0 y 1
+  popperIndex: number; // Índice de falsación (idealmente > 0.85)
+  driftValue: number;
+}
+export interface OptimizationResult {
+  optimizedState: InferenceState;
+  isFeasible: boolean;
+  actionFlag: string;
+}
+/**
+ * Proyecta el estado actual en el conjunto convexo de restricciones operativas.
+ */
+otyep: // (fixing typo in thought process -> export function)
+export function optimizeConvexState(state: InferenceState): OptimizationResult {
+  // Definición del Espacio Convexa (Límites estrictos)
+  const MAX_RISK = 0.05;
+  const MIN_POPPER = 0.85;
+  let feasible = true;
+  let flag = "[OPTIMIZADO_POR_SIGMA: NORMAL]";
+  // Restricción 1: Proyección convexa del riesgo (Clamping al hiperplano seguro)
+  let clampedRisk = state.riskScore;
+  if (clampedRisk > MAX_RISK) {
+    clampedRisk = MAX_RISK;
+    feasible = false;
+    flag = "[OPTIMIZADO_POR_SIGMA: RISK_CLIPPED]";
+  }
+  // Restricción 2: Verificación del índice Popperiano
+  let adjustedPopper = state.popperIndex;
+  if (adjustedPopper < MIN_POPPER) {
+    adjustedPopper = MIN_POPPER;
+    feasible = false;
+    flag = "[OPTIMIZADO_POR_SIGMA: POPPER_ENFORCED]";
+  }
+  return {
+    optimizedState: {
+      riskScore: clampedRisk,
+      popperIndex: adjustedPopper,
+      driftValue: state.driftValue
+    },
+    isFeasible: feasible,
+    actionFlag: flag
+  };
+}
+```
+### Siguiente paso de integración
+Integra esta función en el flujo donde registras tus eventos en Firebase. Antes de que cualquier log llegue a la base de datos, pásalo por optimizeConvexState. De esta manera, **el sistema corrige automáticamente cualquier desviación matemática** antes de escribir en el Ledger.
+¿Deseas que integremos este optimizador directamente en el componente de la Bitácora (ROMEO-P008) para que los logs se validen matemáticamente en tiempo real al hacer clic en el botón?
+Desbloquea la interfaz de lectura en la sección de la Bitácora (P008). Añade un botón rojo de prueba llamado 'Simular Riesgo Crítico (0.09)'. Al hacer clic, este botón debe enviar un riesgo de 0.09 a la función commitInferenceEvent para comprobar visualmente que el Regimen Sigma lo bloquea, lo corrige a 0.05 y lo guarda en Firebase.

@@ -1,0 +1,11 @@
+﻿venv/
+env/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.DS_Store
+results/*
+synthetic_data/*
+!results/.gitkeep
+!synthetic_data/.gitkeep
+romeo_ledger.json

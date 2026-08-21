@@ -1,0 +1,10 @@
+class MarcoEntropico:
+    def __init__(self, limite_tolerancia=0.7):
+        self.limite_tolerancia = limite_tolerancia
+    def calcular_entropia(self, incertidumbre_output, deriva_modelo):
+        indice_caos = (incertidumbre_output + deriva_modelo) / 2
+        return indice_caos
+    def dictaminar_gobernanza(self, indice_caos):
+        if indice_caos > self.limite_tolerancia:
+            return "ALTA ENTROPÍA: El sistema está perdiendo alineación y tiende al caos."
+        return "ENTROPÍA BAJA: El sistema se mantiene bajo los parámetros de orden.”

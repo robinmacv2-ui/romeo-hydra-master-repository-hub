@@ -1,0 +1,154 @@
+Prompt Maestro para Google AI Studio: Extensión de Validación ISO/IEC 42001
+Instrucción de sistema para el modelo:
+Actúa como un Arquitecto Senior de Gobernanza de Inteligencia Artificial, RegTech y Cumplimiento Normativo. Tu objetivo es diseñar e integrar el submódulo de Validación ISO/IEC 42001 (Sistema de Gestión de Inteligencia Artificial - AIMS) dentro de la arquitectura núcleo de ROMEO-HYDRA v3.0 ("La Caja Blanca de la IA"), respaldada por el DOI 10.5281/zenodo.21406719.
+Parámetros Arquitectónicos Base:
+Kernel Sigma: Motor de intercepción autónoma y optimización convexa encargado de evaluar los flujos de inferencia.
+Delta Ledger: Capa de memoria forense inmutable basada en criptografía SHA-256.
+Matriz de Control y IAM: Controles estrictos de privilegios y modo de solo lectura (Viewer Mode) para auditores externos.
+Requerimientos Técnicos para la Integración ISO:
+Mapeo de Controles ISO/IEC 42001: Extiende las capacidades del Kernel Sigma para evaluar de forma continua las directrices de la norma (gestión de riesgos de IA, evaluación de impacto, calidad de datos, ciclo de vida del modelo y supervisión humana).
+Trazabilidad en Delta Ledger: Configura el sellado criptográfico (SHA-256) para que cada auditoría de conformidad ISO genere una traza inmutable, lista para ser presentada ante organismos certificadores y auditores de las Big Four.
+Matriz de Validación Ampliada: Actualiza los parámetros de validación para incluir métricas automatizadas de cumplimiento normativo y gestión de riesgos específicos del estándar ISO.
+Interfaz y Permisos (IAM): Habilita esquemas de acceso seguro bajo el Viewer Mode para que los auditores certificados puedan verificar el estatus de cumplimiento en tiempo real.
+Genera la especificación técnica en código lógico estructurado y los esquemas de datos necesarios para desplegar este módulo en el entorno de producción actual.
+Instrucción de sistema para el modelo: Actúa como Arquitecto Principal de RegTech y Estratega de Relaciones Regulatorias para ROMEO-HYDRA v3.0 ("La Caja Blanca de la IA"), respaldado por el DOI 10.5281/zenodo.21406719. 
+Tu objetivo es estructurar, configurar y documentar el módulo de "Acceso Invitado de Solo Lectura Interactiva" (Viewer Mode), optimizado específicamente para demostrar a los reguladores de la banca central y comisiones bancarias (ej. Banxico, CNBV) que la IA no es una "caja negra" opaca, sino un sistema totalmente transparente, auditable y seguro en tiempo real.
+Parámetros Clave a Implementar en el Prompt/Sistema:
+1. Propuesta de Valor Institucional (El Argumento del Piloto):
+   - Posicionar a ROMEO-HYDRA v3.0 como el estándar de gobernanza de caja blanca que elimina el riesgo sistémico de la opacidad algorítmica.
+   - Demostrar que el regulador puede verificar el cumplimiento normativo de forma autónoma sin comprometer la seguridad ni requerir acceso a código fuente propietario o datos sensibles de clientes.
+2. Especificación Técnica del "Viewer Mode" para Reguladores:
+   - Autenticación Rápida: Integración de credenciales temporales o acceso directo a través de un rol estricto de `viewer`/`observer` (IAM).
+   - Blindaje Frontend: Habilitar la inspección activa de los bloques del Delta Ledger, gráficos de rendimiento, y hashes SHA-256, bloqueando estrictamente cualquier comando de escritura, emisión de credenciales o modificación de parámetros del Kernel Sigma.
+   - Seguridad Backend (Firestore): Reglas de seguridad estrictas que limitan al rol de invitado exclusivamente a operaciones de lectura (`get` y `list`).
+3. Reporte de Evidencia Forense y Trazabilidad:
+   - Generación automática de reportes de conformidad listos para ser presentados ante auditores externos y reguladores, respaldados por el sellado criptográfico inmutable del Delta Ledger.
+Genera la especificación de la interfaz, el flujo de experiencia de usuario (UX) para el regulador y los argumentos de venta técnica listos para desplegarse en el entorno de producción de AI Studio.
+Aquí tienes un **Prompt Maestro** optimizado para Google AI Studio. Está diseñado para que tu aplicación (integrando Firebase Auth y Firestore) registre de forma automática cada visita y cada interacción en tiempo real, diferenciando perfectamente entre **usuarios registrados con su cuenta de Google** y **usuarios que ingresan como invitados (modo anónimo/viewer)**, todo dentro de una interfaz minimalista y lista para auditoría.
+### 📋 Prompt Maestro para Google AI Studio: Sistema de Telemetría de Visitas e Interacciones (Google Auth + Invitados)
+Copia y pega este bloque completo en **Google AI Studio** para generar o actualizar tu aplicación:
+```text
+Actúa como un Arquitecto de Software Full-Stack y Experto en Gobernanza de Datos. Tu objetivo es desarrollar e integrar un sistema robusto de telemetría, control de accesos y registro de interacciones en tiempo real dentro de la aplicación web, utilizando Firebase Authentication y Cloud Firestore.
+Requerimientos Arquitectónicos y Funcionales:
+1. Autenticación Dual (Firebase Auth):
+   - Opción A: Botón de acceso con Google ("Iniciar sesión con Google") utilizando Firebase Authentication con Google Provider para registrar el correo electrónico real del usuario.
+   - Opción B: Botón de acceso rápido para invitados ("Entrar como Invitado / Viewer Mode") utilizando la autenticación anónima de Firebase (Anonymous Auth) o una sesión temporal controlada, asignándoles un identificador de invitado (ej. guest_xxxx).
+2. Registro Automático de Visitas (Cloud Firestore):
+   - Cada vez que un usuario (sea con correo de Google o invitado) cargue la página, la aplicación debe registrar automáticamente un documento en la colección de Firestore llamada `visitas`.
+   - Datos a registrar: 
+     * uid (ID de usuario de Firebase)
+     * tipo_usuario ('Google' o 'Invitado')
+     * correo (si es Google, el email; si es invitado, 'guest@viewer.local' o n/a)
+     * timestamp (marca de tiempo exacta del servidor)
+     * agente_usuario / dispositivo
+3. Registro de Interacciones Dinámicas:
+   - Capturar y registrar en una colección de Firestore llamada `interacciones` cada acción relevante del usuario (ej. clics en botones clave, navegación entre secciones, consultas o despliegue de bloques).
+   - Cada interacción debe almacenar: uid, tipo_usuario, correo/identificador, nombre_interaccion, y timestamp.
+4. Panel de Auditoría / Dashboard Minimalista de Métricas:
+   - Diseñar una sección de visualización limpia (estilo consola de auditoría minimalista con Tailwind CSS) donde se pueda ver en tiempo real:
+     * Total de visitas acumuladas.
+     * Desglose de visitas por tipo (Usuarios Google vs. Invitados).
+     * Tabla o lista de interacciones recientes con su respectiva marca de tiempo e identidad.
+5. Seguridad (Reglas de Firestore):
+   - Asegurar que las reglas de seguridad de Firestore permitan la escritura de visitas e interacciones para cualquier usuario autenticado (incluyendo anónimos), pero restrinjan la modificación o borrado de registros para mantener la integridad de la auditoría.
+```
+### 💡 ¿Cómo operará este sistema en tu aplicación?
+ 1. **Diferenciación Clara:** Cuando alguien entre con su cuenta de Google, Firestore guardará su correo real y su UID. Cuando alguien elija entrar como invitado, el sistema generará una sesión anónima segura bajo el rol de viewer, registrándolo sin forzarlo a dar datos personales pero manteniendo trazabilidad exacta de su visita.
+ 2. **Tablero en Vivo:** Podrás ver en tu propia interfaz de la aplicación el flujo exacto de quién entra, a qué hora y qué interacciones realiza, cumpliendo con los estándares de control y transparencia.
+### 🛠️ Qué significa este error
+En el log de tu consola se aprecia claramente el problema: **Firestore getLedgerBlocks timed out or failed**. Esto ocurre cuando una función asíncrona intenta consultar la base de datos en la nube, pero la conexión o la respuesta tardan más de lo esperado, provocando un tiempo de espera agotado (*timeout*).
+Dado que tu aplicación ya cuenta con un sistema de respaldo ("*Returning local...*"), el objetivo principal es asegurar que ese código asíncrono maneje el fallo de manera limpia sin congelar la interfaz ni arrojar errores críticos.
+### 🔧 Cómo corregir el código asíncrono
+Para solucionar y blindar este tipo de llamadas, debes envolver la operación en un bloque **try...catch** y configurar explícitamente el manejo de la caché local de Firestore.
+Puedes estructurar tu función de la siguiente manera:
+```javascript
+async function getLedgerBlocks() {
+  try {
+    // 1. Intentar la consulta normal al servidor
+    const snapshot = await db.collection('ledgerBlocks').get({ source: 'server' });
+    const blocks = snapshot.docs.map(doc => doc.data());
+    return blocks;
+  } catch (error) {
+    console.warn("Firestore timeout o error de red detectado. Cambiando a respaldo local...", error.message);
+    try {
+      // 2. Respaldo: Forzar la lectura desde la caché local si el servidor falla
+      const cachedSnapshot = await db.collection('ledgerBlocks').get({ source: 'cache' });
+      return cachedSnapshot.docs.map(doc => doc.data());
+    } catch (cacheError) {
+      console.error("Error crítico: No se pudieron obtener datos ni del servidor ni de la caché.", cacheError);
+      // 3. Retornar un valor por defecto seguro (ej. arreglo vacío) para evitar que la app se rompa
+      return [];
+    }
+  }
+}
+```
+### 📋 Claves para revisar en tu implementación
+ * **Uso obligatorio de try...catch:** Toda operación con await debe estar protegida para capturar interrupciones de red sin crashear el sistema.
+ * **Estrategia de respaldo:** Asegúrate de que cuando ocurra el timeout, la función devuelva una estructura válida (como un arreglo vacío [] o un objeto por defecto) en lugar de un valor nulo (undefined), lo cual evitaría errores posteriores al renderizar la interfaz.
+ * **Control de conectividad:** Verifica si estás probando en un entorno local (como un emulador) o con una conexión intermitente, ya que los tiempos de respuesta de Firestore pueden ajustarse automáticamente según la estabilidad de la red.
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROMEO-HYDRA v3.0 | Consola de Auditoría y Caja Blanca</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        hydraDark: '#0a0f1d',
+                        hydraCard: '#111827',
+                        hydraBorder: '#1f2937',
+                        hydraAccent: '#3b82f6',
+                        hydraAlert: '#ef4444'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-hydraDark text-gray-100 min-h-screen font-sans antialiased flex flex-col">
+    <header class="border-b border-hydraBorder bg-hydraCard/80 backdrop-blur sticky top-0 z-50 px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+            <div class="h-3 w-3 rounded-full bg-emerald-500 animate-pulse"></div>
+            <h1 class="text-xl font-bold tracking-tight text-white">ROMEO-HYDRA <span class="text-xs px-2 py-0.5 rounded bg-blue-900/60 text-blue-300 border border-blue-700">v3.0-RC1 Caja Blanca</span></h1>
+        </div>
+        <div class="flex items-center space-x-4 text-sm text-gray-400">
+            <span id="authStatus" class="px-3 py-1 rounded bg-hydraBorder text-gray-300">Modo: Inicializando...</span>
+            <button onclick="window.appLogout()" class="text-xs bg-red-900/40 text-red-300 border border-red-700/50 px-3 py-1.5 rounded hover:bg-red-900/60 transition">Cerrar Sesión</button>
+        </div>
+    </header>
+    <main class="flex-1 max-w-7xl w-full mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <section class="lg:col-span-1 space-y-6">
+            <div class="bg-hydraCard border border-hydraBorder rounded-xl p-5 shadow-lg">
+                <h2 class="text-sm font-semibold tracking-wider text-gray-400 uppercase mb-4">Kernel Sigma (Telemetría)</h2>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center bg-hydraDark p-3 rounded-lg border border-hydraBorder">
+                        <span class="text-sm text-gray-300">Estado del Motor</span>
+                        <span class="text-xs font-mono text-emerald-400 bg-emerald-950/60 px-2 py-1 rounded border border-emerald-800">ACTIVO / OPTIMIZADO</span>
+                    </div>
+                    <div class="flex justify-between items-center bg-hydraDark p-3 rounded-lg border border-hydraBorder">
+                        <span class="text-sm text-gray-300">Latencia de Intercepción</span>
+                        <span class="text-xs font-mono text-blue-400">0.42 ms</span>
+                    </div>
+                    <div class="flex justify-between items-center bg-hydraDark p-3 rounded-lg border border-hydraBorder">
+                        <span class="text-sm text-gray-300">Alineación ISO/IEC 42001</span>
+                        <span class="text-xs font-mono text-emerald-400">100% CUMPLIMIENTO</span>
+                    </div>
+                </div>
+            </div>
+            <div id="adminControls" class="bg-hydraCard border border-hydraBorder rounded-xl p-5 shadow-lg">
+                <h2 class="text-sm font-semibold tracking-wider text-gray-400 uppercase mb-4">Controles de Ejecución</h2>
+                <div class="space-y-3">
+                    <button onclick="window.ejecutarContencion()" class="w-full bg-hydraAccent hover:bg-blue-600 text-white font-medium py-2.5 px-4 rounded-lg transition text-sm shadow">
+                        ⚡ Ejecutar Recorte Normativo
+                    </button>
+                    <button onclick="window.sellarLedger()" class="w-full bg-hydraBorder hover:bg-gray-800 text-gray-200 font-medium py-2.5 px-4 rounded-lg transition text-sm border border-gray-700">
+                        🔐 Sellar Bloque (SHA-256)
+                    </button>
+                </div>
+            </div>
+        </section>
+        <section class="lg:col-span

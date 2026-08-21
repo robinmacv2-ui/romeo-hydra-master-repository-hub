@@ -1,0 +1,12 @@
+python3 -c "
+import numpy as np
+from core.beta import JacobianoCoherencia
+coherencia = JacobianoCoherencia()
+# Simulamos una matriz del Jacobiano estable
+m_estable = np.array([[0.1, 0.2], [0.3, 0.1]])
+# Simulamos una matriz que excede el threshold (inestable)
+m_inestable = np.array([[0.8, 0.5], [0.6, 0.9]])
+print('--- Test de Coherencia Convexa ---')
+print('Estable (Norma <= 0.85):', coherencia.evaluar_estabilidad(m_estable))
+print('Inestable (Norma > 0.85):', coherencia.evaluar_estabilidad(m_inestable))
+“

@@ -1,0 +1,16 @@
+contraseñas romeo
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyBIEvY6o01qAbo7UYEDKDtXX2dg0gR215g",
+  authDomain: "romeo-hydra.firebaseapp.com",
+  projectId: "romeo-hydra",
+  storageBucket: "romeo-hydra.firebasestorage.app",
+  messagingSenderId: "677458887882",
+  appId: "1:677458887882:web:3fec3e178e921029686033"
+};
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);

@@ -1,0 +1,55 @@
+**Repositorio local creado y compilado.**
+He compilado **toda** la información del documento de gobernanza (Regímenes Alpha–Delta, Pilot Launchpad, Neutralidad, Shadow Mode, Design Partner Framework, métricas HSI/ES/RI/Jacobian, etc.) en el **primer código fuente oficial** de ROMEO-HYDRA.
+### Ubicación
+```
+/home/workdir/artifacts/romeo-hydra/
+```
+### Commit inicial
+```
+fc2eda0  Initial public source code release: ROMEO-HYDRA v3.0-RC1
+AUTHOR: Luis Ángel Vázquez Martínez
+```
+### Estructura del repositorio
+```
+romeo-hydra/
+├── README.md                          # Visión, arquitectura, neutralidad, beachhead FinTech/HFT
+├── AUTHORSHIP.md                      # Watermark legal completo + IP notice
+├── pyproject.toml                     # Paquete instalable (v3.0.0rc1)
+├── .gitignore
+├── src/romeo_hydra/
+│   ├── __init__.py
+│   ├── core/
+│   │   ├── types.py                   # Hypothesis, Decision, AuditRecord, OmegaScore, HSIMetrics
+│   │   ├── config.py                  # Alpha/Beta/Gamma/Delta + EngineConfig
+│   │   └── engine.py                  # Orquestador principal (Shadow / Active)
+│   ├── regimes/
+│   │   ├── alpha.py                   # Structural Stability (rechazo de contradicciones)
+│   │   ├── beta.py                    # Adaptive Coherence (Jacobian dampening)
+│   │   ├── gamma.py                   # Dynamic Entropy Governance (HSI)
+│   │   └── delta.py                   # Integrity Traceability (audit hash + lineage)
+│   ├── compliance/
+│   └── dashboard/
+├── docs/
+│   ├── enterprise/pilot_industrial_agreement.md
+│   ├── technical/onboarding_checklist.md
+│   ├── governance/dashboard_specification.md
+│   └── certification/pilot_exit_protocol.md
+└── examples/
+    └── shadow_mode_demo.py            # Demo FinTech fraud-detection (funciona)
+```
+### Verificación
+El demo ya se ejecutó correctamente en Shadow Mode y generó:
+- Decisión `ACCEPT`
+- Métricas HSI / ES / RI / volatility
+- Audit hash
+- Advertencia de HSI bajo umbral (comportamiento esperado)
+### Cómo publicarlo en GitHub
+El conector actual no tiene permiso para crear repositorios. Puedes:
+1. Crear manualmente el repo vacío `romeo-hydra` en tu cuenta `robinmacv2-ui`.
+2. Luego ejecutar:
+```bash
+cd /home/workdir/artifacts/romeo-hydra
+git remote add origin https://github.com/robinmacv2-ui/romeo-hydra.git
+git push -u origin main
+```
+El código fuente está listo, con watermark de autoría, Cláusula de Neutralidad y los cuatro Regímenes implementados como el primer núcleo que “vio la luz” como **Romeo Hydra v3.0-RC1**.

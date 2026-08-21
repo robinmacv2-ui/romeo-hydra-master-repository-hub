@@ -1,0 +1,226 @@
+Aquí tienes los prompts maestros estructurados para que los copies, pegues y ejecutes directamente en Google AI Studio. Cada uno está diseñado para construir las capas exactas de la arquitectura ROMEO-HYDRA con el blindaje de VESA y el Safety Gate, sin saltarse ningún filtro de seguridad.
+Prompt Maestro 1: Configuración Base y Estructura de Carpetas
+Copia y pega esto en AI Studio:
+Actúa como Arquitecto de Software Senior y experto en PWA seguras. Necesito que generes la estructura de archivos y carpetas base para el proyecto ROMEO-HYDRA-CDMX, asegurando la separación estricta entre dominio, interfaz, sensores y seguridad. Crea los archivos de configuración iniciales (package.json, vite.config.ts, tsconfig.json, index.html) y la estructura de directorios exacta: sensors/, telemetry/, storage/, security/, romeo/, decentralized/, safety/, map/ y domain/. No incluyas lógica de negocio todavía, solo deja listos los esqueletos y contratos base en TypeScript.
+
+Prompt Maestro 2: Sensores y Telemetría Confiable
+Copia y pega esto en AI Studio:
+Implementa los módulos dentro de las carpetas /sensors y /telemetry. 
+Reglas estrictas:
+1. La captura de GPS y velocidad debe realizarse de forma nativa en el navegador, operando offline.
+2. Nunca interpretes un valor de velocidad '0' como "vehículo detenido" si el sensor está degradado, intermitente o sin señal; introduce un sistema de salud del sensor (HEALTHY, DEGRADED, STALE, UNAVAILABLE).
+3. El normalizador debe transformar cualquier métrica a unidades estándar (ej. velocidad en metros por segundo) y adjuntar metadatos de calidad (precisión en metros, edad del dato, timestamp exacto).
+
+Prompt Maestro 3: Persistencia Local Soberana y Cola Offline
+Copia y pega esto en AI Studio:
+Construye la capa de almacenamiento en la carpeta /storage utilizando IndexedDB. 
+Reglas estrictas:
+1. Aplica la regla: "Persistir primero, sincronizar después". Jamás envíes datos directamente a la red sin antes guardarlos localmente.
+2. Implementa repositorios separados para Telemetría y Eventos.
+3. Añade una cola de salida (OutboxRepository y SyncQueue) para garantizar que la PWA siga recolectando datos sin internet y sincronice de forma idempotente al recuperar la conexión.
+
+Prompt Maestro 4: Identidad Criptográfica y Seguridad (Security Layer)
+Copia y pega esto en AI Studio:
+Implementa la carpeta /security para blindar el nodo contra ataques. 
+Debe incluir:
+1. IdentityManager.ts: Gestión de identidad criptográfica y claves del nodo (evitando que el device.id sea solo un string manipulable).
+2. MessageAuthenticator.ts y ReplayProtection.ts: Validación obligatoria de firmas digitales, nonces y timestamps para rechazar mensajes duplicados, caducados o falsificados.
+3. SybilDetector.ts: Mecanismos para mitigar la suplantación de nodos y la inyección artificial de tráfico falso.
+
+Prompt Maestro 5: Red Descentralizada y Consenso (Decentralized Layer)
+Copia y pega esto en AI Studio:
+Implementa la carpeta /decentralized para la comunicación entre nodos P2P. 
+El flujo obligatorio que debe seguir cualquier mensaje entrante antes de procesarse es:
+Discovery -> Session -> Authentication (Security) -> Message Validation -> Trust Evaluation -> ConsensusAggregator.
+El ConsensusAggregator debe ponderar la evidencia de múltiples peers combinando identidad, coherencia espacial/temporal y diversidad de fuentes, evitando que múltiples nodos falsos inflen artificialmente la confianza.
+
+Prompt Maestro 6: El Núcleo Lógico ROMEO
+Copia y pega esto en AI Studio:
+Implementa la carpeta /romeo con su contrato estricto de entrada y salida (RomeoContract.ts, RomeoInputBuilder.ts, RomeoAdapter.ts).
+Reglas estrictas:
+1. ROMEO es completamente agnóstico: no conoce la UI, ni Google Maps, ni la base de datos local. Solo procesa telemetría validada y contexto de red.
+2. ROMEO_OUTPUT jamás debe emitir un comando directo de control sobre los semáforos. Su salida obligatoria es una recomendación analítica versionada (ej. TRAFFIC_RECOMMENDATION con nivel de confianza y caducidad), nunca una orden de actuación física.
+
+Prompt Maestro 7: El Motor de Auditoría VESA y el Safety Gate
+Copia y pega esto en AI Studio:
+Implementa las capas /vesa y /safety para la validación y seguridad operacional final.
+1. VESA debe actuar como motor transversal de auditoría, verificando invariantes de integridad, temporalidad, autenticidad y coherencia de cada recomendación generada.
+2. El Safety Gate (SafetyGate.ts y FailSafePolicy.ts) debe evaluar la recomendación de ROMEO y decidir si se aprueba, modifica o rechaza bajo políticas estrictas de fail-safe. La aplicación móvil se encarga exclusivamente de mostrar el resultado verificado en el mapa, manteniendo un desacoplamiento total de la infraestructura crítica de la ciudad.
+
+Implementa los módulos dentro de las carpetas /sensors y /telemetry. 
+Reglas estrictas:
+1. La captura de GPS y velocidad debe realizarse de forma nativa en el navegador, operando offline.
+2. Nunca interpretes un valor de velocidad '0' como "vehículo detenido" si el sensor está degradado, intermitente o sin señal; introduce un sistema de salud del sensor (HEALTHY, DEGRADED, STALE, UNAVAILABLE).
+3. El normalizador debe transformar cualquier métrica a unidades estándar (ej. velocidad en metros por segundo) y adjuntar metadatos de calidad (precisión en metros, edad del dato, timestamp exacto).
+
+/**
+ * ROMEO-HYDRA Kernel: Motor de Decisión, Políticas y Safety Gate (v3.0 - Endurecido)
+ * Diseñado bajo arquitectura fail-closed, validación runtime estricta y separación absoluta de infraestructura.
+ */
+// ==========================================
+// 1. TIPOS Y CONTRATOS ESTRICTOS (RUNTIME)
+// ==========================================
+export type SystemStatus = "RUNNING" | "DEGRADED" | "LOCKED" | "UNSAFE";
+export type SensorHealth = "HEALTHY" | "DEGRADED" | "STALE" | "UNAVAILABLE";
+export type DecisionAction = "OBSERVE" | "INFER" | "RECOMMEND" | "EMERGENCY_OVERRIDE";
+export interface SystemState {
+  readonly status: SystemStatus;
+  readonly coherence_index: number;
+  readonly active_peers: number;
+  readonly state_version: number;
+  readonly observed_at: number;
+}
+export interface TrafficInputData {
+  readonly action: DecisionAction;
+  readonly confidence: number;
+  readonly sensor_health: SensorHealth;
+  readonly payload: Readonly<Record<string, unknown>>;
+  readonly observed_at: number;
+  readonly source_id: string;
+  readonly correlation_id: string;
+}
+export interface AxiomEvaluation {
+  readonly id: string;
+  readonly passed: boolean;
+  readonly severity: "INFO" | "WARNING" | "BLOCK";
+  readonly reason?: string;
+  readonly metadata?: Readonly<Record<string, unknown>>;
+}
+export type AxiomRule = (state: SystemState, input: TrafficInputData) => AxiomEvaluation;
+export interface SafetyPolicy {
+  readonly policy_id: string;
+  readonly version: string;
+  readonly min_confidence: number;
+  readonly min_coherence: number;
+  readonly max_recommendation_seconds: number;
+  readonly allowed_actions: readonly string[];
+}
+export interface RomeoRecommendationOutput {
+  readonly schema: "ROMEO_OUTPUT";
+  readonly schema_version: "1.0.0";
+  readonly recommendation_id: string;
+  readonly correlation_id: string;
+  readonly decision: {
+    readonly type: "TRAFFIC_RECOMMENDATION";
+    readonly target_intersection: string;
+    readonly suggested_action: "EXTEND_GREEN" | "HOLD_PHASE" | "REDUCE_CYCLE";
+    readonly value_seconds: number;
+    readonly confidence: number;
+  };
+  readonly reason: string;
+  readonly validity: {
+    readonly issued_at: number;
+    readonly valid_until: number;
+    readonly max_age_ms: number;
+  };
+  readonly safety: {
+    readonly requires_policy_validation: true;
+    readonly direct_signal_control: false; // Inmutable por contrato y diseño
+  };
+}
+// ==========================================
+// 2. REGIMEN ALPHA: MOTOR DE POLÍTICAS Y AXIOMAS
+// ==========================================
+export class RomeoAlphaRegime {
+  private readonly immutableAxioms: readonly AxiomRule[];
+  constructor() {
+    this.immutableAxioms = [
+      // Axioma 0: Integridad de Estructura y Payload
+      (_state, input) => {
+        if (!input || typeof input !== "object") {
+          return { id: "DATA_INTEGRITY", passed: false, severity: "BLOCK", reason: "Input nulo o malformado." };
+        }
+        if (!input.payload || typeof input.payload !== "object" || Object.keys(input.payload).length === 0) {
+          return { id: "DATA_INTEGRITY", passed: false, severity: "BLOCK", reason: "Payload vacío o inválido." };
+        }
+        return { id: "DATA_INTEGRITY", passed: true, severity: "INFO" };
+      },
+      // Axioma 1: Continuidad y Seguridad de Estado (Anti-Lockout)
+      (state, input) => {
+        const isLocked = state.status === "LOCKED" || state.status === "UNSAFE";
+        const requiresAction = input.action === "INFER" || input.action === "RECOMMEND";
+        if (isLocked && requiresAction) {
+          return { id: "STATE_LOCKOUT", passed: false, severity: "BLOCK", reason: `Sistema en estado ${state.status}. Operación bloqueada.` };
+        }
+        return { id: "STATE_LOCKOUT", passed: true, severity: "INFO" };
+      },
+      // Axioma 2: Integridad Numérica y Confianza
+      (_state, input) => {
+        if (!Number.isFinite(input.confidence) || input.confidence < 0 || input.confidence > 1) {
+          return { id: "NUMERIC_CONFIDENCE", passed: false, severity: "BLOCK", reason: "Valor de confianza fuera de rango o no finito." };
+        }
+        return { id: "NUMERIC_CONFIDENCE", passed: true, severity: "INFO" };
+      },
+      // Axioma 3: Invariante de Coherencia Sistemática
+      (state, input) => {
+        if (!Number.isFinite(state.coherence_index) || state.coherence_index < 0 || state.coherence_index > 1) {
+          return { id: "COHERENCE_BOUNDS", passed: false, severity: "BLOCK", reason: "Índice de coherencia inválido o NaN." };
+        }
+        if (input.action === "RECOMMEND" && state.coherence_index < 0.85) {
+          return { id: "COHERENCE_THRESHOLD", passed: false, severity: "BLOCK", reason: `Coherencia sistémica insuficiente (${state.coherence_index} < 0.85).` };
+        }
+        return { id: "COHERENCE_THRESHOLD", passed: true, severity: "INFO" };
+      },
+      // Axioma 4: Sanidad de Sensores y Frescura
+      (_state, input) => {
+        if (input.action === "RECOMMEND" && (input.sensor_health === "STALE" || input.sensor_health === "UNAVAILABLE")) {
+          return { id: "SENSOR_HEALTH", passed: false, severity: "BLOCK", reason: `Sanidad de sensores comprometida: ${input.sensor_health}.` };
+        }
+        return { id: "SENSOR_HEALTH", passed: true, severity: "INFO" };
+      }
+    ];
+  }
+  public evaluateTransition(currentState: SystemState, proposedInput: TrafficInputData): { allowed: boolean; evaluations: AxiomEvaluation[] } {
+    const evaluations: AxiomEvaluation[] = [];
+    let allowed = true;
+    for (const axiom of this.immutableAxioms) {
+      const evaluation = axiom(currentState, proposedInput);
+      evaluations.push(evaluation);
+      if (!evaluation.passed && evaluation.severity === "BLOCK") {
+        allowed = false;
+      }
+    }
+    return { allowed, evaluations };
+  }
+}
+// ==========================================
+// 3. SAFETY GATE INDEPENDIENTE (FAIL-CLOSED)
+// ==========================================
+export class SafetyGateEngine {
+  private readonly defaultPolicy: SafetyPolicy = {
+    policy_id: "CDMX_TRAFFIC_POLICY",
+    version: "1.0.0",
+    min_confidence: 0.75,
+    min_coherence: 0.85,
+    max_recommendation_seconds: 30,
+    allowed_actions: ["EXTEND_GREEN", "HOLD_PHASE", "REDUCE_CYCLE"]
+  };
+  public evaluateRecommendation(output: RomeoRecommendationOutput, currentTimestamp: number): { status: "APPROVED" | "REJECTED"; failReason?: string } {
+    if (!Number.isFinite(currentTimestamp)) {
+      return { status: "REJECTED", failReason: "Timestamp actual inválido (NaN o Infinito)." };
+    }
+    // Garantía estricta de runtime: prohibición absoluta de control físico directo
+    if (output.safety.direct_signal_control !== false || output.safety.requires_policy_validation !== true) {
+      return { status: "REJECTED", failReason: "Violación crítica: Invariantes de seguridad de hardware comprometidos." };
+    }
+    const { issued_at, valid_until, max_age_ms } = output.validity;
+    if (!Number.isFinite(issued_at) || !Number.isFinite(valid_until) || !Number.isFinite(max_age_ms) || max_age_ms <= 0 || issued_at > valid_until) {
+      return { status: "REJECTED", failReason: "Metadatos temporales de validez inconsistentes o corruptos." };
+    }
+    // Política de expiración estricta (Fail-closed)
+    if (currentTimestamp >= valid_until || (currentTimestamp - issued_at) > max_age_ms) {
+      return { status: "REJECTED", failReason: "Recomendación caducada o fuera de ventana temporal." };
+    }
+    const { value_seconds, confidence, suggested_action } = output.decision;
+    if (!Number.isFinite(value_seconds) || value_seconds < 0 || value_seconds > this.defaultPolicy.max_recommendation_seconds) {
+      return { status: "REJECTED", failReason: "Valor de tiempo de recomendación fuera del rango seguro permitido." };
+    }
+    if (!Number.isFinite(confidence) || confidence < this.defaultPolicy.min_confidence || confidence > 1) {
+      return { status: "REJECTED", failReason: "Nivel de confianza inválido o por debajo del umbral mínimo." };
+    }
+    if (!this.defaultPolicy.allowed_actions.includes(suggested_action)) {
+      return { status: "REJECTED", failReason: "Acción sugerida no autorizada por la política vigente." };
+    }
+    return { status: "APPROVED" };
+  }
+}

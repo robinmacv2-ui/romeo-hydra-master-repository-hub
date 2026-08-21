@@ -1,0 +1,9 @@
+El Códice Chip RRPH (Papel Picado Romeo Hydra) / PPRH es una Unidad Mínima Reproducible (UMR) diseñada para la gobernanza de Inteligencia Artificial y la lógica convexa.
+¿Qué es?
+Arquitectura: Es un núcleo ejecutable ligero compuesto principalmente por tres módulos de Python (core.py, telemetry.py y cli.py) junto con herramientas de contenedorización como Docker.
+Identificación y Autoría: Cuenta con el identificador científico DOI 10.5281/zenodo.21406719 y fue creado por Luis Angel Vazquez Martinez.
+¿Para qué sirve?
+Ingesta y Procesamiento de Datos: Permite procesar datos categorizados bajo rubros como gobernanza de IA, métricas empíricas y topología convexa.
+Telemetría de Alta Precisión: Registra tiempos de ejecución en nanosegundos y microsegundos utilizando time.perf_counter_ns() para garantizar métricas orientadas a una supuesta "cero fricción operativa".
+Trazabilidad Criptográfica: Aplica transformaciones mediante hashes SHA-256 combinando los datos de entrada con el DOI del proyecto para asegurar determinismo e inmutabilidad.
+Generación de Manifiestos: Produce reportes de trazabilidad y manifiestos de viabilidad en formato JSON que validan la integridad estructural del sistema.

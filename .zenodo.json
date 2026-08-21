@@ -1,0 +1,46 @@
+{
+  "title": "ROMEO-HYDRA v0.2.0 — Information Folding Topology (Structure-Before-Specificity)",
+  "version": "0.2.0",
+  "description": "Release that elevates information folding as a base principle of computer topology inside ROMEO-HYDRA.\n\nPrinciple: any digital object induces a space. Stable information lives in structural invariants (components, identity cycles, critical order). High-entropy detail is scaffold and can be discarded or regenerated under a rate budget. Encoding invariants is folding; reconstruction is unfolding.\n\nMetaphor: the cell packs ~2 m of DNA into a nucleus smaller than 0.5 mm — not by deleting sequence, but by hierarchical folding that preserves function. The same idea applied to files, documents, ledgers and media: keep what must persist, fold away what does not.\n\nIncludes:\n- romeo.topology.fold (fold_bytes, fold_text, fold_file)\n- romeo.tools.video (YC-ready offline compress as a media instance of the same principle)\n- docs/TOPOLOGY.md\n- Offline / Termux aarch64 compatible APIs\n- Continuity with prior DOIs (concept 10.5281/zenodo.21744014)\n\nAuthor: Luis Angel Vazquez Martinez. License: AGPL-3.0-or-later (evaluation) / commercial EMMOROR on request.",
+  "creators": [
+    {
+      "name": "Vazquez Martinez, Luis Angel",
+      "affiliation": "ROMEO-HYDRA / CDMX",
+      "orcid": ""
+    }
+  ],
+  "keywords": [
+    "information topology",
+    "information folding",
+    "structure-before-specificity",
+    "topological compression",
+    "offline AI",
+    "edge computing",
+    "Termux",
+    "aarch64",
+    "ROMEO-HYDRA",
+    "DNA packing metaphor",
+    "Zenodo",
+    "sovereign software"
+  ],
+  "license": "AGPL-3.0-or-later",
+  "upload_type": "software",
+  "access_right": "open",
+  "related_identifiers": [
+    {
+      "identifier": "10.5281/zenodo.21744014",
+      "relation": "isVersionOf",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.5281/zenodo.21922106",
+      "relation": "isNewVersionOf",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ]
+}

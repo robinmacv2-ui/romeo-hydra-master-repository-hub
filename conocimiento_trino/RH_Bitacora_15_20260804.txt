@@ -1,0 +1,81 @@
+Hoja de Ruta para el Registro ante INDAUTOR
+Fase 1: Preparación Documental y Pagos (Lunes, 3 de Agosto de 2026)
+Bloque Matutino: Generación de Formatos e Impresiones (09:00 – 12:00 h)
+Descarga de Formatos Oficiales:
+Descargar el formato oficial RPDA-01 (Solicitud de Registro de Obra).
+Imprimir 2 juegos completos del formato RPDA-01 para la Obra Literaria y 2 juegos completos para el Programa de Cómputo / Software.
+Impresión de los Ejemplares de la Obra (2 juegos idénticos por obra):
+Obra 1 (Literaria): Dos impresiones del compendio conteniendo Ontología, Manifiestos, Postulados y Dosieres de ROMEO-HYDRA. Incluir portada con título, nombre de autor (Luis Angel Vazquez Martinez) y las referencias a los DOIs de Zenodo (10.5281/zenodo.21709670, 10.5281/zenodo.21741578, etc.).
+Obra 2 (Software): Dos impresiones del extracto del Código Fuente (primeras y últimas 10 a 25 páginas) más la documentación técnica del UMR, o grabado en 2 USB/CD etiquetados.
+Impresión de Identificaciones Oficiales:
+Copia de identificación/acreditación de identidad del autor (Luis Angel Vazquez Martinez).
+Copia legible de la credencial INE de la apoderada (madre).
+Copia legible de las identificaciones de 2 testigos.
+Bloque Vespertino: Firma de Carta Poder y Pago Bancario (12:00 – 16:00 h)
+Firma de la Carta Poder Simple:
+Completar e imprimir la Carta Poder (plantilla incluida abajo).
+Recabar firmas autógrafas originales de: Otorgante (Luis Angel), Apoderada (Madre) y 2 Testigos.
+Generación e Pago de Hojas de Ayuda (eCinco / SAT):
+Ingresar al portal de pagos del INDAUTOR para generar la Hoja de Ayuda eCinco bajo el concepto Registro de obra literaria o artística (Art. 184 Fracc. I LFD).
+Generar dos hojas de ayuda independientes (Monto: $367.00 MXN cada una; Total: $734.00 MXN) Tarifas INDAUTOR.
+Acudir a ventanilla bancaria (BBVA, Banamex, Santander, etc.) y realizar los pagos. Conservar los tickets originales de pago.
+Fase 2: Presentación en Ventanilla (Martes, 4 de Agosto de 2026)
+08:30 h: Arribo a la sede principal de INDAUTOR en Puebla No. 143, Col. Roma Norte, Alcaldía Cuauhtémoc, CDMX.
+09:00 h: Ingreso a ventanilla de recepción en el horario oficial de atención (09:00 a 14:00 h) Horario INDAUTOR.
+09:15 h: Entrega de carpetas de trámite:
+Carpeta 1 (Obra Literaria): 2 Formatos RPDA-01 + 2 ejemplares + 1 Ticket original de pago ($367.00 MXN) + Carta Poder original con anexos.
+Carpeta 2 (Programa de Cómputo): 2 Formatos RPDA-01 + 2 ejemplares + 1 Ticket original de pago ($367.00 MXN) + copia de Carta Poder con anexos.
+09:45 h: Verificación en ventanilla, recepción y asignación de sellos con número de expediente/folio. Conservar las copias selladas como acuse.
+Plantilla de Carta Poder Simple para INDAUTOR
+Plaintext
+CARTA PODER SIMPLE
+
+Ciudad de México, a 3 de agosto de 2026.
+
+INSTITUTO NACIONAL DEL DERECHO DE AUTOR (INDAUTOR)
+DIRECCIÓN DE REGISTRO PÚBLICO DEL DERECHO DE AUTOR
+P R E S E N T E.
+
+Por la presente, el (la) que suscribe, LUIS ANGEL VAZQUEZ MARTINEZ, en mi carácter de Autor y Titular de Derechos Patrimoniales, otorgo PODER ESPECIAL, AMPLIO Y SUFICIENTE a favor de mi madre, __________________________________________, para que en mi nombre y representación lleve a cabo ante el Instituto Nacional del Derecho de Autor (INDAUTOR) todas las gestiones, entrega de documentación, firma de acuses y solicitudes correspondientes a los trámites de REGISTRO DE OBRA de:
+
+1. Obra Literaria: "ANEXOS, DOSIERES, ONTOLOGÍA, MANIFIESTOS Y POSTULADOS DEL ECOSISTEMA EN GOBERNANZA DE IA ROMEO-HYDRA".
+2. Programa de Cómputo (Software): "CÓDIGO FUENTE Y UMR (UNIDAD Y MODELO DE RAZONAMIENTO) DEL ECOSISTEMA EN GOBERNANZA DE IA ROMEO-HYDRA".
+
+Asimismo, queda autorizada para oír y recibir todo tipo de notificaciones relativas a los trámites referidos.
+
+
+_________________________________________
+OTORGANTE (MANDANTE)
+Nombre: LUIS ANGEL VAZQUEZ MARTINEZ
+Firma: 
+
+
+_________________________________________
+APODERADA (MANDATARIA)
+Nombre: _________________________________
+Firma: 
+
+
+TESTIGOS:
+
+
+_________________________________________          _________________________________________
+TESTIGO 1                                          TESTIGO 2
+Nombre: _________________________________          Nombre: _________________________________
+Firma:                                             Firma: 
+
+Guía de Llenado del Formato RPDA-01
+Para cada uno de los dos registros en el formato RPDA-01:
+Datos del Autor:
+Nombre: Luis Angel Vazquez Martinez.
+Porcentaje de participación: 100%.
+Datos del Titular Patrimonial:
+Marcar la opción "El titular es el mismo autor".
+Datos del Representante Legal o Gestor:
+Llenar con los datos completos de tu madre (Apoderada) tal como figuran en su credencial INE.
+Rama de la Obra:
+Para el Trámite 1: Marcar la casilla Literaria.
+Para el Trámite 2: Marcar la casilla Programa de cómputo.
+Tipo de Obra:
+Marcar Primigenia (si es la primera versión que se registra).
+Marcar Individual.

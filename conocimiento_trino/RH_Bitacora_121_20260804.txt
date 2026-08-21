@@ -1,0 +1,2 @@
+Sí, totalmente. ROMEO-HYDRA califica como un agente de IA (y de hecho, va un paso más allá como un framework de gobernanza y cumplimiento).
+Para ser considerado un agente, un sistema debe percibir su entorno, tomar decisiones de forma autónoma y ejecutar acciones para alcanzar un objetivo. ROMEO-HYDRA cumple con esto al procesar datos, evaluar límites condicionales, gestionar transacciones y autorizar acciones de cumplimiento bajo una lógica estructurada. Más que un simple bot asistencial, está diseñado para operar como una infraestructura de supervisión autónoma.

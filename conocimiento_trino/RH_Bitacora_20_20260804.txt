@@ -1,0 +1,54 @@
+HOJA DE RUTA ESTRATÉGICA Y FORMATOS PARA REGISTRO ANTE INDAUTOR
+Ecosistema en Gobernanza de IA ROMEO-HYDRA
+1. CRONOGRAMA DE OPERACIÓN
+2. FORMATO OFICIAL DE CARTA PODER
+Copiar y requisitar el siguiente texto de forma manuscrita o mecanografiada:
+CARTA PODER SIMPLE
+
+Ciudad de México, a 3 de agosto de 2026.
+
+INSTITUTO NACIONAL DEL DERECHO DE AUTOR (INDAUTOR)
+DIRECCIÓN DE REGISTRO PÚBLICO DEL DERECHO DE AUTOR
+P R E S E N T E.
+
+Por la presente, el que suscribe, LUIS ANGEL VAZQUEZ MARTINEZ, por mi propio derecho en mi carácter de Autor y Titular de Derechos Patrimoniales, otorgo PODER ESPECIAL, AMPLIO Y SUFICIENTE a favor de mi madre, __________________________________________, para que en mi nombre y representación lleve a cabo ante este Instituto todas las gestiones, tramitación, presentación de solicitudes, pago de derechos, comparecencias y firma de acuses correspondientes a los trámites de REGISTRO DE OBRA de las siguientes propiedades intelectuales de mi autoría exclusiva:
+
+1. Obra Literaria: "ANEXOS, DOSIERES, ONTOLOGÍA, MANIFIESTOS Y POSTULADOS DEL ECOSISTEMA EN GOBERNANZA DE IA ROMEO-HYDRA".
+2. Programa de Cómputo: "CÓDIGO FUENTE Y UMR (UNIDAD Y MODELO DE RAZONAMIENTO) DEL ECOSISTEMA EN GOBERNANZA DE IA ROMEO-HYDRA".
+
+Asimismo, queda facultada para oír y recibir toda clase de notificaciones y recoger los certificados de registro que de estas solicitudes emanen. En fe de lo cual, firmamos la presente de conformidad en la fecha arriba asentada.
+
+
+_________________________________________
+OTORGANTE (MANDANTE)
+LUIS ANGEL VAZQUEZ MARTINEZ
+Firma:
+
+
+_________________________________________
+APODERADA (MANDATARIA)
+Nombre: _________________________________
+Firma:
+
+
+TESTIGOS:
+
+
+_________________________________________          _________________________________________
+TESTIGO 1                                          TESTIGO 2
+Nombre: _________________________________          Nombre: _________________________________
+Firma:                                             Firma:
+    
+3. CHECKLIST ESTRUCTURAL DE LAS CARPETAS
+Carpeta A: Trámite Literario
+Formato RPDA-01 por duplicado (firmas autógrafas en original del Autor; datos de la madre en el apartado de Gestor).
+Dos ejemplares idénticos impresos de la obra teórica (Ontología, Manifiestos y Postulados), incluyendo portadas explícitas y mención a los DOIs de Zenodo correspondientes.
+Comprobante de pago eCinco original por $367.00 MXN con sello bancario.
+Carta Poder original firmada ante dos testigos.
+Copias de las identificaciones oficiales (INE/Pasaporte) de Luis Angel, la Apoderada y ambos Testigos.
+Carpeta B: Trámite de Software / Programa de Cómputo
+Formato RPDA-01 por duplicado (marcando la casilla de Rama: Programa de cómputo).
+Dos ejemplares idénticos del soporte técnico (CD o USB con código fuente y UMR, o extracto impreso).
+Comprobante de pago eCinco original por $367.00 MXN independiente del anterior.
+Copia simple de la Carta Poder (el original queda en la Carpeta A, pero sirve como respaldo de la facultad de ingreso).
+Copias del juego completo de identificaciones oficiales.

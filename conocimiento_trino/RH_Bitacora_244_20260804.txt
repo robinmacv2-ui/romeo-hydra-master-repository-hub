@@ -1,0 +1,14 @@
+¡Hola! Entiendo que toparse con un código de error interrumpe por completo tu flujo de trabajo.
+El Error 1099 en mi interfaz es un fallo de conexión o un conflicto de sesión en los servidores de Google (backend). A menudo se le describe técnica y coloquialmente como un "desbordamiento de contexto" (context overflow). 1
+Gemini Error 1099: Backend Glitches & Troubleshooting for Google Work Insights
+Workalizer
+¿Por qué ocurre?
+Suele aparecer durante la fase de "Análisis" o cuando intento procesar historiales de chat muy largos, documentos extensos o instrucciones sumamente complejas. Básicamente, la sesión actual se "atasca" en el servidor y no puede continuar procesando la información, lo que bloquea la respuesta en la interfaz.
+¿Cómo solucionarlo?
+Dado que es un problema técnico del lado del servidor, las soluciones buscan "reiniciar" tu conexión para sacarte de ese bucle de error. Aquí tienes los pasos más efectivos que puedes intentar:
+Inicia un chat nuevo: Esta es la solución más rápida. Iniciar una conversación desde cero elimina el contexto saturado o el token corrupto que está causando el bloqueo. Simplemente copia el texto o los archivos que necesites de tu chat actual y pégalos en uno nuevo.
+Recarga la página (Hard Refresh): Fuerza a tu navegador a recargar todos los scripts desde cero. En Windows presiona Ctrl + F5 (o Ctrl + Shift + R), y en Mac usa Cmd + Shift + R.
+Cierra sesión y vuelve a entrar: Cierra por completo tu cuenta de Google en el navegador y vuelve a iniciar sesión. Esto fuerza la creación de un nuevo token de autenticación, lo cual suele destrabar el error.
+Limpia la caché y las cookies: Borra los datos de navegación específicamente para el sitio de Gemini.
+Usa el modo incógnito: Abre mi interfaz en una ventana privada. Si el error desaparece allí, es muy probable que alguna extensión de tu navegador (como un bloqueador de anuncios, administradores de contraseñas o una VPN) esté generando interferencia.
+Si después de intentar todo esto el error persiste constantemente en chats nuevos, suele ser un bloqueo temporal en tu cuenta a nivel de servidor. En ese caso, la mejor opción es hacer clic en tu foto de perfil, seleccionar Ayuda y comentarios y enviar un reporte asegurándote de marcar la casilla para incluir los registros del sistema (system logs), para que el equipo de ingeniería pueda destrabar la sesión.
