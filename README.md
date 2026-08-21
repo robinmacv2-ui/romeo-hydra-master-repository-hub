@@ -1,20 +1,23 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21744014.svg)](https://doi.org/10.5281/zenodo.21744014)
 [![ORCID](https://img.shields.io/badge/ORCID-0009--0006--8163--3759-green)](https://orcid.org/0009-0006-8163-3759)
+[![Stdlib](https://img.shields.io/badge/core-stdlib%20only-success.svg)](#)
+[![Offline](https://img.shields.io/badge/offline-100%25-green.svg)](#)
+[![Fail-closed](https://img.shields.io/badge/gate-FAIL--CLOSED-black.svg)](#)
 
 # ROMEO-HYDRA
 
-**Capa de admisibilidad ex-ante y evidencia criptográfica para decisiones algorítmicas críticas.**
+**Ex-ante admissibility layer + cryptographic evidence for critical algorithmic decisions.**
 
-Offline · Fail-closed · Python 3.11 · Core = stdlib only · Formal DFA
+Offline · Fail-closed · Python 3.11 · Core = **stdlib only** · Formal DFA
 
 ---
 
-## Qué es (sin humo)
+## What it is (no hype)
 
-HYDRA no afirma que una decisión de IA sea legalmente nula.  
-Afirma algo más preciso y defendible:
+HYDRA does **not** claim that an AI decision is legally void.  
+It claims something narrower and testable:
 
-> Cuando la trazabilidad y la acreditación de una decisión son requisitos regulatorios o de control interno, HYDRA impone una **condición técnica de admisibilidad ex-ante** y produce **evidencia criptográficamente encadenada**.
+> When traceability and accreditation of a decision are required, HYDRA enforces a **technical ex-ante admissibility condition** and produces **cryptographically chained evidence**.
 
 ```
 INPUT → PARSE → ADMISSIBILITY → PRE-RECEIPT
@@ -24,44 +27,64 @@ INPUT → PARSE → ADMISSIBILITY → PRE-RECEIPT
                              DENY / HOLD → FAILURE_RECEIPT → LEDGER
 ```
 
-## Quick start (entorno limpio — cero dependencias forzadas)
+---
+
+## Jury path (≤ 3 minutes)
 
 ```bash
-git clone https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub.git
+git clone --depth 1 https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub.git
 cd romeo-hydra-master-repository-hub
 python3 -m venv .venv && source .venv/bin/activate
-pip install -e .          # instala ZERO paquetes de terceros
+pip install -e .          # ZERO third-party packages for product surface
 python main.py
-python -m pilot.run_offline_audit --days 30 --entity EVAL 2>/dev/null || true
+python -m romeo_agent -c "status ::"
+python -m romeo_agent -c "help ::"
 ```
 
-> **Nota para jurado**: el núcleo (gate + receipt + ledger) es Python 3.11 stdlib.  
-> `numpy` es un extra opcional de laboratorio (`pip install -e ".[lab]"`), nunca dependencia del producto surface.
+Full checklist: [`JURY_CHECKLIST.md`](JURY_CHECKLIST.md) · Evaluators: [`FOR_EVALUATORS.md`](FOR_EVALUATORS.md)
 
-## Documentos clave
-
-| Documento              | Para qué                          |
-|------------------------|-----------------------------------|
-| `JURY_CHECKLIST.md`    | Checklist de escrutinio técnico   |
-| `FOR_EVALUATORS.md`    | Jurado / aceleradoras / LOI       |
-| `DOI_HISTORY.md`       | Acta de nacimiento + DOIs         |
-| `STRUCTURE.md`         | Qué es producto vs laboratorio    |
-| `docs/FHE_STATUS.md`   | Límites reales de cripto          |
-
-## Qué NO es
-
-- No es sistema bancario en producción  
-- No está certificado por CNBV ni ninguna autoridad  
-- No es un LLM  
-- No genera folio CNBV oficial (folio interno de evidencia)
-
-## Licencia
-
-Dual: AGPL-3.0 (evaluación / PoC) · Comercial EMMOROR (producción)  
-Contacto: emmororromeohydra@gmail.com
+> **Jury note:** core path (gate + receipt + ledger + agent) is Python 3.11 stdlib.  
+> Laboratory code under `lab/` is **out of scope** for product evaluation.
 
 ---
 
-**Autor:** Luis Angel Vazquez Martinez  
+## Key documents
+
+| Document | Purpose |
+|----------|---------|
+| `JURY_CHECKLIST.md` | Pass/fail technical scrutiny |
+| `FOR_EVALUATORS.md` | Jury / accelerators / LOI |
+| `STRUCTURE.md` | Product Surface vs Laboratory |
+| `DOI_HISTORY.md` | Birth record + DOIs |
+| `docs/FHE_STATUS.md` | Real crypto limits |
+
+---
+
+## What it is NOT
+
+- Not a production banking system  
+- Not certified by CNBV or any authority  
+- Not an LLM  
+- Does not issue official CNBV folios (internal evidence only)
+
+---
+
+## Sister public MRUs
+
+| Repo | Role |
+|------|------|
+| [hydra-genesis-zero](https://github.com/robinmacv2-ui/hydra-genesis-zero) | Pure kernel (no pip) |
+| [romeo-hydra-quantik](https://github.com/robinmacv2-ui/romeo-hydra-quantik) | Public evaluation door |
+
+---
+
+## License
+
+Dual: AGPL-3.0 (evaluation / PoC) · Commercial EMMOROR (production)  
+Contact: emmororromeohydra@gmail.com · robinmac.v2@gmail.com
+
+---
+
+**Author:** Luis Angel Vazquez Martinez  
 **ORCID:** 0009-0006-8163-3759  
 **Concept DOI:** https://doi.org/10.5281/zenodo.21744014

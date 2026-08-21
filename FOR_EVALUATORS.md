@@ -1,79 +1,59 @@
-# FOR EVALUATORS — FIAB / BIND / 500 LATAM / YC
+# FOR EVALUATORS — ROMEO-HYDRA
 
-**ROMEO-HYDRA**  
-Author: Luis Angel Vazquez Martinez  
-ORCID: 0009-0006-8163-3759  
-Concept DOI: 10.5281/zenodo.21744014
+**One page for jury / accelerator / LOI reviewers.**
 
 ---
 
-## 1. What this is
+## 60-second claim
 
-Offline Python package.  
-Fail-closed admissibility layer + cryptographic evidence for algorithmic decisions.
+Offline, fail-closed, stdlib-only admissibility gate that **allows or denies** structured commands *before* execution and writes **SHA-256 lineage + receipts** either way.
 
-- Ex-ante gate (closed verbs + capabilities)
-- SHA-256 append-only ledger
-- Internal folio only (explicitly not CNBV)
-- Reproducible on Termux aarch64 / bare-metal / clean venv
-- **Core path = pure Python 3.11 stdlib** (no forced third-party deps)
-
-It is not a LLM.  
-It is not a production banking system.  
-It is not certified by any authority.
+Not a bank. Not CNBV-certified. Not an LLM.
 
 ---
 
-## 2. Product Surface (evaluate only this)
-
-See `STRUCTURE.md` and `JURY_CHECKLIST.md`.  
-Everything outside the Product Surface is Laboratory and is invisible to evaluation by design.
-
----
-
-## 3. Judge test (clean environment — zero third-party packages)
+## Reproduce (copy-paste)
 
 ```bash
-mkdir -p /tmp/auditoria_jurado && cd /tmp/auditoria_jurado
-git clone https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub.git
+git clone --depth 1 https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub.git
 cd romeo-hydra-master-repository-hub
 python3 -m venv .venv && source .venv/bin/activate
-pip install -e .          # installs ZERO third-party packages
-python main.py
-python -m pilot.run_offline_audit --days 30 --entity EVAL 2>/dev/null || true
+pip install -e .
+python -m romeo_agent -c "status ::"
+python -m romeo_agent -c "help ::"
 ```
 
-Expected: runs without requiring numpy or any external library for the core path.  
-JSON receipts (when pilot succeeds) carry explicit note that the folio is internal (not CNBV).
+Expect: JSON with `"status": "allow"` and a `lineage` block (architect, DOI, policy fail-closed).
+
+DENY smoke:
+
+```bash
+python -m romeo_agent -c "rm :: /tmp" 2>/dev/null || true
+```
+
+Expect: deny + reason + receipt (process must not crash).
 
 ---
 
-## 4. Official statement
+## Where to look
 
-Build: pure Python 3.11 core, offline, fail-closed.  
-Evidence: SHA-256 ledger + internal folio.  
-Status: 0 paying customers / $0 MRR. Seeking first offline pilot LOI.
-
----
-
-## 5. What is never claimed
-
-- Production banking or trading system
-- CNBV certification or any regulatory approval
-- Compiled TFHE / full homomorphic encryption in the default runtime
-- LLM or chatbot capabilities
-- Automatic legal nullity of any decision
-- That numpy is required for the core
+| Path | Why |
+|------|-----|
+| `romeo_agent/` | Parser, admissibility, tools, runtime |
+| `pilot/` | Offline audit / evidence |
+| `JURY_CHECKLIST.md` | Full pass/fail table |
+| `STRUCTURE.md` | What is product vs `lab/` |
+| `lab/` | **Ignore for product scoring** |
 
 ---
 
-## 6. License
+## Pure kernel alternative
 
-AGPL-3.0 (evaluation / PoC)  
-Commercial EMMOROR (production)  
-Contact: emmororromeohydra@gmail.com
+No install path: [hydra-genesis-zero](https://github.com/robinmacv2-ui/hydra-genesis-zero) → `python3 main.py`
 
 ---
 
-Luis Angel Vazquez Martinez  
-https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub
+## Contact
+
+Luis Angel Vazquez Martinez · ORCID 0009-0006-8163-3759  
+robinmac.v2@gmail.com · emmororromeohydra@gmail.com
