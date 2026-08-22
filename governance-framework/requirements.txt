@@ -1,0 +1,4 @@
+# ARCHITECTURE OVERVIEW: FULL-STACK TSX (EXPRESS + REACT + VITE)
+# This project runs on Node.js. Dependencies are managed via package.json.
+# This file is provided for environment scanners requiring requirements.txt.
+# No Python dependencies are needed for running the ROMEO-HYDRA Kernel.

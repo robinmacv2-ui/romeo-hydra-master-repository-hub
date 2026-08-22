@@ -1,0 +1,6 @@
+{
+  "name": "ROMEO-HYDRA Governance Framework",
+  "description": "A metacognitive reasoning governance and empirical validation framework under EMMOROR Legal Regimes.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
