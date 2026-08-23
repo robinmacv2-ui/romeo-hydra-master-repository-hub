@@ -1,0 +1,420 @@
+[
+  {
+    "entry_hash": "8dc49ec05fa6ae1b2683105b1a78838f45d9c5a9d616ee739d7642168eec7143",
+    "payload": {
+      "anclajes_T": {
+        "E_T": 0,
+        "N_T": 1,
+        "O_T": 0,
+        "S_T": 1
+      },
+      "event_type": "init",
+      "extra": {},
+      "fingerprint_sha256": "2d88977bd27ea7b6fa9b41b3d7a43fbdc3092aec00534e3e72bd4a121d5df8dc",
+      "modo": "Luminoso",
+      "ts_utc": "2026-08-22T22:08:32.209129+00:00",
+      "vector": [
+        1,
+        0,
+        0,
+        1
+      ]
+    },
+    "prev_hash": null,
+    "seq": 1
+  },
+  {
+    "entry_hash": "e78bfc0c48d4eb55db04777f807fb48d2f22f9304cbff6af817842aa281f7acc",
+    "payload": {
+      "anclajes_T": {
+        "E_T": 0,
+        "N_T": 1,
+        "O_T": 0,
+        "S_T": 1
+      },
+      "event_type": "init",
+      "extra": {},
+      "fingerprint_sha256": "0a9e45fb2d89460768a27ea18707bfabcaefc134ecd296b76976038f179e22e8",
+      "modo": "Oscuro",
+      "ts_utc": "2026-08-22T22:08:32.242649+00:00",
+      "vector": [
+        0,
+        1,
+        1,
+        0
+      ]
+    },
+    "prev_hash": "8dc49ec05fa6ae1b2683105b1a78838f45d9c5a9d616ee739d7642168eec7143",
+    "seq": 2
+  },
+  {
+    "entry_hash": "9f3210ae0118b7b47fa53afc5adb2b6047bc59d82d984f868dee650a9108872f",
+    "payload": {
+      "anclajes_T": {
+        "E_T": 0,
+        "N_T": 1,
+        "O_T": 0,
+        "S_T": 1
+      },
+      "event_type": "calcular_dualidad",
+      "extra": {
+        "from": "Luminoso",
+        "to": "Oscuro"
+      },
+      "fingerprint_sha256": "2d88977bd27ea7b6fa9b41b3d7a43fbdc3092aec00534e3e72bd4a121d5df8dc",
+      "modo": "Luminoso",
+      "ts_utc": "2026-08-22T22:08:32.286354+00:00",
+      "vector": [
+        1,
+        0,
+        0,
+        1
+      ]
+    },
+    "prev_hash": "e78bfc0c48d4eb55db04777f807fb48d2f22f9304cbff6af817842aa281f7acc",
+    "seq": 3
+  },
+  {
+    "entry_hash": "47f8271dbcbab5d7a52183ba0f2e51664364d9ae1da1e78fd81e2601184f1446",
+    "payload": {
+      "anclajes_T": {
+        "E_T": 0,
+        "N_T": 1,
+        "O_T": 0,
+        "S_T": 1
+      },
+      "event_type": "init",
+      "extra": {},
+      "fingerprint_sha256": "2d88977bd27ea7b6fa9b41b3d7a43fbdc3092aec00534e3e72bd4a121d5df8dc",
+      "modo": "Luminoso",
+      "ts_utc": "2026-08-22T22:12:12.204453+00:00",
+      "vector": [
+        1,
+        0,
+        0,
+        1
+      ]
+    },
+    "prev_hash": "9f3210ae0118b7b47fa53afc5adb2b6047bc59d82d984f868dee650a9108872f",
+    "seq": 4
+  },
+  {
+    "entry_hash": "76a1471735894f9377ea763e7d6ad614cf29559d223fc07c89d73620f60688f1",
+    "payload": {
+      "anclajes_T": {
+        "E_T": 0,
+        "N_T": 1,
+        "O_T": 0,
+        "S_T": 1
+      },
+      "event_type": "init",
+      "extra": {},
+      "fingerprint_sha256": "0a9e45fb2d89460768a27ea18707bfabcaefc134ecd296b76976038f179e22e8",
+      "modo": "Oscuro",
+      "ts_utc": "2026-08-22T22:12:12.251337+00:00",
+      "vector": [
+        0,
+        1,
+        1,
+        0
+      ]
+    },
+    "prev_hash": "47f8271dbcbab5d7a52183ba0f2e51664364d9ae1da1e78fd81e2601184f1446",
+    "seq": 5
+  },
+  {
+    "entry_hash": "8232397ac92ed030c7095f0f4c7faedc3597077a7d8f256fddc2281d290b3272",
+    "payload": {
+      "anclajes_T": {
+        "E_T": 0,
+        "N_T": 1,
+        "O_T": 0,
+        "S_T": 1
+      },
+      "event_type": "calcular_dualidad",
+      "extra": {
+        "from": "Luminoso",
+        "to": "Oscuro"
+      },
+      "fingerprint_sha256": "2d88977bd27ea7b6fa9b41b3d7a43fbdc3092aec00534e3e72bd4a121d5df8dc",
+      "modo": "Luminoso",
+      "ts_utc": "2026-08-22T22:12:12.298199+00:00",
+      "vector": [
+        1,
+        0,
+        0,
+        1
+      ]
+    },
+    "prev_hash": "76a1471735894f9377ea763e7d6ad614cf29559d223fc07c89d73620f60688f1",
+    "seq": 6
+  },
+  {
+    "entry_hash": "a647040beb43a8c1698c670ebbb5d2ed72cccc998ab1e40aa88f717b77648bb6",
+    "payload": {
+      "anclajes_T": {
+        "E_T": 0,
+        "N_T": 1,
+        "O_T": 0,
+        "S_T": 1
+      },
+      "event_type": "init",
+      "extra": {},
+      "fingerprint_sha256": "2d88977bd27ea7b6fa9b41b3d7a43fbdc3092aec00534e3e72bd4a121d5df8dc",
+      "modo": "Luminoso",
+      "ts_utc": "2026-08-22T22:14:11.558108+00:00",
+      "vector": [
+        1,
+        0,
+        0,
+        1
+      ]
+    },
+    "prev_hash": "8232397ac92ed030c7095f0f4c7faedc3597077a7d8f256fddc2281d290b3272",
+    "seq": 7
+  },
+  {
+    "entry_hash": "0d1f58141c9b76e3cb203f180c0d52c91364002e16ae131363e83ce00f109769",
+    "payload": {
+      "anclajes_T": {
+        "E_T": 0,
+        "N_T": 1,
+        "O_T": 0,
+        "S_T": 1
+      },
+      "event_type": "init",
+      "extra": {},
+      "fingerprint_sha256": "0a9e45fb2d89460768a27ea18707bfabcaefc134ecd296b76976038f179e22e8",
+      "modo": "Oscuro",
+      "ts_utc": "2026-08-22T22:14:11.608408+00:00",
+      "vector": [
+        0,
+        1,
+        1,
+        0
+      ]
+    },
+    "prev_hash": "a647040beb43a8c1698c670ebbb5d2ed72cccc998ab1e40aa88f717b77648bb6",
+    "seq": 8
+  },
+  {
+    "entry_hash": "5e4e0b4ec758a3ae7732cf8be259d6f1fb9b308bf3d11e7d0c3a51c59fe8cf5b",
+    "payload": {
+      "anclajes_T": {
+        "E_T": 0,
+        "N_T": 1,
+        "O_T": 0,
+        "S_T": 1
+      },
+      "event_type": "calcular_dualidad",
+      "extra": {
+        "from": "Luminoso",
+        "to": "Oscuro"
+      },
+      "fingerprint_sha256": "2d88977bd27ea7b6fa9b41b3d7a43fbdc3092aec00534e3e72bd4a121d5df8dc",
+      "modo": "Luminoso",
+      "ts_utc": "2026-08-22T22:14:11.659103+00:00",
+      "vector": [
+        1,
+        0,
+        0,
+        1
+      ]
+    },
+    "prev_hash": "0d1f58141c9b76e3cb203f180c0d52c91364002e16ae131363e83ce00f109769",
+    "seq": 9
+  },
+  {
+    "entry_hash": "b7ea86c25987eab262a0ebbb1e4cacbc792f349570e9a769c5f1b0bf8aeb4eec",
+    "payload": {
+      "anclajes_T": {
+        "E_T": 0,
+        "N_T": 1,
+        "O_T": 0,
+        "S_T": 1
+      },
+      "event_type": "init",
+      "extra": {},
+      "fingerprint_sha256": "2d88977bd27ea7b6fa9b41b3d7a43fbdc3092aec00534e3e72bd4a121d5df8dc",
+      "modo": "Luminoso",
+      "ts_utc": "2026-08-22T22:22:04.527652+00:00",
+      "vector": [
+        1,
+        0,
+        0,
+        1
+      ]
+    },
+    "prev_hash": "5e4e0b4ec758a3ae7732cf8be259d6f1fb9b308bf3d11e7d0c3a51c59fe8cf5b",
+    "seq": 10
+  },
+  {
+    "entry_hash": "dd58c0106ce9ef170360379599b537a2c65289e00d2a3a7eec680c693644390c",
+    "payload": {
+      "anclajes_T": {
+        "E_T": 0,
+        "N_T": 1,
+        "O_T": 0,
+        "S_T": 1
+      },
+      "event_type": "init",
+      "extra": {},
+      "fingerprint_sha256": "0a9e45fb2d89460768a27ea18707bfabcaefc134ecd296b76976038f179e22e8",
+      "modo": "Oscuro",
+      "ts_utc": "2026-08-22T22:22:04.589299+00:00",
+      "vector": [
+        0,
+        1,
+        1,
+        0
+      ]
+    },
+    "prev_hash": "b7ea86c25987eab262a0ebbb1e4cacbc792f349570e9a769c5f1b0bf8aeb4eec",
+    "seq": 11
+  },
+  {
+    "entry_hash": "ab01715ba94548399537bb994fc9f28d5f77429cd71b7e396a9aa6479f6dbe5a",
+    "payload": {
+      "anclajes_T": {
+        "E_T": 0,
+        "N_T": 1,
+        "O_T": 0,
+        "S_T": 1
+      },
+      "event_type": "calcular_dualidad",
+      "extra": {
+        "from": "Luminoso",
+        "to": "Oscuro"
+      },
+      "fingerprint_sha256": "2d88977bd27ea7b6fa9b41b3d7a43fbdc3092aec00534e3e72bd4a121d5df8dc",
+      "modo": "Luminoso",
+      "ts_utc": "2026-08-22T22:22:04.636533+00:00",
+      "vector": [
+        1,
+        0,
+        0,
+        1
+      ]
+    },
+    "prev_hash": "dd58c0106ce9ef170360379599b537a2c65289e00d2a3a7eec680c693644390c",
+    "seq": 12
+  },
+  {
+    "entry_hash": "32252f59630ca28e3b94b3517c8e745010288d498741ba4381e7c14c00944026",
+    "payload": {
+      "anclajes_T": {
+        "E_T": 0,
+        "N_T": 1,
+        "O_T": 1,
+        "S_T": 0
+      },
+      "event_type": "init",
+      "extra": {},
+      "fingerprint_sha256": "2053f9018b90667e6712ab4870ff3711253dada367044ba08dd29391dc40c81a",
+      "modo": "Luminoso",
+      "ts_utc": "2026-08-22T23:46:44.543947+00:00",
+      "vector": [
+        1,
+        0,
+        0,
+        1
+      ]
+    },
+    "prev_hash": "ab01715ba94548399537bb994fc9f28d5f77429cd71b7e396a9aa6479f6dbe5a",
+    "seq": 13
+  },
+  {
+    "entry_hash": "196c1dad94281a328bc27e0c940defeb349460f0abeb21a13d46037b56d0d0a9",
+    "payload": {
+      "anclajes_T": {
+        "E_T": 1,
+        "N_T": 0,
+        "O_T": 0,
+        "S_T": 1
+      },
+      "event_type": "init",
+      "extra": {},
+      "fingerprint_sha256": "f7e004ae2b3f20dfb75b452970b533032a96591b3c1278b5d22e0c36549eddcc",
+      "modo": "Oscuro",
+      "ts_utc": "2026-08-22T23:46:44.668950+00:00",
+      "vector": [
+        0,
+        1,
+        1,
+        0
+      ]
+    },
+    "prev_hash": "32252f59630ca28e3b94b3517c8e745010288d498741ba4381e7c14c00944026",
+    "seq": 14
+  },
+  {
+    "entry_hash": "1851d2c58e126b97855e72d991326c36c1bd6ce4c2b1cb3846e724d5c1233e87",
+    "payload": {
+      "anclajes_T": {
+        "E_T": 0,
+        "N_T": 1,
+        "O_T": 1,
+        "S_T": 0
+      },
+      "event_type": "calcular_dualidad",
+      "extra": {
+        "to_modo": "Oscuro",
+        "to_vector": [
+          0,
+          1,
+          1,
+          0
+        ]
+      },
+      "fingerprint_sha256": "2053f9018b90667e6712ab4870ff3711253dada367044ba08dd29391dc40c81a",
+      "modo": "Luminoso",
+      "ts_utc": "2026-08-22T23:46:44.700200+00:00",
+      "vector": [
+        1,
+        0,
+        0,
+        1
+      ]
+    },
+    "prev_hash": "196c1dad94281a328bc27e0c940defeb349460f0abeb21a13d46037b56d0d0a9",
+    "seq": 15
+  },
+  {
+    "entry_hash": "1497759824c4258d31c72cdeeb4b12bedb548df281988b937a343f76f95ea53b",
+    "payload": {
+      "anclajes_T": {
+        "E_T": 0,
+        "N_T": 1,
+        "O_T": 1,
+        "S_T": 0
+      },
+      "event_type": "sigma_collapse",
+      "extra": {
+        "cfg_fp": "dbab4612f0e3c5a8375a",
+        "core_sha256": "214a1ed1c960418cb81bf71283e7c4e60e7d661863659e96b95e8c648c5566f0",
+        "entropy": 0.04999999999994212,
+        "metrics": {
+          "complex_phase": 0.2684524243166897,
+          "delta_norm": 0.8637312276670553,
+          "local_density": 0.07238241365054197,
+          "log_N": 13.815510557964274,
+          "max_eig": 1.013148668698477,
+          "original_entropy": 0.8637312276670553,
+          "projected_norm": 0.04999999999994212,
+          "sieve_rejected": 0.6484375
+        }
+      },
+      "fingerprint_sha256": "2053f9018b90667e6712ab4870ff3711253dada367044ba08dd29391dc40c81a",
+      "modo": "Luminoso",
+      "ts_utc": "2026-08-22T23:46:46.314137+00:00",
+      "vector": [
+        1,
+        0,
+        0,
+        1
+      ]
+    },
+    "prev_hash": "1851d2c58e126b97855e72d991326c36c1bd6ce4c2b1cb3846e724d5c1233e87",
+    "seq": 16
+  }
+]

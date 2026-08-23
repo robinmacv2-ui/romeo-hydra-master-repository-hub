@@ -1,3 +1,9 @@
+import sys
+from pathlib import Path
+
+# Añadimos la raíz del monorepo al path de Python para encontrar simulador_tarjeta_logica
+sys.path.append(str(Path(__file__).resolve().parent.parent))
+
 from simulador_tarjeta_logica import TarjetaLogica
 from core.ledger.worm_ledger import WormLedger
 

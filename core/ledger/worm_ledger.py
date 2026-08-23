@@ -1,15 +1,9 @@
-#!/usr/bin/env python3
-"""
-WORM Ledger for TarjetaLogica state transitions.
-Append-only, SHA-256 chained, fail-closed.
-"""
 from __future__ import annotations
-
 import json
 import hashlib
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 
 class WormLedger:
@@ -19,17 +13,17 @@ class WormLedger:
         if not self.path.exists():
             self._write([])
 
-    def _read(self) -> list[Dict[str, Any]]:
+    def _read(self) -> List[Dict[str, Any]]:
         try:
             with self.path.open("r", encoding="utf-8") as f:
                 data = json.load(f)
             if not isinstance(data, list):
-                raise ValueError("Ledger must be a JSON array")
+                raise ValueError("Ledger debe ser un array JSON")
             return data
         except (json.JSONDecodeError, ValueError) as e:
-            raise RuntimeError(f"Ledger corrupted or invalid: {e}") from e
+            raise RuntimeError(f"Ledger corrupto o inválido: {e}") from e
 
-    def _write(self, entries: list[Dict[str, Any]]) -> None:
+    def _write(self, entries: List[Dict[str, Any]]) -> None:
         tmp = self.path.with_suffix(".tmp")
         with tmp.open("w", encoding="utf-8") as f:
             json.dump(entries, f, indent=2, ensure_ascii=False, sort_keys=True)
@@ -42,7 +36,7 @@ class WormLedger:
     def append(
         self,
         event_type: str,
-        vector: list[int],
+        vector: List[int],
         modo: str,
         anclajes: Dict[str, int],
         fingerprint: str,
@@ -50,7 +44,6 @@ class WormLedger:
     ) -> Dict[str, Any]:
         entries = self._read()
         prev_hash = entries[-1]["entry_hash"] if entries else None
-
         payload = {
             "ts_utc": datetime.now(timezone.utc).isoformat(),
             "event_type": event_type,
@@ -60,14 +53,12 @@ class WormLedger:
             "fingerprint_sha256": fingerprint,
             "extra": extra or {},
         }
-
         entry = {
             "seq": len(entries) + 1,
             "prev_hash": prev_hash,
             "payload": payload,
             "entry_hash": self._chain_hash(prev_hash, payload),
         }
-
         entries.append(entry)
         self._write(entries)
         return entry
@@ -77,7 +68,10 @@ class WormLedger:
         prev = None
         for e in entries:
             expected = self._chain_hash(prev, e["payload"])
-            if e["entry_hash"] != expected or e["prev_hash"] != prev:
+            if e.get("entry_hash") != expected or e.get("prev_hash") != prev:
                 return False
             prev = e["entry_hash"]
         return True
+
+    def get_entries(self) -> List[Dict[str, Any]]:
+        return self._read()

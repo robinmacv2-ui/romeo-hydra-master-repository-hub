@@ -1,6 +1,0 @@
-{
-  "name": "Códice Chip RRPH - Tarjeta Lógica Cuántica",
-  "description": "Simulador interactivo de la Tarjeta Lógica Cuántica Primaria Códice Chip RRPH (Papel Picado Romeo Hydra), invento fundado por Luis Angel Vazquez Martinez. Incluye lenguaje formal Romeo-Aedra/Romeo-Hydra, sellado criptográfico SHA-256 y expediente técnico-legal.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}
