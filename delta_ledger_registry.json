@@ -1,0 +1,15 @@
+{
+    "ledger_version": "1.0",
+    "node_framework": "Romeo-Hydra",
+    "generation_timestamp": "2026-08-23T18:24:34.867322",
+    "total_entries": 1,
+    "entries": [
+        {
+            "sequence": 1,
+            "timestamp": "2026-08-23T18:24:34.851713",
+            "file_target": "knowledge_core/romeo_hydra_ontology.json",
+            "sha256_hash": "32022ed5779ccf9d017b4beb2048410a22b445a10a134867e2eba3a7f05e73bc",
+            "status": "INTEGRIDAD_VERIFICADA"
+        }
+    ]
+}
