@@ -1,0 +1,70 @@
+[
+    {
+        "ledger_version": "1.0",
+        "node_framework": "Romeo-Hydra",
+        "generation_timestamp": "2026-08-22T15:37:41.065576",
+        "total_entries": 6,
+        "entries": [
+            {
+                "sequence": 1,
+                "timestamp": "2026-08-22T15:37:40.682386",
+                "file_target": "stress_test_hydra.py",
+                "sha256_hash": "ee62f88f481acaef534a4558ad0b8a78a3f77c793fd9c5a02bc00d0c854efae5",
+                "status": "INTEGRIDAD_VERIFICADA"
+            },
+            {
+                "sequence": 2,
+                "timestamp": "2026-08-22T15:37:40.768862",
+                "file_target": "inject_ontology.py",
+                "sha256_hash": "355cabcbb7bdb1419f8b937f9134c3059601b0dc8e3c078b298b07c3ec98b9a9",
+                "status": "INTEGRIDAD_VERIFICADA"
+            },
+            {
+                "sequence": 3,
+                "timestamp": "2026-08-22T15:37:40.818597",
+                "file_target": "verify_romeo.py",
+                "sha256_hash": "25ada79c07b5f99921b01c685a3d3b47302f8a4d218910ab4bbef53dd2a63d05",
+                "status": "INTEGRIDAD_VERIFICADA"
+            },
+            {
+                "sequence": 4,
+                "timestamp": "2026-08-22T15:37:40.932122",
+                "file_target": "test_all_flanks.py",
+                "sha256_hash": "9a48239c8f568ac93c8543e789a8b709572ffd450d4aadea7a921dc098563a22",
+                "status": "INTEGRIDAD_VERIFICADA"
+            },
+            {
+                "sequence": 5,
+                "timestamp": "2026-08-22T15:37:40.995682",
+                "file_target": "exotic_mirror_test.py",
+                "sha256_hash": "2f9c1ad6b7de55b8f6d12977e8fdcf9d1193909c17921f80ca4d828f34b63605",
+                "status": "INTEGRIDAD_VERIFICADA"
+            },
+            {
+                "sequence": 6,
+                "timestamp": "2026-08-22T15:37:41.065576",
+                "file_target": "knowledge_core/romeo_hydra_ontology.json",
+                "sha256_hash": "32022ed5779ccf9d017b4beb2048410a22b445a10a134867e2eba3a7f05e73bc",
+                "status": "INTEGRIDAD_VERIFICADA"
+            }
+        ]
+    },
+    {
+        "modulo": "CODICE_PPRH",
+        "fundador": "Luis Angel Vazquez Martinez",
+        "modo": "Luminoso",
+        "vector_sino": [
+            1,
+            0,
+            0,
+            1
+        ],
+        "anclajes_t": {
+            "N_T": 1,
+            "E_T": 0,
+            "S_T": 1,
+            "O_T": 0
+        },
+        "sha256_sello": "2d88977bd27ea7b6fa9b41b3d7a43fbdc3092aec00534e3e72bd4a121d5df8dc"
+    }
+]

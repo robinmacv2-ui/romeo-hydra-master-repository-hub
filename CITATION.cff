@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 title: "ROMEO-HYDRA — Information Folding Topology"
-message: "If you use this software, please cite it using the metadata from this file."
+message: "Si utilizas este software, cita el registro oficial y el DOI."
 type: software
 version: 0.2.0
 doi: 10.5281/zenodo.21941689
@@ -14,10 +14,14 @@ identifiers:
   - type: doi
     value: 10.5281/zenodo.21922106
     description: Previous version DOI (v0.1.2)
+  - type: other
+    value: "INDAUTOR: 03-2026-081813295300-01"
+    description: "Registro Oficial de Derechos de Autor — Programas de Computación (México)"
 authors:
   - family-names: "Vazquez Martinez"
     given-names: "Luis Angel"
     email: "robinmac.v2@gmail.com"
+    orcid: "https://orcid.org/0009-0006-8163-3759"
 license: "AGPL-3.0-or-later"
 repository-code: "https://github.com/robinmacv2-ui/romeo-hydra-master-repository-hub"
 url: "https://doi.org/10.5281/zenodo.21941689"
@@ -30,6 +34,8 @@ keywords:
   - edge
   - termux
   - topological-compression
+  - ai-governance
+  - fail-closed
 abstract: >-
   ROMEO-HYDRA v0.2.0 elevates information folding as a base principle of
   computer topology. Any digital object induces a space; stable information
@@ -39,3 +45,4 @@ abstract: >-
   function — the same idea applied to files, documents, ledgers and media.
   Includes romeo.topology.fold and romeo.tools.video (YC-ready offline
   compress as a media instance). Offline / Termux aarch64 compatible.
+  Official Mexican copyright registration: INDAUTOR 03-2026-081813295300-01.
