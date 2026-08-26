@@ -1,0 +1,110 @@
+import unittest
+
+from core.envelope import deserialize, seal, serialize, verify
+from core.aead import encrypt, generate_key
+from core.pedersen import Q
+
+
+class TestEnvelopeFull(unittest.TestCase):
+
+    def setUp(self):
+        self.key = generate_key()
+        self.plaintext = b"ROMEO-HYDRA canonical transaction payload"
+        self.aad = b"audit-context:session-99"
+        self.nonce, self.ciphertext = encrypt(self.key, self.plaintext, self.aad)
+        self.event_id = "evt-2026-08-26-001"
+
+    def test_round_trip(self):
+        env, r = seal(self.event_id, self.nonce, self.ciphertext, self.aad)
+        self.assertTrue(verify(env, r=r))
+
+    def test_deterministic_canonical_serialization(self):
+        env1, _ = seal(self.event_id, self.nonce, self.ciphertext, self.aad)
+        env2, _ = seal(self.event_id, self.nonce, self.ciphertext, self.aad)
+        self.assertEqual(serialize(env1), serialize(env2))
+
+    def test_payload_tampering(self):
+        env, r = seal(self.event_id, self.nonce, self.ciphertext, self.aad)
+        corrupted = bytearray(self.ciphertext)
+        corrupted[0] ^= 0xFF
+        env["ciphertext"] = bytes(corrupted).hex()
+        self.assertFalse(verify(env, r=r))
+
+    def test_aad_tampering(self):
+        env, r = seal(self.event_id, self.nonce, self.ciphertext, self.aad)
+        env["aad"] = b"wrong-aad".hex()
+        self.assertFalse(verify(env, r=r))
+
+    def test_nonce_tampering(self):
+        env, r = seal(self.event_id, self.nonce, self.ciphertext, self.aad)
+        env["nonce"] = "00" * 12
+        self.assertFalse(verify(env, r=r))
+
+    def test_commitment_mismatch(self):
+        env, r = seal(self.event_id, self.nonce, self.ciphertext, self.aad)
+        val = int(env["pedersen_commitment"], 16) + 1
+        env["pedersen_commitment"] = hex(val)
+        self.assertFalse(verify(env, r=r))
+
+    def test_digest_mismatch(self):
+        env, r = seal(self.event_id, self.nonce, self.ciphertext, self.aad)
+        env["payload_digest"] = "0" * 64
+        self.assertFalse(verify(env, r=r))
+
+    def test_invalid_version(self):
+        env, _ = seal(self.event_id, self.nonce, self.ciphertext, self.aad)
+        env["version"] = 99
+        with self.assertRaises(ValueError):
+            serialize(env)
+        self.assertFalse(verify(env))
+
+    def test_invalid_hexadecimal_fields(self):
+        env, _ = seal(self.event_id, self.nonce, self.ciphertext, self.aad)
+        env["nonce"] = "not-hex-string!!"
+        with self.assertRaises(ValueError):
+            serialize(env)
+        self.assertFalse(verify(env))
+
+    def test_unexpected_fields(self):
+        env, _ = seal(self.event_id, self.nonce, self.ciphertext, self.aad)
+        env["extra_field"] = "injected"
+        with self.assertRaises(ValueError):
+            serialize(env)
+        self.assertFalse(verify(env))
+
+    def test_missing_required_fields(self):
+        env, _ = seal(self.event_id, self.nonce, self.ciphertext, self.aad)
+        del env["aad"]
+        with self.assertRaises(ValueError):
+            serialize(env)
+        self.assertFalse(verify(env))
+
+    def test_wrong_pedersen_opening(self):
+        env, r = seal(self.event_id, self.nonce, self.ciphertext, self.aad)
+        wrong_r = (r + 1) % Q
+        self.assertFalse(verify(env, r=wrong_r))
+
+    def test_empty_payload(self):
+        empty_pt = b""
+        n, c = encrypt(self.key, empty_pt, self.aad)
+        env, r = seal("evt-empty", n, c, self.aad)
+        self.assertTrue(verify(env, r=r))
+
+    def test_unicode_utf8(self):
+        unicode_pt = "Café con ñoñería y lógica convexa 🚀".encode("utf-8")
+        n, c = encrypt(self.key, unicode_pt, self.aad)
+        env, r = seal("evt-unicode", n, c, self.aad)
+        self.assertTrue(verify(env, r=r))
+        ser = serialize(env)
+        des = deserialize(ser)
+        self.assertEqual(env, des)
+
+    def test_large_payload(self):
+        large_pt = b"A" * 65536
+        n, c = encrypt(self.key, large_pt, self.aad)
+        env, r = seal("evt-large", n, c, self.aad)
+        self.assertTrue(verify(env, r=r))
+
+
+if __name__ == "__main__":
+    unittest.main()
