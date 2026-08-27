@@ -25,3 +25,5 @@ venv/
 .venv/
 **/__pycache__/
 *.pyc
+evidence/
+romeo-hydra-crypto/evidence/
