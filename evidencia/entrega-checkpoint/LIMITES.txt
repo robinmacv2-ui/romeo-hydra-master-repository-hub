@@ -1,0 +1,13 @@
+ROMEO-HYDRA — nota de entrega (checkpoint crypto)
+
+Esto es evidencia técnica reproducible del módulo de sobre criptográfico
+(envelope): pruebas automatizadas y commit fijo en el repositorio.
+
+NO es:
+- certificado de seguridad
+- aval de Hyperium IA ni LAINCRIM
+- dictamen legal, fiscal o forense
+- aprobación para uso en producción
+
+Autor del sistema: Luis Angel Vazquez Martinez
+Referencia de evaluación preliminar: Patricio Tirado, 26 de agosto de 2026

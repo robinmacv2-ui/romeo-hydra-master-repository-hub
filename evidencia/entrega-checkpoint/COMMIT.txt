@@ -1,0 +1,6 @@
+2b1d1b450d4030f6ba25fd2f145f83e07e8f3505
+2b1d1b450d4030f6ba25fd2f145f83e07e8f3505
+2026-08-26 18:23:04 -0600
+chore: ignore local evidence directories
+crypto-envelope-v1.0.0-checkpoint
+etiqueta: crypto-envelope-v1.0.0-checkpoint
