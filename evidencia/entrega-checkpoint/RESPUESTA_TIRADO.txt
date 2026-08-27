@@ -1,0 +1,26 @@
+Asunto: Checkpoint técnico ROMEO-HYDRA (envelope) — evidencia, sin solicitud de aval
+
+Estimado Patricio:
+
+Gracias por la evaluación preliminar limitada del 26 de agosto de 2026.
+Acepto el alcance y los límites que usted describe: no es auditoría integral,
+no es certificación, no es dictamen legal ni fiscal, y no constituye alianza.
+
+Adjunto un checkpoint técnico del módulo de sobre criptográfico:
+
+1) Commit y etiqueta fijos en el repositorio público
+2) Prueba rápida ENVELOPE_CRYPTO_OK
+3) 60 pruebas automatizadas en verde
+4) Nota explícita de que esto no es certificado ni aval
+
+Lo demostrado se limita a integridad y reproducibilidad de ese módulo
+(schema, digests, pruebas). No se afirma seguridad de producción,
+resistencia total del equipo, ni valor legal o fiscal de la evidencia.
+
+Quedo atento a una segunda etapa, si procede, centrada en:
+- descripción clara de recibos
+- lista de riesgos y límites
+- un caso de uso concreto con criterios de éxito
+
+Saludos,
+Luis Angel Vazquez Martinez
