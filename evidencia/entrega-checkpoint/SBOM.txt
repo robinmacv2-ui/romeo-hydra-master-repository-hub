@@ -1,6 +1,4 @@
 ROMEO-HYDRA crypto-envelope v1.0.0-checkpoint
-Dependencies: Python stdlib only (hashlib, hmac, json, os, pathlib)
-No third-party pip dependencies
-RSA implementation: pure Python (demo 1024-bit, production requires 2048+)
 Commit: 38b6bdc14d8141263e71a989ad9c3e0d2043aa94
-Tag: crypto-envelope-v1.0.0-checkpoint
+Dependencies: Python stdlib only + cryptography (optional for AEAD tests)
+No pip deps required for core envelope
