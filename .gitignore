@@ -16,3 +16,12 @@ romeo_hydra.egg-info/
 __pycache__/
 *.egg-info/
 .venv/
+
+# Backups / local noise
+*.bak
+*.bak.*
+*.corrupt.bak
+venv/
+.venv/
+**/__pycache__/
+*.pyc
