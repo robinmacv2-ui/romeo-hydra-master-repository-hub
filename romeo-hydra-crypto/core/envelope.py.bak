@@ -1,0 +1,661 @@
+from __future__ import annotations
+
+import hashlib
+import hmac
+import json
+import re
+from typing import Any
+
+from core.pedersen import (
+    P,
+    Q,
+    commit,
+    commitment_from_hex,
+    commitment_to_hex,
+    verify as pedersen_verify,
+)
+
+
+# ============================================================
+# ROMEO-HYDRA — CANONICAL EVENT ENVELOPE
+# ============================================================
+
+# Protocolo
+CURRENT_VERSION = 1
+
+# Alias de compatibilidad con código anterior.
+VERSION = CURRENT_VERSION
+
+HASH_ALGORITHM = "SHA-256"
+PEDERSEN_SCHEME = "PEDERSEN-RFC3526-G14"
+
+# AES-GCM: nonce recomendado de 96 bits.
+NONCE_BYTES = 12
+NONCE_HEX_LENGTH = NONCE_BYTES * 2
+
+# SHA-256.
+DIGEST_BYTES = 32
+DIGEST_HEX_LENGTH = DIGEST_BYTES * 2
+
+# RFC 3526 Group 14 = 2048 bits = 256 bytes = 512 hex chars.
+COMMITMENT_BYTES = 256
+COMMITMENT_HEX_LENGTH = COMMITMENT_BYTES * 2
+
+EVENT_ID_MAX_LENGTH = 1024
+
+REQUIRED_FIELDS = frozenset(
+    {
+        "version",
+        "event_id",
+        "nonce",
+        "ciphertext",
+        "aad",
+        "digest",
+        "pedersen_commitment",
+    }
+)
+
+HEX_RE = re.compile(r"^[0-9a-fA-F]*$")
+
+
+# ============================================================
+# PROTOCOL INVARIANTS
+# ============================================================
+
+if P.bit_length() != 2048:
+    raise RuntimeError(
+        "Pedersen requiere RFC 3526 Group 14 de 2048 bits"
+    )
+
+if Q.bit_length() != 2047:
+    raise RuntimeError(
+        "El orden Q esperado debe ser de 2047 bits"
+    )
+
+if NONCE_HEX_LENGTH != 24:
+    raise RuntimeError(
+        "Nonce canónico inválido"
+    )
+
+if DIGEST_HEX_LENGTH != 64:
+    raise RuntimeError(
+        "Digest SHA-256 inválido"
+    )
+
+if COMMITMENT_HEX_LENGTH != 512:
+    raise RuntimeError(
+        "Commitment Group 14 inválido"
+    )
+
+
+# ============================================================
+# BASIC VALIDATION
+# ============================================================
+
+def _require_dict(
+    value: Any,
+    name: str = "envelope",
+) -> dict[str, Any]:
+    if not isinstance(value, dict):
+        raise TypeError(
+            f"{name} debe ser un diccionario"
+        )
+
+    return value
+
+
+def _require_exact_keys(
+    envelope: dict[str, Any],
+) -> None:
+    actual = set(envelope.keys())
+
+    missing = REQUIRED_FIELDS - actual
+    unexpected = actual - REQUIRED_FIELDS
+
+    if missing:
+        raise ValueError(
+            "Faltan campos obligatorios: "
+            + ", ".join(sorted(missing))
+        )
+
+    if unexpected:
+        raise ValueError(
+            "Campos inesperados: "
+            + ", ".join(sorted(unexpected))
+        )
+
+
+def _validate_version(
+    version: Any,
+) -> None:
+    # bool es subtipo de int en Python; explícitamente no se acepta.
+    if isinstance(version, bool) or not isinstance(version, int):
+        raise ValueError(
+            "El campo version debe ser un entero"
+        )
+
+    if version != CURRENT_VERSION:
+        raise ValueError(
+            f"Versión no soportada: {version}"
+        )
+
+
+def _validate_event_id(
+    event_id: Any,
+) -> None:
+    if not isinstance(event_id, str):
+        raise ValueError(
+            "El campo event_id debe ser una cadena"
+        )
+
+    if not event_id:
+        raise ValueError(
+            "El campo event_id no puede estar vacío"
+        )
+
+    if len(event_id) > EVENT_ID_MAX_LENGTH:
+        raise ValueError(
+            "El campo event_id excede el tamaño máximo"
+        )
+
+    for char in event_id:
+        if ord(char) < 0x20:
+            raise ValueError(
+                "event_id contiene caracteres de control"
+            )
+
+
+def _validate_hex(
+    value: Any,
+    field: str,
+    exact_length: int | None = None,
+    allow_empty: bool = False,
+) -> None:
+    if not isinstance(value, str):
+        raise ValueError(
+            f"El campo {field} debe ser una cadena hexadecimal válida"
+        )
+
+    if not value and not allow_empty:
+        raise ValueError(
+            f"El campo {field} no puede estar vacío"
+        )
+
+    if len(value) % 2:
+        raise ValueError(
+            f"El campo {field} debe tener longitud hexadecimal par"
+        )
+
+    if exact_length is not None and len(value) != exact_length:
+        raise ValueError(
+            f"El campo {field} debe tener exactamente "
+            f"{exact_length} caracteres hexadecimales"
+        )
+
+    if HEX_RE.fullmatch(value) is None:
+        raise ValueError(
+            f"El campo {field} contiene caracteres no hexadecimales"
+        )
+
+
+def _validate_nonce(
+    nonce: Any,
+) -> None:
+    _validate_hex(
+        nonce,
+        "nonce",
+        exact_length=NONCE_HEX_LENGTH,
+    )
+
+
+def _validate_ciphertext(
+    ciphertext: Any,
+) -> None:
+    _validate_hex(
+        ciphertext,
+        "ciphertext",
+        allow_empty=True,
+    )
+
+
+def _validate_aad(
+    aad: Any,
+) -> None:
+    _validate_hex(
+        aad,
+        "aad",
+        allow_empty=True,
+    )
+
+
+def _validate_digest(
+    digest: Any,
+) -> None:
+    _validate_hex(
+        digest,
+        "digest",
+        exact_length=DIGEST_HEX_LENGTH,
+    )
+
+
+def _validate_commitment_encoding(
+    commitment: Any,
+) -> None:
+    _validate_hex(
+        commitment,
+        "pedersen_commitment",
+        exact_length=COMMITMENT_HEX_LENGTH,
+    )
+
+    value = commitment_from_hex(
+        commitment
+    )
+
+    if not 1 <= value < P:
+        raise ValueError(
+            "pedersen_commitment fuera de Z_p*"
+        )
+
+
+# ============================================================
+# ENVELOPE STRUCTURE
+# ============================================================
+
+def _validate_envelope_structure(
+    envelope: dict[str, Any],
+) -> None:
+    _require_dict(envelope)
+    _require_exact_keys(envelope)
+
+    _validate_version(
+        envelope["version"]
+    )
+
+    _validate_event_id(
+        envelope["event_id"]
+    )
+
+    _validate_nonce(
+        envelope["nonce"]
+    )
+
+    _validate_ciphertext(
+        envelope["ciphertext"]
+    )
+
+    _validate_aad(
+        envelope["aad"]
+    )
+
+    _validate_digest(
+        envelope["digest"]
+    )
+
+    _validate_commitment_encoding(
+        envelope["pedersen_commitment"]
+    )
+
+
+# ============================================================
+# HEX NORMALIZATION
+# ============================================================
+
+def _to_hex(
+    value: bytes | str,
+    field: str,
+) -> str:
+    if isinstance(value, bytes):
+        return value.hex()
+
+    if isinstance(value, str):
+        _validate_hex(
+            value,
+            field,
+            allow_empty=True,
+        )
+        return value.lower()
+
+    raise TypeError(
+        f"{field} debe ser bytes o hexadecimal str"
+    )
+
+
+# ============================================================
+# CANONICAL EVENT MATERIAL
+# ============================================================
+
+def _canonical_event_object(
+    event_id: str,
+    nonce_hex: str,
+    ciphertext_hex: str,
+    aad_hex: str,
+) -> dict[str, Any]:
+    return {
+        "aad": aad_hex,
+        "ciphertext": ciphertext_hex,
+        "event_id": event_id,
+        "nonce": nonce_hex,
+        "version": CURRENT_VERSION,
+    }
+
+
+def _canonical_json_bytes(
+    value: dict[str, Any],
+) -> bytes:
+    return json.dumps(
+        value,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode("utf-8")
+
+
+def _calculate_digest(
+    event_id: str,
+    nonce_hex: str,
+    ciphertext_hex: str,
+    aad_hex: str,
+) -> str:
+    material = _canonical_event_object(
+        event_id=event_id,
+        nonce_hex=nonce_hex,
+        ciphertext_hex=ciphertext_hex,
+        aad_hex=aad_hex,
+    )
+
+    return hashlib.sha256(
+        _canonical_json_bytes(material)
+    ).hexdigest()
+
+
+def calculate_digest(
+    event_id: str,
+    nonce: str,
+    ciphertext: str,
+    aad: str,
+) -> str:
+    _validate_event_id(event_id)
+
+    nonce_hex = _to_hex(
+        nonce,
+        "nonce",
+    )
+
+    ciphertext_hex = _to_hex(
+        ciphertext,
+        "ciphertext",
+    )
+
+    aad_hex = _to_hex(
+        aad,
+        "aad",
+    )
+
+    _validate_nonce(nonce_hex)
+    _validate_ciphertext(ciphertext_hex)
+    _validate_aad(aad_hex)
+
+    return _calculate_digest(
+        event_id=event_id,
+        nonce_hex=nonce_hex,
+        ciphertext_hex=ciphertext_hex,
+        aad_hex=aad_hex,
+    )
+
+
+# ============================================================
+# DIGEST -> Z_q
+# ============================================================
+
+def _digest_to_scalar(
+    digest_hex: str,
+) -> int:
+    _validate_digest(
+        digest_hex
+    )
+
+    digest_int = int(
+        digest_hex,
+        16,
+    )
+
+    return digest_int % Q
+
+
+# ============================================================
+# SEAL
+# ============================================================
+
+def seal(
+    event_id: str,
+    nonce: bytes | str,
+    ciphertext: bytes | str,
+    aad: bytes | str,
+) -> tuple[dict[str, Any], int]:
+
+    _validate_event_id(
+        event_id
+    )
+
+    nonce_hex = _to_hex(
+        nonce,
+        "nonce",
+    )
+
+    ciphertext_hex = _to_hex(
+        ciphertext,
+        "ciphertext",
+    )
+
+    aad_hex = _to_hex(
+        aad,
+        "aad",
+    )
+
+    _validate_nonce(
+        nonce_hex
+    )
+
+    _validate_ciphertext(
+        ciphertext_hex
+    )
+
+    _validate_aad(
+        aad_hex
+    )
+
+    digest = _calculate_digest(
+        event_id=event_id,
+        nonce_hex=nonce_hex,
+        ciphertext_hex=ciphertext_hex,
+        aad_hex=aad_hex,
+    )
+
+    message = _digest_to_scalar(
+        digest
+    )
+
+    commitment, r = commit(
+        message
+    )
+
+    envelope = {
+        "version": CURRENT_VERSION,
+        "event_id": event_id,
+        "nonce": nonce_hex,
+        "ciphertext": ciphertext_hex,
+        "aad": aad_hex,
+        "digest": digest,
+        "pedersen_commitment": commitment_to_hex(
+            commitment
+        ),
+    }
+
+    _validate_envelope_structure(
+        envelope
+    )
+
+    return envelope, r
+
+
+# ============================================================
+# VERIFY
+# ============================================================
+
+def verify(
+    envelope: dict[str, Any],
+    r: int,
+) -> bool:
+
+    try:
+        _validate_envelope_structure(
+            envelope
+        )
+
+        if isinstance(r, bool):
+            return False
+
+        if not isinstance(r, int):
+            return False
+
+        if not 0 <= r < Q:
+            return False
+
+        expected_digest = _calculate_digest(
+            event_id=envelope["event_id"],
+            nonce_hex=envelope["nonce"].lower(),
+            ciphertext_hex=envelope["ciphertext"].lower(),
+            aad_hex=envelope["aad"].lower(),
+        )
+
+        actual_digest = envelope["digest"].lower()
+
+        if not hmac.compare_digest(
+            expected_digest,
+            actual_digest,
+        ):
+            return False
+
+        message = _digest_to_scalar(
+            expected_digest
+        )
+
+        commitment = commitment_from_hex(
+            envelope["pedersen_commitment"]
+        )
+
+        return bool(
+            pedersen_verify(
+                commitment,
+                message,
+                r,
+            )
+        )
+
+    except (
+        TypeError,
+        ValueError,
+        KeyError,
+        OverflowError,
+    ):
+        return False
+
+
+# ============================================================
+# SERIALIZATION
+# ============================================================
+
+def serialize(
+    envelope: dict[str, Any],
+) -> str:
+    _validate_envelope_structure(
+        envelope
+    )
+
+    return json.dumps(
+        envelope,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+
+
+# ============================================================
+# DESERIALIZATION
+# ============================================================
+
+def deserialize(
+    data: str | bytes,
+) -> dict[str, Any]:
+
+    if isinstance(data, bytes):
+        try:
+            data = data.decode(
+                "utf-8",
+                errors="strict",
+            )
+        except UnicodeDecodeError as exc:
+            raise ValueError(
+                "El envelope no contiene UTF-8 válido"
+            ) from exc
+
+    if not isinstance(data, str):
+        raise TypeError(
+            "deserialize() requiere str o bytes"
+        )
+
+    try:
+        value = json.loads(
+            data
+        )
+    except json.JSONDecodeError as exc:
+        raise ValueError(
+            "El envelope no contiene JSON válido"
+        ) from exc
+
+    if not isinstance(value, dict):
+        raise ValueError(
+            "El JSON del envelope debe representar un objeto"
+        )
+
+    _validate_envelope_structure(
+        value
+    )
+
+    return value
+
+
+# ============================================================
+# OPTIONAL PUBLIC VALIDATOR
+# ============================================================
+
+def validate(
+    envelope: dict[str, Any],
+) -> bool:
+    """
+    Validación estructural pública.
+    No requiere la apertura Pedersen.
+    """
+
+    try:
+        _validate_envelope_structure(
+            envelope
+        )
+        return True
+    except (
+        TypeError,
+        ValueError,
+        KeyError,
+        OverflowError,
+    ):
+        return False
+
+
+# ============================================================
+# FINAL SANITY CHECKS
+# ============================================================
+
+if CURRENT_VERSION != VERSION:
+    raise RuntimeError(
+        "VERSION/CURRENT_VERSION inconsistente"
+    )

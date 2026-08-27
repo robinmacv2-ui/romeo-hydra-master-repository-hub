@@ -1,10 +1,14 @@
 from __future__ import annotations
 
-import os
+import hashlib
 import secrets
-from typing import Tuple
 
-P = int(
+
+# ============================================================
+# RFC 3526 — MODP GROUP 14
+# ============================================================
+
+P_HEX = (
     "FFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD1"
     "29024E088A67CC74020BBEA63B139B22514A08798E3404DD"
     "EF9519B3CD3A431B302B0A6DF25F14374FE1356D6D51C245"
@@ -15,116 +19,343 @@ P = int(
     "670C354E4ABC9804F1746C08CA18217C32905E462E36CE3B"
     "E39E772C180E86039B2783A2EC07A28FB5C55DF06F4C52C9"
     "DE2BCBF6955817183995497CEA956AE515D2261898FA0510"
-    "15728E5A8AAAC42AD33170D04507A33981125A1F3B18684B"
-    "51CE7743E4B77468E1894B144E137F4C8F5B3EDF4B0E8FA0"
-    "AF602B9FE1CA97943F5EADCC682C6E34DA5C9B3C83D43424"
-    "C45241B7203E3F873DFEEF121F76EA6336341258601A9498"
-    "BBBD9F7DB8A67ACFE857140B3DF73E0FBA61B78A00ACF23B"
-    "BEE64B9AE13E4ACFB4D5F8F65E4701980838634B03362143"
-    "F0B6F082ED0E67FFB823D201A51B2BB2BB215FE60ED40FF4"
-    "201B7CE89BEF997E2DF43D0A3559EA5CF56DF8373AF2C353"
-    "DA8287F4A7596BE533475737E99A27F11C84EB6687063FA0"
-    "D234A31EE00CDAD66F94523315D36D9955F10D1D690E8AC8"
-    "C7E05FF8F8E6DB53FC2A3E05EE265E9A34925769F8208945"
-    "106D5EBE63544CD53A710AA50731CF1567C75CFA5F62A4DF"
-    "858348CC32F6FB477b707F818E696144A531A6BF94F25CCF"
-    "280E625A11841B8DBDBA416D41113229AA634E39178E697F"
-    "5F6B9DFE4A7D844DCB4FFBD1B9FFCD0E634DB820FE7197D6"
-    "C2A7FB9797A32EE353715C60783F41EE794C5F79E892D0FA"
-    "C0D2F4B78A524240756B91F843DE70E6DE76A7AA23BE4892"
-    "CE02FE629AF49FE237B47E11B454F49EA225B5C1B9206A26"
-    "CE00D364375A22CE74A27B08B9F5D2C2A0A47167667C0FC8"
-    "A33E291CD73AF96E69D8F8F99BE5FA0B099859FE2FE2E372"
-    "C29E65A4A671F11D00B8D99276228385750A8C17F7A22180"
-    "296F96A531B5EEB6E677F47F66023F0B23846D5CBFF12686"
-    "3C161C68ED250568B452D6CEBE08E35A5333F2E37434EF62"
-    "CB9746A728E2C6A3029FB65D1E86629AB4C30EC3A595C75A"
-    "2E0BEE0463A2BFB6B3F5B891A8090C8E8B623DA7469EA430"
-    "60A3F1F985D36B50B01D51FF28771A91443682970CEB079D"
-    "6979A098E9B6647970F3ED6A238914B0072C9E44F4E4663D"
-    "66F95DB214D167448B69842F5568160B8E3D85E5A8E0B077"
-    "2661585805562095C24CC57100346399434BD0C67566236B"
-    "2DB6D378E56DF6182FF8D18C44D4EE20EA386CE6A0905CD9"
-    "48589B854A7E3E5B1c19F218DA4B8D1CEBF4B1F70B1D4063"
-    "DB5711BEFA16D2185D965251FF8372605E82D6E97E2CEA18"
-    "A817DB2187DE508A1B51A9CE53B78FAEC90F16C6D85DF93E"
-    "5E5E26E5AA5D79B11394A1F6E22765A2190A2E2A676E4B11"
-    "0020E21DB13CD925762888D18E7F0D7EF649D1CEB7EBDCE7"
-    "46D7791A06BA911367098E1EC174780EE50529A1054C542D"
-    "503DBB857643E2EEAC3F93E4E81639A26A188C0EBDE29D7E"
-    "E3C2BDB64B55CC4E268E651D981D3335A7FFCA55869EB3BA"
-    "A7A1BEEF072044F59275087F867A7D73715C8276D3EC096E"
-    "0C3473DDE9C0E2B87071F9D46387D17D9130D0099684C62B"
-    "FD2E35122F36A96E49E10A74F34A7B8C461CC8A21EF3F3F5"
-    "7963BC894C236611598D905B2109F605A7490A50DEB7C95B"
-    "E1FA18E417646545163629A66EBCE4133A2DC57C4293E3FC"
-    "DBA4EE9E2207D87140B46CD9DC7EA29CE5CC9FC6DDE757F3"
-    "35F92003881EA66395AFB410D6C147A46FF11BF7C794DBA4"
-    "60A3CC6E4C4B441B5C06F8AF863264FE538260F0C06930EB"
-    "176FC9E3E406F920CE137A208AE659B6252BE5AF44E9FFB8"
-    "02DB85F2C8233C3B14397395727CE76F32DCEb360D4F0240"
-    "3E26C4E1D0C30A90F8454CE048B309D5FC08170D4B2634C3"
-    "A34E35243AC43D9A8D7E84FC32E2769019623D3E9034E1DF"
-    "79E53FF1A6C2E216B512165039478C263065E07EC7C27582"
-    "C597E3A06B898A190011C54D83FC54694D481FC34098A367"
-    "EF7A6780C28938955EA0FDBBB57B96D8FA9DBA8481A4E747"
-    "5D9FC3076F11EF375630F7C948259E60983ECDE663E2763D",
-    16,
+    "15728E5A8AACAA68FFFFFFFFFFFFFFFF"
 )
 
-Q = int(
-    "7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"
-    "D747B58A3CEBFB3505AF6C19F68B39B7C7524C4130EE8FA949D6B3C00A38EB41",
-    16,
-)
+P = int(P_HEX, 16)
 
+# Safe-prime subgroup order.
+Q = (P - 1) // 2
+
+# RFC 3526 generator.
 G = 2
-H = 3
 
-_BACKEND_CHOICE = os.environ.get("ROMEO_HYDRA_CRYPTO_BACKEND", "auto").lower()
+COMMITMENT_BYTES = (P.bit_length() + 7) // 8
+COMMITMENT_HEX_LENGTH = COMMITMENT_BYTES * 2
 
-_USE_GMP = False
-if _BACKEND_CHOICE in ("gmp", "auto"):
+
+# ============================================================
+# DOMAIN-SEPARATED SECOND GENERATOR
+# ============================================================
+
+def _hash_to_group(
+    domain_string: str,
+    p: int,
+) -> int:
+    """
+    Deterministically derives a non-zero quadratic residue.
+
+    The squaring operation maps the SHA-256-derived integer
+    into the subgroup of quadratic residues modulo p.
+
+    This is a prototype hash-to-group construction with
+    explicit domain separation.
+    """
+
+    if not isinstance(domain_string, str):
+        raise TypeError("domain_string debe ser str")
+
+    if p <= 3 or p % 2 == 0:
+        raise ValueError("p debe ser un primo impar válido")
+
+    digest = hashlib.sha256(
+        domain_string.encode("utf-8")
+    ).digest()
+
+    x = int.from_bytes(
+        digest,
+        byteorder="big",
+    )
+
+    # Avoid identity element.
+    x %= p
+
+    if x == 0:
+        x = 1
+
+    h = pow(x, 2, p)
+
+    if h == 1:
+        # Deterministic retry with domain-separated input.
+        digest2 = hashlib.sha256(
+            (
+                domain_string
+                + "/RETRY"
+            ).encode("utf-8")
+        ).digest()
+
+        x = int.from_bytes(
+            digest2,
+            byteorder="big",
+        ) % p
+
+        if x == 0:
+            x = 2
+
+        h = pow(x, 2, p)
+
+    if h == 1:
+        raise RuntimeError(
+            "No se pudo derivar un generador H no trivial"
+        )
+
+    return h
+
+
+H = _hash_to_group(
+    "ROMEO-HYDRA/PEDERSEN/H_GENERATOR_V1",
+    P,
+)
+
+
+# ============================================================
+# CANONICAL ENCODING
+# ============================================================
+
+def commitment_to_hex(
+    commitment: int,
+) -> str:
+    """
+    Canonical fixed-width encoding.
+
+    RFC 3526 Group 14:
+        2048 bits
+        256 bytes
+        512 hexadecimal characters
+    """
+
+    if isinstance(commitment, bool):
+        raise TypeError("commitment debe ser int")
+
+    if not isinstance(commitment, int):
+        raise TypeError("commitment debe ser int")
+
+    if not 1 <= commitment < P:
+        raise ValueError(
+            "commitment fuera del rango válido de Z_p*"
+        )
+
+    return f"{commitment:0{COMMITMENT_HEX_LENGTH}x}"
+
+
+def commitment_from_hex(
+    value: str,
+) -> int:
+    """
+    Strict inverse of commitment_to_hex().
+    """
+
+    if not isinstance(value, str):
+        raise TypeError(
+            "commitment hexadecimal debe ser str"
+        )
+
+    if len(value) != COMMITMENT_HEX_LENGTH:
+        raise ValueError(
+            "Longitud de commitment hexadecimal inválida"
+        )
+
     try:
-        import gmpy2
-        _GMP_P = gmpy2.mpz(P)
-        _GMP_G = gmpy2.mpz(G)
-        _GMP_H = gmpy2.mpz(H)
-        _USE_GMP = True
-    except Exception as e:
-        if _BACKEND_CHOICE == "gmp":
-            raise RuntimeError(f"Backend GMP requerido explícitamente pero falló al cargar: {e}")
-        # Imprimir la razón exacta por la cual cayó a Python reference
-        print(f"[*] Aviso: gmpy2 no disponible o falló al cargar ({e}). Usando Python Reference.")
-        _USE_GMP = False
+        result = int(value, 16)
+    except ValueError as exc:
+        raise ValueError(
+            "Commitment no es hexadecimal válido"
+        ) from exc
+
+    if not 1 <= result < P:
+        raise ValueError(
+            "Commitment fuera del rango de Z_p*"
+        )
+
+    return result
 
 
-def _pow_mod(base: int, exponent: int, modulus: int) -> int:
-    if _USE_GMP:
-        return int(gmpy2.powmod(gmpy2.mpz(base), gmpy2.mpz(exponent), gmpy2.mpz(modulus)))
-    else:
-        return pow(base, exponent, modulus)
+# ============================================================
+# PEDERSEN COMMITMENT
+# ============================================================
 
+def commit(
+    m: int,
+    r: int | None = None,
+) -> tuple[int, int]:
+    """
+    Pedersen commitment:
 
-def commit(m: int, r: int | None = None) -> Tuple[int, int]:
-    if not (0 <= m < Q):
-        raise ValueError("El mensaje m debe estar en el rango [0, Q-1]")
-    
+        C = G^m * H^r mod P
+
+    where:
+
+        m ∈ Z_q
+        r ∈ Z_q
+        C ∈ Z_p*
+    """
+
+    if isinstance(m, bool) or not isinstance(m, int):
+        raise TypeError("m debe ser int")
+
+    if not 0 <= m < Q:
+        raise ValueError(
+            "El mensaje m debe pertenecer a Z_q"
+        )
+
     if r is None:
         r = secrets.randbelow(Q)
     else:
-        if not (0 <= r < Q):
-            raise ValueError("El factor de cegamiento r debe estar en el rango [0, Q-1]")
+        if isinstance(r, bool) or not isinstance(r, int):
+            raise TypeError("r debe ser int")
 
-    gm = _pow_mod(G, m, P)
-    hr = _pow_mod(H, r, P)
-    c = (gm * hr) % P
+        if not 0 <= r < Q:
+            raise ValueError(
+                "El factor r debe pertenecer a Z_q"
+            )
+
+    c = (
+        pow(G, m, P)
+        * pow(H, r, P)
+    ) % P
+
+    if not 1 <= c < P:
+        raise RuntimeError(
+            "Commitment fuera de Z_p*"
+        )
+
     return c, r
 
 
-def verify(c: int, m: int, r: int) -> bool:
-    if not (0 <= c < P) or not (0 <= m < Q) or not (0 <= r < Q):
+def verify(
+    c: int,
+    m: int,
+    r: int,
+) -> bool:
+    """
+    Verifica:
+
+        C == G^m H^r mod P
+    """
+
+    try:
+        if isinstance(c, bool) or not isinstance(c, int):
+            return False
+
+        if isinstance(m, bool) or not isinstance(m, int):
+            return False
+
+        if isinstance(r, bool) or not isinstance(r, int):
+            return False
+
+        if not 1 <= c < P:
+            return False
+
+        if not 0 <= m < Q:
+            return False
+
+        if not 0 <= r < Q:
+            return False
+
+        expected = (
+            pow(G, m, P)
+            * pow(H, r, P)
+        ) % P
+
+        return c == expected
+
+    except (
+        TypeError,
+        ValueError,
+        OverflowError,
+    ):
         return False
 
-    expected_c, _ = commit(m, r)
-    return c == expected_c
+
+def combine(
+    c1: int,
+    c2: int,
+) -> int:
+    """
+    Homomorfismo multiplicativo:
+
+        C1 * C2 mod P
+
+    corresponde a:
+
+        C(m1+m2, r1+r2)
+    """
+
+    if not isinstance(c1, int):
+        raise TypeError("c1 debe ser int")
+
+    if not isinstance(c2, int):
+        raise TypeError("c2 debe ser int")
+
+    if not 1 <= c1 < P:
+        raise ValueError("c1 fuera de Z_p*")
+
+    if not 1 <= c2 < P:
+        raise ValueError("c2 fuera de Z_p*")
+
+    return (c1 * c2) % P
+
+
+def verify_sum(
+    c_list: list[int],
+    total_m: int,
+    total_r: int,
+) -> bool:
+    """
+    Verifica la suma homomórfica en Z_q.
+    """
+
+    if not c_list:
+        raise ValueError(
+            "La lista de compromisos no puede estar vacía"
+        )
+
+    if not isinstance(total_m, int):
+        raise TypeError("total_m debe ser int")
+
+    if not isinstance(total_r, int):
+        raise TypeError("total_r debe ser int")
+
+    product = 1
+
+    for c in c_list:
+        if not isinstance(c, int):
+            return False
+
+        if not 1 <= c < P:
+            return False
+
+        product = (
+            product * c
+        ) % P
+
+    return verify(
+        product,
+        total_m % Q,
+        total_r % Q,
+    )
+
+
+# ============================================================
+# IMPORT-TIME INVARIANTS
+# ============================================================
+
+if P.bit_length() != 2048:
+    raise RuntimeError(
+        "RFC 3526 Group 14 debe tener 2048 bits"
+    )
+
+if Q.bit_length() != 2047:
+    raise RuntimeError(
+        "Q debe tener 2047 bits"
+    )
+
+if G <= 1 or G >= P:
+    raise RuntimeError(
+        "Generador G inválido"
+    )
+
+if not 1 < H < P:
+    raise RuntimeError(
+        "Generador H inválido"
+    )
