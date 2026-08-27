@@ -1,6 +1,6 @@
-2b1d1b450d4030f6ba25fd2f145f83e07e8f3505
-2b1d1b450d4030f6ba25fd2f145f83e07e8f3505
-2026-08-26 18:23:04 -0600
-chore: ignore local evidence directories
+38b6bdc14d8141263e71a989ad9c3e0d2043aa94
+38b6bdc14d8141263e71a989ad9c3e0d2043aa94
+2026-08-26 19:45:24 -0600
+chore(checkpoint): finalize evaluation evidence, response draft, and docs
 crypto-envelope-v1.0.0-checkpoint
 etiqueta: crypto-envelope-v1.0.0-checkpoint

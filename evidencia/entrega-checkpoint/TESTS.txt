@@ -1,36 +1,4 @@
-======================================================================
-ERROR: test_aead (unittest.loader._FailedTest.test_aead)
 ----------------------------------------------------------------------
-ImportError: Failed to import test module: test_aead
-Traceback (most recent call last):
-  File "C:\Users\robin\AppData\Local\Programs\Python\Python311\Lib\unittest\loader.py", line 419, in _find_test_path
-    module = self._get_module_from_name(name)
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\robin\AppData\Local\Programs\Python\Python311\Lib\unittest\loader.py", line 362, in _get_module_from_name
-    __import__(name)
-  File "C:\Users\robin\ROMEO-HYDRA-MASTER\romeo-hydra-master-repository-hub\romeo-hydra-crypto\tests\test_aead.py", line 3, in <module>
-    from cryptography.exceptions import InvalidTag
-ModuleNotFoundError: No module named 'cryptography'
+Ran 60 tests in 7.007s
 
-
-======================================================================
-ERROR: test_envelope (unittest.loader._FailedTest.test_envelope)
-----------------------------------------------------------------------
-ImportError: Failed to import test module: test_envelope
-Traceback (most recent call last):
-  File "C:\Users\robin\AppData\Local\Programs\Python\Python311\Lib\unittest\loader.py", line 419, in _find_test_path
-    module = self._get_module_from_name(name)
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\robin\AppData\Local\Programs\Python\Python311\Lib\unittest\loader.py", line 362, in _get_module_from_name
-    __import__(name)
-  File "C:\Users\robin\ROMEO-HYDRA-MASTER\romeo-hydra-master-repository-hub\romeo-hydra-crypto\tests\test_envelope.py", line 3, in <module>
-    from core.aead import decrypt, encrypt, generate_key
-  File "C:\Users\robin\ROMEO-HYDRA-MASTER\romeo-hydra-master-repository-hub\romeo-hydra-crypto\core\aead.py", line 5, in <module>
-    from cryptography.exceptions import InvalidTag
-ModuleNotFoundError: No module named 'cryptography'
-
-
-----------------------------------------------------------------------
-Ran 16 tests in 0.860s
-
-FAILED (errors=2)
+OK
