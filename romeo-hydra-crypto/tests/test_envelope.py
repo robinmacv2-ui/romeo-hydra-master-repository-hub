@@ -773,6 +773,8 @@ class TestEnvelopeFull(unittest.TestCase):
                 env["nonce"],
             "version":
                 env["version"],
+            "digest":
+                env["digest"],
         }
 
         self.assertEqual(
