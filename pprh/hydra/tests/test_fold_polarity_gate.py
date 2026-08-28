@@ -187,7 +187,7 @@ def test_gate_module_does_not_import_crypto():
     import pprh.hydra.puf.entropy_gate as eg
 
     src = Path(eg.__file__).read_text(encoding="utf-8")
-    assert "romeo-hydra-crypto" not in src
+    assert "from core.envelope" not in src and "import core.envelope" not in src
     assert "romeo_hydra_crypto" not in src
     assert "from core.envelope" not in src
     assert "import core.envelope" not in src

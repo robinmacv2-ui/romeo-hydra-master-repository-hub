@@ -1,0 +1,79 @@
+ROMEO-HYDRA — AUDIT LOCAL RUN (P4)
+timestamp_utc: 2026-08-28T08:55:15Z
+repo_root:     /data/data/com.termux/files/home/romeo-hydra-master-repository-hub
+------------------------------------------------------------
+SECTION 1: git identity
+[SKIP] git_pull_ff_only — --no-pull
+HEAD:   3afe9a9381c2d55e561775923f27ed13a36ab03d
+BRANCH: main
+[PASS] git_rev_parse — 3afe9a9381c2d55e561775923f27ed13a36ab03d
+------------------------------------------------------------
+SECTION 2: pytest pprh
+============================= test session starts ==============================
+platform android -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0 -- /data/data/com.termux/files/usr/bin/python3.14
+cachedir: .pytest_cache
+rootdir: /data/data/com.termux/files/home/romeo-hydra-master-repository-hub
+configfile: pyproject.toml
+collecting ... collected 27 items
+
+pprh/hydra/tests/test_fold_polarity_gate.py::test_fold_vector_length PASSED [  3%]
+pprh/hydra/tests/test_fold_polarity_gate.py::test_fold_vector_values_binary PASSED [  7%]
+pprh/hydra/tests/test_fold_polarity_gate.py::test_fold_descriptor_stable PASSED [ 11%]
+pprh/hydra/tests/test_fold_polarity_gate.py::test_fold_descriptor_note PASSED [ 14%]
+pprh/hydra/tests/test_fold_polarity_gate.py::test_fold_invalid_n1 PASSED [ 18%]
+pprh/hydra/tests/test_fold_polarity_gate.py::test_polarity_L PASSED      [ 22%]
+pprh/hydra/tests/test_fold_polarity_gate.py::test_polarity_D PASSED      [ 25%]
+pprh/hydra/tests/test_fold_polarity_gate.py::test_polarity_duality PASSED [ 29%]
+pprh/hydra/tests/test_fold_polarity_gate.py::test_polarity_invalid_mode PASSED [ 33%]
+pprh/hydra/tests/test_fold_polarity_gate.py::test_gate_negative_residual_blocked PASSED [ 37%]
+pprh/hydra/tests/test_fold_polarity_gate.py::test_gate_zero_residual_blocked PASSED [ 40%]
+pprh/hydra/tests/test_fold_polarity_gate.py::test_gate_positive_residual_allowed PASSED [ 44%]
+pprh/hydra/tests/test_fold_polarity_gate.py::test_gate_error_code_on_block PASSED [ 48%]
+pprh/hydra/tests/test_fold_polarity_gate.py::test_gate_no_error_code_when_allowed PASSED [ 51%]
+pprh/hydra/tests/test_fold_polarity_gate.py::test_gate_residual_calculation PASSED [ 55%]
+pprh/hydra/tests/test_fold_polarity_gate.py::test_gate_default_margin_is_16 PASSED [ 59%]
+pprh/hydra/tests/test_fold_polarity_gate.py::test_gate_margin_configurable PASSED [ 62%]
+pprh/hydra/tests/test_fold_polarity_gate.py::test_gate_helper_configurable PASSED [ 66%]
+pprh/hydra/tests/test_fold_polarity_gate.py::test_gate_min_entropy_configurable PASSED [ 70%]
+pprh/hydra/tests/test_fold_polarity_gate.py::test_gate_decimal_preserves_precision PASSED [ 74%]
+pprh/hydra/tests/test_fold_polarity_gate.py::test_gate_result_immutable PASSED [ 77%]
+pprh/hydra/tests/test_fold_polarity_gate.py::test_gate_module_does_not_import_crypto PASSED [ 81%]
+pprh/hydra/tests/test_fold_polarity_gate.py::test_gate_compat_dict_api PASSED [ 85%]
+pprh/hydra/tests/test_fold_polarity_gate.py::test_gate_require_raises_on_block PASSED [ 88%]
+pprh/hydra/tests/test_fold_polarity_gate.py::test_gate_require_passes_when_positive PASSED [ 92%]
+pprh/hydra/tests/test_fold_polarity_gate.py::test_gate_budget_compat_class PASSED [ 96%]
+pprh/hydra/tests/test_fold_polarity_gate.py::test_gate_best_case_uncertainty_still_blocked PASSED [100%]
+
+============================== 27 passed in 0.60s ==============================
+[PASS] pytest_pprh — test_fold_polarity_gate.py
+------------------------------------------------------------
+SECTION 3: romeo-hydra-crypto
+----------------------------------------------------------------------
+Ran 60 tests in 5.960s
+
+OK
+[PASS] crypto_unittest — discover -s tests -q
+[PASS] crypto_smoke — ENVELOPE_CRYPTO_OK
+ENVELOPE_CRYPTO_OK
+------------------------------------------------------------
+SECTION 4: pprh decouple grep
+[PASS] pprh_no_crypto_imports — grep clean
+------------------------------------------------------------
+SECTION 5: dataset evidence files
+[PASS] dataset_manifest — evidencia/dataset/HYDRA-PHYS-2026-08-27-v1/DATASET_MANIFEST.md
+[PASS] repeatability_protocol — evidencia/dataset/HYDRA-PHYS-2026-08-27-v1/REPEATABILITY_PROTOCOL_10.md
+[PASS] audit_delta_p1 — evidencia/audit/AUDIT_DELTA_6bafb5e7_9bff763f.md
+------------------------------------------------------------
+SECTION 6: crypto delta vs gate SHA
+[PASS] crypto_diff_vs_gate_sha — empty vs 6bafb5e7cf38502de19500cd6ed0188e7caa1a60
+[PASS] pprh_diff_vs_gate_sha — empty vs 6bafb5e7cf38502de19500cd6ed0188e7caa1a60
+------------------------------------------------------------
+SUMMARY
+PASS=10  FAIL=0  SKIP=1
+OVERALL: PASS (local reproduction)
+Levels reminder:
+  - This run converts PENDING LOCAL RUN → PASS/FAIL for pytest/unittest/smoke
+  - Physical min-entropy / 10-cycle log remain out of scope
+  - PPRH_EC008 is not cleared by this script
+------------------------------------------------------------
+end_timestamp_utc: 2026-08-28T08:55:26Z

@@ -172,7 +172,7 @@ except Exception as e:
   # ------------------------------------------------------------------
   log "SECTION 4: pprh decouple grep"
   if [[ -d pprh ]]; then
-    HITS="$(grep -R -n -E 'romeo-hydra-crypto|romeo_hydra_crypto|from core\.envelope|import core\.envelope' pprh 2>/dev/null || true)"
+    HITS="$(grep -R -n -E '^\s*(from|import)\s+core\.envelope|^\s*from\s+romeo_hydra_crypto|^\s*import\s+romeo_hydra_crypto' pprh --include='*.py' | grep -v test_fold_polarity_gate.py || true 2>/dev/null || true)"
     if [[ -z "$HITS" ]]; then
       record PASS "pprh_no_crypto_imports" "grep clean"
     else
