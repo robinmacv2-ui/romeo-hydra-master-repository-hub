@@ -65,27 +65,51 @@ Video sequences:
 | descriptor_hash | SHA-256 of protocol parameters only |
 | measured_hinf | Measured min-entropy of the physical response |
 | helper_bits | Bits leaked by the error-correction helper data |
-| remaining | measured_hinf − helper_bits − safety_margin |
-| PPRH_EC008 | Entropy-gate fail-closed error code |
+| remaining / residual | derived: measured_hinf − helper_bits − safety_margin |
+| PPRH_EC008 | Entropy-gate fail-closed **error code** (string) |
 | Polaridad L / D | L = 1001, D = 0110 (1→4 map) |
 | RECIBO-v3 | Target receipt schema (future integration) |
 
 ---
 
-## 5. Entropy budget (experimental, Phase C.1)
+## 5. Entropy evaluation (experimental, Phase C.1)
+
+Canonical rule (identical in code, tests, README):
 
 ```
-measured_hinf     ≈  33.9 bits
-helper_bits       = 495 bits   (BCH-class helper leakage estimate)
-safety_margin     =  16 bits
-remaining         ≈ −477.1 bits
+R = H_inf - helper_bits - safety_margin
+
+R > 0  => ALLOWED
+R <= 0 => PPRH_EC008  (KEY_DERIVATION_FORBIDDEN)
+
+R == 0 => BLOCK
 ```
 
-**Decision of the Entropy Gate:**
+```yaml
+entropy_evaluation:
+  measured_hinf_bits: 33.9
+  measurement_uncertainty_bits: 1.8
+  helper_bits: 495
+  safety_margin_bits: 16
+
+  derived:
+    remaining_bits: -477.1
+    formula: "measured_hinf_bits - helper_bits - safety_margin_bits"
+    remaining_best_case_bits: -475.3   # 33.9 + 1.8 - 495 - 16
+
+  decision:
+    error_code: "PPRH_EC008"
+    gate_status: "KEY_DERIVATION_FORBIDDEN"
+    rule: "remaining > 0 required for authorization"
+```
+
+Even the upper end of measurement uncertainty remains negative:
 
 ```
-remaining ≤ 0  →  KEY DERIVATION FORBIDDEN  (PPRH_EC008)
+33.9 + 1.8 - 495 - 16 = -475.3 < 0
 ```
+
+Therefore there is **no** justification to enable key derivation for this dataset.
 
 The 704-bit structure is a **geometric descriptor**, not 704 bits of cryptographic strength.
 Security must come from measured physical uncertainty that survives reconciliation.
@@ -97,8 +121,16 @@ Security must come from measured physical uncertainty that survives reconciliati
 | Layer | Location / tag | Role |
 |-------|----------------|------|
 | Digital envelope | `romeo-hydra-crypto/` · tag `crypto-envelope-v1.0.0-checkpoint` | Canonical seal / verify / Pedersen / digests (60 tests) |
-| Geometry + gate | `pprh/hydra/` · tag `v3.0.0-c1-geometry-gate` | FoldGeometry, polarity, entropy_gate (13 tests) |
+| Geometry + gate | `pprh/hydra/` · tag `v3.0.0-c1-geometry-gate` + harden on main | FoldGeometry, polarity, entropy_gate |
 | This dataset | `evidencia/dataset/HYDRA-PHYS-2026-08-27-v1/` | Empirical physical specimen declaration |
+
+Architecture direction (must not invert):
+
+```
+fold ──► GateResult ──► integration ──► crypto
+```
+
+`pprh` must not import `romeo-hydra-crypto`.
 
 ---
 
@@ -128,12 +160,6 @@ File path in hub:
 
 ```
 evidencia/dataset/HYDRA-PHYS-2026-08-27-v1/DATASET_MANIFEST.md
-```
-
-Commit message of introduction:
-
-```
-docs(dataset): add HYDRA-PHYS-2026-08-27-v1 physical prototype manifest
 ```
 
 Author: Luis Angel Vazquez Martinez  
