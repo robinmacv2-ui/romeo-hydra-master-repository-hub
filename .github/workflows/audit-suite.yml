@@ -1,0 +1,174 @@
+# =============================================================================
+# ROMEO-HYDRA — Audit Suite (control-plane + crypto integrity)
+# Automated counterpart to scripts/audit_close_head.sh (P4)
+#
+# Levels covered in CI:
+#   - Tests present in repo → executed here
+#   - Crypto unittest + smoke at this SHA
+#   - Decouple pprh ↛ crypto
+#   - Dataset manifest / protocol presence
+#
+# NOT covered (by design):
+#   - Physical min-entropy / NIST SP 800-90B
+#   - 10-cycle human repeatability log
+#   - Clearing PPRH_EC008 / changing R > 0 contract
+# =============================================================================
+
+name: Audit Suite (PPRH + Crypto)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "pprh/**"
+      - "romeo-hydra-crypto/**"
+      - "evidencia/dataset/**"
+      - "evidencia/audit/**"
+      - "scripts/audit_close_head.sh"
+      - ".github/workflows/audit-suite.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "pprh/**"
+      - "romeo-hydra-crypto/**"
+      - "evidencia/dataset/**"
+      - "evidencia/audit/**"
+      - "scripts/audit_close_head.sh"
+      - ".github/workflows/audit-suite.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: audit-suite-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHONPATH: ${{ github.workspace }}
+  GATE_SHA: "6bafb5e7cf38502de19500cd6ed0188e7caa1a60"
+
+jobs:
+  audit:
+    name: Control-plane + crypto integrity
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install pytest
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest
+
+      - name: Record HEAD
+        id: meta
+        run: |
+          set -euo pipefail
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          echo "HEAD=$(git rev-parse HEAD)"
+          echo "REF=${GITHUB_REF}"
+
+      - name: Pytest — pprh fold / polarity / entropy gate
+        run: |
+          set -euo pipefail
+          export PYTHONPATH="${GITHUB_WORKSPACE}:${PYTHONPATH:-}"
+          pytest pprh/hydra/tests/test_fold_polarity_gate.py -v --tb=short
+
+      - name: Unittest — romeo-hydra-crypto
+        run: |
+          set -euo pipefail
+          cd romeo-hydra-crypto
+          python -m unittest discover -s tests -q
+
+      - name: Smoke — ENVELOPE_CRYPTO_OK
+        run: |
+          set -euo pipefail
+          export PYTHONPATH="${GITHUB_WORKSPACE}/romeo-hydra-crypto:${PYTHONPATH:-}"
+          python - <<'PY'
+          from core.envelope import (
+              seal, verify, serialize, deserialize,
+              CURRENT_VERSION, COMMITMENT_HEX_LENGTH,
+              NONCE_HEX_LENGTH, DIGEST_HEX_LENGTH,
+          )
+          env, r = seal("evt-ci-audit", b"123456789012", b"payload", b"audit")
+          assert env["version"] == CURRENT_VERSION
+          assert len(env["pedersen_commitment"]) == COMMITMENT_HEX_LENGTH
+          assert len(env["nonce"]) == NONCE_HEX_LENGTH
+          assert len(env["digest"]) == DIGEST_HEX_LENGTH
+          assert verify(env, r)
+          s = serialize(env)
+          assert deserialize(s) == env
+          assert verify(deserialize(s), r)
+          print("ENVELOPE_CRYPTO_OK")
+          PY
+
+      - name: Decouple — pprh must not import crypto
+        run: |
+          set -euo pipefail
+          if grep -R -n -E 'romeo-hydra-crypto|romeo_hydra_crypto|from core\.envelope|import core\.envelope' pprh; then
+            echo "FAIL: crypto import detected under pprh/"
+            exit 1
+          fi
+          echo "PASS: no crypto imports in pprh"
+
+      - name: Evidence files present
+        run: |
+          set -euo pipefail
+          test -f evidencia/dataset/HYDRA-PHYS-2026-08-27-v1/DATASET_MANIFEST.md
+          test -f evidencia/dataset/HYDRA-PHYS-2026-08-27-v1/REPEATABILITY_PROTOCOL_10.md
+          echo "PASS: manifest + protocol"
+
+      - name: Crypto tree unchanged vs gate SHA (when ancestor)
+        run: |
+          set -euo pipefail
+          if git rev-parse --verify "${GATE_SHA}^{commit}" >/dev/null 2>&1; then
+            if git merge-base --is-ancestor "${GATE_SHA}" HEAD; then
+              if git diff --quiet "${GATE_SHA}" HEAD -- romeo-hydra-crypto; then
+                echo "PASS: romeo-hydra-crypto identical to ${GATE_SHA}"
+              else
+                echo "FAIL: romeo-hydra-crypto changed since ${GATE_SHA}"
+                git diff --stat "${GATE_SHA}" HEAD -- romeo-hydra-crypto
+                exit 1
+              fi
+            else
+              echo "SKIP: gate SHA not ancestor of HEAD (shallow history or rebase)"
+            fi
+          else
+            echo "SKIP: gate SHA not in this clone"
+          fi
+
+      - name: Write AUDIT_CI_RUN.txt
+        if: always()
+        run: |
+          set -euo pipefail
+          mkdir -p evidencia/audit
+          {
+            echo "ROMEO-HYDRA — AUDIT CI RUN"
+            echo "timestamp_utc: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            echo "github_sha: ${{ github.sha }}"
+            echo "github_ref: ${{ github.ref }}"
+            echo "workflow: ${{ github.workflow }}"
+            echo "run_id: ${{ github.run_id }}"
+            echo "run_url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            echo "gate_sha_ref: ${GATE_SHA}"
+            echo "note: CI covers software contracts only; physical validation remains experimental"
+            echo "PPRH_EC008: not cleared by this workflow"
+          } | tee evidencia/audit/AUDIT_CI_RUN.txt
+
+      - name: Upload audit artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: audit-ci-${{ github.sha }}
+          path: evidencia/audit/AUDIT_CI_RUN.txt
+          retention-days: 90
