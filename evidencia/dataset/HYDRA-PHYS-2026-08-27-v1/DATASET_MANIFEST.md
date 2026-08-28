@@ -17,6 +17,7 @@
 | Protocol | HYDRA-FOLD-v1 |
 | Related release | `v3.0.0-c1-geometry-gate` |
 | Related checkpoint | `crypto-envelope-v1.0.0-checkpoint` |
+| Repeatability protocol | `REPEATABILITY_PROTOCOL_10.md` (same folder) |
 
 ---
 
@@ -33,24 +34,55 @@
 | COMPRESSED_VOLUME | approx. 1 cm3 |
 | SCALE_REFERENCE | 2 x Mexican 1-peso coin (diameter approx. 21 mm) |
 | STATES_CAPTURED | folded (compact), expanded (zigzag spring), stress topography |
+| AXIS_A (conceptual) | Residual plastic tension + micro-wrinkles after fold — **candidate_measurement (raw)**, not a key |
 
 ---
 
-## 3. Media inventory (source material)
+## 3. Media inventory (annotated)
 
-Still images (examples from capture session):
+Binary files stay in the local evidence pack / external storage. This table only **declares identity and role** for audit.
 
-- 13767.jpg … 13773.jpg and subsequent close-ups
-- Scale shots with 1-peso coins
-- Top and side views of the compact bundle
+### 3.1 Role vocabulary (use exactly)
 
-Video sequences:
+| Role | Meaning |
+|------|---------|
+| `folded` | Compact accordion / stacked form |
+| `expanded` | Open zigzag / spring form |
+| `topography` | Residual relief, waffle / micro-wrinkle surface (axis **a** visible) |
+| `scale` | Shot with 1-peso coin(s) for size reference |
+| `process` | Folding or manipulation sequence (video) |
 
-- Folding process (grid paper → accordion)
-- Expand / contract cycles (spring behaviour)
-- Stress / residual topography manipulation
+### 3.2 Stills (examples from capture sessions)
 
-**Note:** Binary media files are not stored inside this manifest. They remain in the local evidence pack and/or external storage. This file only declares identity, naming and measured parameters.
+| Capture ID | Role(s) | Notes |
+|------------|---------|-------|
+| 13767.jpg … 13773.jpg | `folded`, `scale` | Compact bundle; coin scale shots |
+| 13782.jpg | `topography` | Held sheet; residual grid + wrinkles |
+| 13783.jpg | `topography` | Held sheet; strong waffle relief |
+| 13784.jpg | `topography` | Held sheet; dense micro-relief |
+| (prior close-ups in session) | `folded`, `topography` | Side / top views of compact form |
+
+### 3.3 Video
+
+| Capture ID | Role(s) | Duration (approx.) | Notes |
+|------------|---------|--------------------|-------|
+| 13781.mp4 | `process`, `topography` | ~9 s | Accordion on table → hand grips edge → tilt shows residual grid / wrinkles |
+| (earlier session clips) | `process`, `expanded`, `folded` | — | Fold construction; expand/contract spring cycles |
+
+### 3.4 What this media supports (and does not)
+
+**Supports**
+
+- Empirical existence of pico/valle accordion on grid paper.
+- Observable residual texture after fold (axis **a** as *raw visual candidate*).
+- Scale order of magnitude (~1 cm³ compact form with coin reference in other stills).
+
+**Does not support**
+
+- Min-entropy claims (NIST SP 800-90B or otherwise).
+- Intra-instance repeatability statistics (see protocol file).
+- Inter-instance uniqueness.
+- Key derivation or PUF product claims.
 
 ---
 
@@ -63,7 +95,9 @@ Video sequences:
 | Matrix88 | Intermediate expansion |
 | Micro704 | 704-bit geometric descriptor (protocol ID, not security bits) |
 | descriptor_hash | SHA-256 of protocol parameters only |
-| measured_hinf | Measured min-entropy of the physical response |
+| candidate_measurement | Raw physical response (e.g. residual texture / axis **a**) — **not** a key |
+| estimated_entropy | TBD until measured; do not hard-code 256 |
+| measured_hinf | Measured min-entropy of the physical response (when available) |
 | helper_bits | Bits leaked by the error-correction helper data |
 | remaining / residual | derived: measured_hinf − helper_bits − safety_margin |
 | PPRH_EC008 | Entropy-gate fail-closed **error code** (string) |
@@ -112,7 +146,6 @@ Even the upper end of measurement uncertainty remains negative:
 Therefore there is **no** justification to enable key derivation for this dataset.
 
 The 704-bit structure is a **geometric descriptor**, not 704 bits of cryptographic strength.
-Security must come from measured physical uncertainty that survives reconciliation.
 
 ---
 
@@ -122,7 +155,7 @@ Security must come from measured physical uncertainty that survives reconciliati
 |-------|----------------|------|
 | Digital envelope | `romeo-hydra-crypto/` · tag `crypto-envelope-v1.0.0-checkpoint` | Canonical seal / verify / Pedersen / digests (60 tests) |
 | Geometry + gate | `pprh/hydra/` · tag `v3.0.0-c1-geometry-gate` + harden on main | FoldGeometry, polarity, entropy_gate |
-| This dataset | `evidencia/dataset/HYDRA-PHYS-2026-08-27-v1/` | Empirical physical specimen declaration |
+| This dataset | `evidencia/dataset/HYDRA-PHYS-2026-08-27-v1/` | Empirical physical specimen + media roles |
 
 Architecture direction (must not invert):
 
@@ -140,17 +173,19 @@ fold ──► GateResult ──► integration ──► crypto
 - This dataset does **not** authorize key derivation.
 - This dataset does **not** constitute regulatory certification or legal evidence by itself.
 - descriptor_hash is a protocol identifier, not a physical entropy proof.
-- Media prove fold geometry and scale; they do not yet prove uniqueness or inter-device distance.
+- Media prove fold geometry, residual texture visibility, and scale; they do not yet prove uniqueness or inter-device distance.
+- Axis **a** is a **candidate_measurement** (raw), not key material.
 
 ---
 
 ## 8. Next measurements required (to move remaining > 0)
 
 1. Feature extraction from stills / video (fold density, residual plastic stress, local topography).
-2. Reproducibility and uniqueness statistics across multiple specimens / sessions.
-3. Revised measured_hinf from real scans.
-4. Reduction of helper_bits (better code or lower noise).
-5. Only then re-evaluate the Entropy Gate.
+2. **Intra-instance repeatability** — execute `REPEATABILITY_PROTOCOL_10.md` and log results.
+3. Inter-instance uniqueness (multiple specimens).
+4. Revised measured_hinf from real scans (e.g. path toward NIST SP 800-90B-class analysis).
+5. Reduction of helper_bits (better code or lower noise).
+6. Only then re-evaluate the Entropy Gate.
 
 ---
 
@@ -160,6 +195,7 @@ File path in hub:
 
 ```
 evidencia/dataset/HYDRA-PHYS-2026-08-27-v1/DATASET_MANIFEST.md
+evidencia/dataset/HYDRA-PHYS-2026-08-27-v1/REPEATABILITY_PROTOCOL_10.md
 ```
 
 Author: Luis Angel Vazquez Martinez  
